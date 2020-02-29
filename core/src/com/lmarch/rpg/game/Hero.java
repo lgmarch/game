@@ -56,8 +56,4 @@ public class Hero {
         position.x = pointerPosition.x;
         position.y = pointerPosition.y;
     }
-
-    public Vector2 getPosition() {
-        return position;
-    }
 }
