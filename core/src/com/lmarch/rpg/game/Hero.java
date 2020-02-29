@@ -53,7 +53,17 @@ public class Hero {
     }
 
     public void moveToMouse(Vector2 pointerPosition, float dt){
-        position.x = pointerPosition.x;
-        position.y = pointerPosition.y;
+//        position.x = pointerPosition.x;
+//        position.y = pointerPosition.y;
+
+        if (position.x <= pointerPosition.x)
+            position.x += speed * dt;
+        if (position.x >= pointerPosition.x)
+            position.x -= speed * dt;
+
+        if (position.y <= pointerPosition.y)
+            position.y += speed * dt;
+        if (position.y >= pointerPosition.y)
+            position.y -= speed * dt;
     }
 }

@@ -55,10 +55,8 @@ public class GeekRpgGame extends ApplicationAdapter {
 
 		if (Gdx.input.justTouched()){
 			pointerPosition.set(Gdx.input.getX(), 720.0f - Gdx.input.getY());
-			do {
-				hero.moveToMouse(pointerPosition, dt);
-			}while (hero.getPosition().x < pointerPosition.x);
 		}
+		hero.moveToMouse(pointerPosition, dt);
 	}
 	
 	@Override
