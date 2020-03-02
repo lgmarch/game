@@ -11,9 +11,11 @@ public class GeekRpgGame extends ApplicationAdapter {
 	private SpriteBatch batch; //
 	private Texture textureGrass;
 	private Texture texturePointer;
+	private Hero hero;
+
 	private Vector2 pointerPosition;
 	private float rt;
-	private Hero hero;
+
 	
 	@Override
 	public void create () {
@@ -28,9 +30,11 @@ public class GeekRpgGame extends ApplicationAdapter {
 	public void render () {
 		//x += v(100px/sec)*dt
 		float dt = Gdx.graphics.getDeltaTime();
+
 		update(dt);
+
 		//Цвет очистки экрана: выбор цвета
-		Gdx.gl.glClearColor(1, 1, 1, 1);
+		Gdx.gl.glClearColor(0, 0, 0, 1);
 		//Очистка экрана
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 

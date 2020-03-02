@@ -32,6 +32,7 @@ public class Hero {
 
     //логика движения персонажа - расчет
     public void update(float dt){
+
         if (Gdx.input.isKeyPressed(Input.Keys.A)){
             position.x -= speed * dt;
         }
