@@ -19,12 +19,10 @@ public class Projectile {
     }
 
     public void setup(float x, float y, float targetX, float targetY){
-        if (!active) {
             position.set(x, y);
             //tmp.set(targetX, targetY).sub(x, y).nor().scl(500.0f);
             velocity.set(targetX, targetY).sub(x, y).nor().scl(500.0f);
             active = true;
-        }
     }
 
     public void deactivate(){
@@ -33,18 +31,18 @@ public class Projectile {
 
     //Отрисовка стрелы
     public void render(SpriteBatch batch){
-        if (active) {
             batch.draw(textureRegion, position.x - 30, position.y - 30,
                     30, 30, 60, 60, 1, 1, velocity.angle());
-        }
     }
 
     public void update(float dt){
-        if(active){
             position.mulAdd(velocity, dt);
             if (position.x < 0 || position.x > 1280 || position.y < 0 || position.y > 720){
                 deactivate();
             }
-        }
+    }
+
+    public boolean isActive() {
+        return active;
     }
 }

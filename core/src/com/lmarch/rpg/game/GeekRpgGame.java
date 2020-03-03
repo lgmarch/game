@@ -16,7 +16,7 @@ public class GeekRpgGame extends ApplicationAdapter {
 	private Hero hero;
 
 	//Домашнее задание:
-	// 1. Добавить на экран яблоко и попроббовать отследить попадание стрелы в яблоко.
+	// 1. Добавить на экран яблоко и попробовать отследить попадание стрелы в яблоко.
 	//    При попадании яблоко должно появиться в новом месте.
 	// 2. ** Попробуйте заставить героя выпускать несколько стрел.
 	
@@ -50,6 +50,7 @@ public class GeekRpgGame extends ApplicationAdapter {
 		}
 		hero.render(batch);
 		hero.renderGUI(batch, font24);//GUI желательно рисовать отдельно
+
 		batch.end();
 	}
 

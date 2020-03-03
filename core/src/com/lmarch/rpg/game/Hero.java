@@ -9,8 +9,8 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
 public class Hero {
-    private Projectile projectile;
     private TextureRegion texture;
+    private ProjectileController projectController;
     private TextureRegion texturePointer;
     private TextureRegion textureHp;
     private Vector2 position; //Позиция героя
@@ -28,7 +28,7 @@ public class Hero {
         this.texture = atlas.findRegion("pig1");
         this.texturePointer = atlas.findRegion("pointer");
         this.textureHp = atlas.findRegion("hp");
-        this.projectile = new Projectile(atlas);
+        this.projectController = new ProjectileController(atlas);
         this.position = new Vector2(100, 100);
         this.dst = new Vector2(position);
         this.tmp = new Vector2(0, 0);
@@ -50,7 +50,7 @@ public class Hero {
 
         batch.draw(textureHp, position.x - 35, position.y + 35, 60 * ((float) hp / hpMax), 8);
 
-        projectile.render(batch);
+        projectController.render(batch);
     }
 
     public void renderGUI(SpriteBatch batch, BitmapFont font){
@@ -62,7 +62,7 @@ public class Hero {
 
     //логика движения персонажа - расчет
     public void update(float dt){
-        projectile.update(dt); //Плохо апдейтить внутри героя
+        projectController.update(dt); //Плохо апдейтить внутри героя
 
         rotation +=dt;
 
@@ -71,7 +71,7 @@ public class Hero {
         }
 
         if (Gdx.input.isButtonJustPressed(Input.Buttons.RIGHT)){
-            projectile.setup(position.x, position.y, Gdx.input.getX(), 720 - Gdx.input.getY());
+            projectController.setup(position.x, position.y, Gdx.input.getX(), 720 - Gdx.input.getY());
         }
 
         tmp.set(dst).sub(position).nor().scl(speed); //вектор скорости
@@ -85,7 +85,6 @@ public class Hero {
         }else {
             position.set(dst);
         }
-        //position.mulAdd(tmp, dt);
 
         //Данную строку использовать нельзя (метод cpy()...)
         //position.mulAdd(dst.cpy().sub(position).nor().scl(speed), dt);
