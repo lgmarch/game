@@ -14,6 +14,11 @@ public class GeekRpgGame extends ApplicationAdapter {
 	private TextureAtlas atlas;
 	private TextureRegion textureGrass;
 	private Hero hero;
+
+	//Домашнее задание:
+	// 1. Добавить на экран яблоко и попроббовать отследить попадание стрелы в яблоко.
+	//    При попадании яблоко должно появиться в новом месте.
+	// 2. ** Попробуйте заставить героя выпускать несколько стрел.
 	
 	@Override
 	public void create () {
@@ -44,7 +49,7 @@ public class GeekRpgGame extends ApplicationAdapter {
 			}
 		}
 		hero.render(batch);
-		hero.renderGUI(batch, font24);//Желательно рисовать отдельно
+		hero.renderGUI(batch, font24);//GUI желательно рисовать отдельно
 		batch.end();
 	}
 
