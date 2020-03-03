@@ -3,19 +3,25 @@ package com.lmarch.rpg.game;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class GeekRpgGame extends ApplicationAdapter {
 	private SpriteBatch batch; //
-	private Texture textureGrass;
+	private BitmapFont font24;
+	private TextureAtlas atlas;
+	private TextureRegion textureGrass;
 	private Hero hero;
 	
 	@Override
 	public void create () {
-		batch = new SpriteBatch();
-		hero = new Hero();
-		textureGrass = new Texture("grass.png");
+		this.batch = new SpriteBatch();
+		this.atlas = new TextureAtlas("game.pack"); //Загрузка атласа текстур в память
+		this.hero = new Hero(atlas);
+		this.textureGrass = atlas.findRegion("grass");
+		this.font24 = new BitmapFont(Gdx.files.internal("font24.fnt"));
 	}
 
 	@Override
@@ -38,7 +44,7 @@ public class GeekRpgGame extends ApplicationAdapter {
 			}
 		}
 		hero.render(batch);
-
+		hero.renderGUI(batch, font24);//Желательно рисовать отдельно
 		batch.end();
 	}
 

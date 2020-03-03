@@ -1,45 +1,58 @@
 package com.lmarch.rpg.game;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
 public class Hero {
-    private Texture texture;
-    private Texture texturePointer;
+    private TextureRegion texture;
+    private TextureRegion texturePointer;
     private Vector2 position; //Позиция героя
     private Vector2 dst; //Полиция поинтера
     private Vector2 tmp;
-
+    private StringBuilder strBuilder;
     private float speed;
-    private float lifeTime;
+    private float rotation; //lifeTime
+    private int hp; //здоровье героя
+
     private float param;
 
-    public Hero(){
-        this.texture = new Texture("pig1.png");
-        texturePointer = new Texture("pointer.png");
+    public Hero(TextureAtlas atlas){
+        this.texture = atlas.findRegion("pig1");
+        this.texturePointer = atlas.findRegion("pointer");
         this.position = new Vector2(100, 100);
         this.dst = new Vector2(position);
         this.tmp = new Vector2(0, 0);
-        this.speed = 100.0f;
-        this.param = 1.0f;
+        this.strBuilder = new StringBuilder();
+        this.speed = 200.0f;
+        this.hp = 10;
+        this.param = 10.0f;
     }
 
     //Прорисовка
     public void render(SpriteBatch batch){
         batch.draw(texturePointer, dst.x - 32, dst.y - 32,
-                32, 32, 64,64,
-                1, 1, lifeTime * 90.0f, 0, 0, 64, 64, false, false);
+                32, 32, 64, 64, 1, 1, rotation * 90.0f);
 
         batch.draw(texture, position.x - 32, position.y - 32,
                 32, 32, 64,64,
-                1, 1, param, 0, 0, 64, 64, false, false);
+                1, 1, param);
+    }
+
+    public void renderGUI(SpriteBatch batch, BitmapFont font){
+        strBuilder.setLength(0); //Очистка
+        strBuilder.append("Class: ").append("Pig").append("\n");
+        strBuilder.append("HP: ").append(hp).append("\n");
+        font.draw(batch, strBuilder, 10, 710);
     }
 
     //логика движения персонажа - расчет
     public void update(float dt){
-        lifeTime +=dt;
+        rotation +=dt;
+
         if (Gdx.input.justTouched()){
             dst.set(Gdx.input.getX(), 720 - Gdx.input.getY());
         }
@@ -54,18 +67,5 @@ public class Hero {
 
         //Данную строку использовать нельзя (метод cpy()...)
         //position.mulAdd(dst.cpy().sub(position).nor().scl(speed), dt);
-
-//        if (position.x > dst.x){
-//            position.x -= speed * dt;
-//        }
-//        if (position.x < dst.x){
-//            position.x += speed * dt;
-//        }
-//        if (position.y > dst.y){
-//            position.y -= speed * dt;
-//        }
-//        if (position.y < dst.y){
-//            position.y += speed * dt;
-//        }
     }
 }
