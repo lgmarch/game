@@ -10,6 +10,7 @@ public class Hero {
     private Texture texturePointer;
     private Vector2 position; //Позиция героя
     private Vector2 dst; //Полиция поинтера
+    private Vector2 tmp;
 
     private float speed;
     private float lifeTime;
@@ -20,6 +21,7 @@ public class Hero {
         texturePointer = new Texture("pointer.png");
         this.position = new Vector2(100, 100);
         this.dst = new Vector2(position);
+        this.tmp = new Vector2(0, 0);
         this.speed = 100.0f;
         this.param = 1.0f;
     }
@@ -42,17 +44,28 @@ public class Hero {
             dst.set(Gdx.input.getX(), 720 - Gdx.input.getY());
         }
 
-        if (position.x > dst.x){
-            position.x -= speed * dt;
+        tmp.set(dst).sub(position).nor().scl(speed); //вектор скорости
+        if (position.dst(dst) > speed * dt){
+            position.mulAdd(tmp, dt);
+        }else {
+            position.set(dst);
         }
-        if (position.x < dst.x){
-            position.x += speed * dt;
-        }
-        if (position.y > dst.y){
-            position.y -= speed * dt;
-        }
-        if (position.y < dst.y){
-            position.y += speed * dt;
-        }
+        //position.mulAdd(tmp, dt);
+
+        //Данную строку использовать нельзя (метод cpy()...)
+        //position.mulAdd(dst.cpy().sub(position).nor().scl(speed), dt);
+
+//        if (position.x > dst.x){
+//            position.x -= speed * dt;
+//        }
+//        if (position.x < dst.x){
+//            position.x += speed * dt;
+//        }
+//        if (position.y > dst.y){
+//            position.y -= speed * dt;
+//        }
+//        if (position.y < dst.y){
+//            position.y += speed * dt;
+//        }
     }
 }
