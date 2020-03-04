@@ -3,19 +3,21 @@ package com.lmarch.rpg.game;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 
-public class ProjectileController {
-    private Projectile[] projectiles;
+public class ArrowsController {
+    private Arrow[] arrows;
+    private int numArrowsInQuiver;
 
-    public ProjectileController(TextureAtlas atlas) {
-        projectiles = new Projectile[3];
+    public ArrowsController(TextureAtlas atlas) {
+        numArrowsInQuiver = 10;
+        arrows = new Arrow[numArrowsInQuiver];
 
-        for (int i = 0; i < projectiles.length; i++) {
-            projectiles[i] = new Projectile(atlas);
+        for (int i = 0; i < arrows.length; i++) {
+            arrows[i] = new Arrow(atlas);
         }
     }
 
     public void setup(float x, float y, float targetX, float targetY){
-        for (Projectile o : projectiles) {
+        for (Arrow o : arrows) {
             if (!o.isActive()) {
                 o.setup(x, y, targetX, targetY);
                 return;
@@ -24,7 +26,7 @@ public class ProjectileController {
     }
 
     public void update(float dt){
-        for (Projectile o : projectiles) {
+        for (Arrow o : arrows) {
             if (o.isActive()){
                 o.update(dt);
             }
@@ -32,10 +34,14 @@ public class ProjectileController {
     }
 
     public void render(SpriteBatch batch){
-        for (Projectile o : projectiles) {
+        for (Arrow o : arrows) {
             if(o.isActive()){
                 o.render(batch);
             }
         }
+    }
+
+    public Arrow[] getArrows() {
+        return arrows;
     }
 }

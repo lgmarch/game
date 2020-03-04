@@ -10,7 +10,7 @@ import com.badlogic.gdx.math.Vector2;
 
 public class Hero {
     private TextureRegion texture;
-    private ProjectileController projectController;
+    private ArrowsController projectController;
     private TextureRegion texturePointer;
     private TextureRegion textureHp;
     private Vector2 position; //Позиция героя
@@ -20,7 +20,7 @@ public class Hero {
     private float speed;
     private float rotation; //lifeTime
     private int hp; //здоровье героя
-    private int hpMax;
+    private int hpMax; //максимальное здоровье
 
     private Vector2 angle;
 
@@ -28,7 +28,7 @@ public class Hero {
         this.texture = atlas.findRegion("pig1");
         this.texturePointer = atlas.findRegion("pointer");
         this.textureHp = atlas.findRegion("hp");
-        this.projectController = new ProjectileController(atlas);
+        this.projectController = new ArrowsController(atlas);
         this.position = new Vector2(100, 100);
         this.dst = new Vector2(position);
         this.tmp = new Vector2(0, 0);
@@ -76,7 +76,7 @@ public class Hero {
 
         tmp.set(dst).sub(position).nor().scl(speed); //вектор скорости
         angle.set(tmp);
-        System.out.println(angle.angle());
+//        System.out.println(angle.angle());
 //        if (position.x < dst.x) angle = dst.angle();
 //        if (position.x > dst.x) angle = dst.angle() - 180.0f;
 
@@ -88,5 +88,9 @@ public class Hero {
 
         //Данную строку использовать нельзя (метод cpy()...)
         //position.mulAdd(dst.cpy().sub(position).nor().scl(speed), dt);
+    }
+
+    public ArrowsController getProjectController() {
+        return projectController;
     }
 }
