@@ -17,9 +17,10 @@ public class Hero {
     private Vector2 tmp;
     private StringBuilder strBuilder;
     private float speed;
-    private float rotation; //lifeTime
+    private float lifeTime;
     private int hp; //здоровье героя
     private int hpMax;
+    private int coin;
 
     private Vector2 angle;
 
@@ -35,6 +36,7 @@ public class Hero {
         this.speed = 200.0f;
         this.hp = 10;
         this.hpMax = 10;
+        this.coin = 0;
 
         this.angle = new Vector2(0, 0); //Вращение героя
     }
@@ -42,7 +44,7 @@ public class Hero {
     //Прорисовка
     public void render(SpriteBatch batch){
         batch.draw(texturePointer, dst.x - 32, dst.y - 32,
-                32, 32, 64, 64, 0.5f, 0.5f, rotation * 90.0f);
+                32, 32, 64, 64, 0.5f, 0.5f, lifeTime * 90.0f);
 
         batch.draw(texture, position.x - 32, position.y - 32,
                 32, 32, 64,64, 1, 1, angle.angle());
@@ -54,12 +56,13 @@ public class Hero {
         strBuilder.setLength(0); //Очистка
         strBuilder.append("Class: ").append("Pig").append("\n");
         strBuilder.append("HP: ").append(hp).append(" / ").append(hpMax).append("\n");
+        strBuilder.append("coin: ").append(coin).append("\n");
         font.draw(batch, strBuilder, 10, 710);
     }
 
     //логика движения персонажа - расчет
     public void update(float dt){
-        rotation +=dt;
+        lifeTime += dt;
         if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)){
             dst.set(Gdx.input.getX(), 720 - Gdx.input.getY());
         }
@@ -69,7 +72,7 @@ public class Hero {
         tmp.set(dst).sub(position).nor().scl(speed); //вектор скорости
 
         angle.set(tmp);
-        System.out.println(angle.angle());
+        //System.out.println(angle.angle());
 
         if (position.dst(dst) > speed * dt){
             position.mulAdd(tmp, dt);
@@ -79,6 +82,14 @@ public class Hero {
 
         //Данную строку использовать нельзя (метод cpy()...)
         //position.mulAdd(dst.cpy().sub(position).nor().scl(speed), dt);
+    }
+
+    public void reducingHealthHero(int reducing){
+        hp -= reducing;
+    }
+
+    public void setCoin(int coin) {
+        this.coin += coin;
     }
 
     public Vector2 getPosition() {

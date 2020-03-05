@@ -12,6 +12,7 @@ public class GameScreen extends AbstractScreen {
     private ProjectilesController projectilesController;
     private Hero hero;
     private Monster monster;
+    private float halfSecond;
 
     public ProjectilesController getProjectilesController() {
         return projectilesController;
@@ -32,6 +33,7 @@ public class GameScreen extends AbstractScreen {
         this.monster = new Monster(this);
         this.textureGrass = Assets.getInstance().getAtlas().findRegion("grass");
         this.font24 = Assets.getInstance().getAssetManager().get("fonts/font24.ttf");
+        this.halfSecond = 0;
     }
 
     @Override //Отрисовка
@@ -58,17 +60,27 @@ public class GameScreen extends AbstractScreen {
     public void update(float dt){
         hero.update(dt);
         monster.update(dt);
-        checkCollisions();
+        checkCollisions(dt);
         projectilesController.update(dt);
     }
 
-    public void checkCollisions(){
+    public void checkCollisions(float dt){
         for (int i = 0; i < projectilesController.getActiveList().size(); i++) {
             //Ссылка на один из активных снарядов
             Projectile p = projectilesController.getActiveList().get(i);
             if (p.getPosition().dst(monster.getPosition()) < 24) {
                 p.deactivate();
-                monster.takeDamage(1);
+                if (monster.takeDamage(20)){
+                    monster.reincarnation();
+                    hero.setCoin(3);
+                };
+            }
+        }
+        if (hero.getPosition().dst(monster.getPosition()) < 20){
+            halfSecond += dt;
+            if (halfSecond > 0.5f){
+                halfSecond = 0.0f;
+                hero.reducingHealthHero(1);
             }
         }
     }

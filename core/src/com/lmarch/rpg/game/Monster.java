@@ -8,24 +8,23 @@ public class Monster {
     private GameScreen gameScreen;
     private TextureRegion texture;
     private TextureRegion textureHp;
-    private Vector2 position; //Позиция героя
-    private Vector2 dst; //Позиция поинтера
+    private Vector2 position; //Позиция монстра
     private Vector2 tmp;
-    private float lifeTime; //lifeTime
     private float speed;
-    private int hp; //здоровье героя
+    private int hp; //здоровье монстра
     private int hpMax;
+    private boolean healingMonster; //true - монстр на лечении (не преследует героя)
 
     public Monster(GameScreen gameScreen){
         this.gameScreen = gameScreen;
         this.texture = Assets.getInstance().getAtlas().findRegion("knight");
         this.textureHp = Assets.getInstance().getAtlas().findRegion("hp");
         this.position = new Vector2(800, 300);
-        this.dst = new Vector2(position);
         this.tmp = new Vector2(0, 0);
         this.speed = 100.0f;
-        this.hp = 30;
-        this.hpMax = 30;
+        this.hp = 200;
+        this.hpMax = 200;
+        this.healingMonster = false;
     }
 
     public void render(SpriteBatch batch){ //Прорисовка
@@ -38,13 +37,19 @@ public class Monster {
 
     //логика движения персонажа - расчет
     public void update(float dt){
-        lifeTime +=dt;
+        if(!healingMonster) { //Если монстр не на лечении
+            tmp.set(gameScreen.getHero().getPosition()).sub(position).nor().scl(speed); //вектор скорости
+            position.mulAdd(tmp, dt);
+        }else {
+            if (hp++ >= hpMax) {
+                healingMonster = false;
+            }
+        }
+    }
 
-        tmp.set(gameScreen.getHero().getPosition()).sub(position).nor().scl(speed); //вектор скорости
-        position.mulAdd(tmp, dt);
-
-        //Данную строку использовать нельзя (метод cpy()...)
-        //position.mulAdd(dst.cpy().sub(position).nor().scl(speed), dt);
+    public void reincarnation(){
+        position.set((float) Math.random() * 1230, (float) Math.random() * 730);
+        healingMonster = true;
     }
 
     public boolean takeDamage(int amount){
