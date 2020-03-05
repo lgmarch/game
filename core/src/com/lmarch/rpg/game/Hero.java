@@ -80,4 +80,8 @@ public class Hero {
         //Данную строку использовать нельзя (метод cpy()...)
         //position.mulAdd(dst.cpy().sub(position).nor().scl(speed), dt);
     }
+
+    public Vector2 getPosition() {
+        return position;
+    }
 }

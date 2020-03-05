@@ -11,6 +11,7 @@ public class GameScreen extends AbstractScreen {
     private TextureRegion textureGrass;
     private ProjectilesController projectilesController;
     private Hero hero;
+    private Monster monster;
 
     public ProjectilesController getProjectilesController() {
         return projectilesController;
@@ -20,17 +21,17 @@ public class GameScreen extends AbstractScreen {
         super(batch);
     }
 
+    public Hero getHero() {
+        return hero;
+    }
+
     @Override //Инициализация
     public void show() {
         this.projectilesController = new ProjectilesController();
         this.hero = new Hero(this);
+        this.monster = new Monster(this);
         this.textureGrass = Assets.getInstance().getAtlas().findRegion("grass");
         this.font24 = Assets.getInstance().getAssetManager().get("fonts/font24.ttf");
-    }
-
-    public void update(float dt){
-        hero.update(dt);
-        projectilesController.update(dt);
     }
 
     @Override //Отрисовка
@@ -48,8 +49,27 @@ public class GameScreen extends AbstractScreen {
             }
         }
         hero.render(batch);
+        monster.render(batch);
         projectilesController.render(batch);
         hero.renderGUI(batch, font24);//GUI желательно рисовать отдельно
         batch.end();
+    }
+
+    public void update(float dt){
+        hero.update(dt);
+        monster.update(dt);
+        checkCollisions();
+        projectilesController.update(dt);
+    }
+
+    public void checkCollisions(){
+        for (int i = 0; i < projectilesController.getActiveList().size(); i++) {
+            //Ссылка на один из активных снарядов
+            Projectile p = projectilesController.getActiveList().get(i);
+            if (p.getPosition().dst(monster.getPosition()) < 24) {
+                p.deactivate();
+                monster.takeDamage(1);
+            }
+        }
     }
 }

@@ -48,4 +48,8 @@ public class Projectile implements Poolable{
             deactivate();
         }
     }
+
+    public Vector2 getPosition() {
+        return position;
+    }
 }
