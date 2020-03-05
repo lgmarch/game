@@ -13,7 +13,12 @@ public class GeekRpgGame extends ApplicationAdapter {
 	private BitmapFont font24;
 	private TextureAtlas atlas;
 	private TextureRegion textureGrass;
+	private ProjectilesController projectilesController;
 	private Hero hero;
+
+	public ProjectilesController getProjectilesController() {
+		return projectilesController;
+	}
 
 	//Домашнее задание:
 	// 1. Добавить на экран яблоко и попроббовать отследить попадание стрелы в яблоко.
@@ -24,7 +29,8 @@ public class GeekRpgGame extends ApplicationAdapter {
 	public void create () {
 		this.batch = new SpriteBatch();
 		this.atlas = new TextureAtlas("game.pack"); //Загрузка атласа текстур в память
-		this.hero = new Hero(atlas);
+		this.projectilesController = new ProjectilesController(atlas);
+		this.hero = new Hero(this, atlas);
 		this.textureGrass = atlas.findRegion("grass");
 		this.font24 = new BitmapFont(Gdx.files.internal("font24.fnt"));
 	}
@@ -49,12 +55,14 @@ public class GeekRpgGame extends ApplicationAdapter {
 			}
 		}
 		hero.render(batch);
+		projectilesController.render(batch);
 		hero.renderGUI(batch, font24);//GUI желательно рисовать отдельно
 		batch.end();
 	}
 
 	public void update(float dt){
 		hero.update(dt);
+		projectilesController.update(dt);
 	}
 	
 	@Override

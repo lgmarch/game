@@ -9,7 +9,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
 public class Hero {
-    private Projectile projectile;
+    private GeekRpgGame game;
     private TextureRegion texture;
     private TextureRegion texturePointer;
     private TextureRegion textureHp;
@@ -24,11 +24,11 @@ public class Hero {
 
     private Vector2 angle;
 
-    public Hero(TextureAtlas atlas){
+    public Hero(GeekRpgGame game, TextureAtlas atlas){
+        this.game = game;
         this.texture = atlas.findRegion("pig1");
         this.texturePointer = atlas.findRegion("pointer");
         this.textureHp = atlas.findRegion("hp");
-        this.projectile = new Projectile(atlas);
         this.position = new Vector2(100, 100);
         this.dst = new Vector2(position);
         this.tmp = new Vector2(0, 0);
@@ -49,8 +49,6 @@ public class Hero {
                 32, 32, 64,64, 1, 1, angle.angle());
 
         batch.draw(textureHp, position.x - 35, position.y + 35, 60 * ((float) hp / hpMax), 8);
-
-        projectile.render(batch);
     }
 
     public void renderGUI(SpriteBatch batch, BitmapFont font){
@@ -62,8 +60,6 @@ public class Hero {
 
     //логика движения персонажа - расчет
     public void update(float dt){
-        projectile.update(dt); //Плохо апдейтить внутри героя
-
         rotation +=dt;
 
         if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)){
@@ -71,7 +67,7 @@ public class Hero {
         }
 
         if (Gdx.input.isButtonJustPressed(Input.Buttons.RIGHT)){
-            projectile.setup(position.x, position.y, Gdx.input.getX(), 720 - Gdx.input.getY());
+            game.getProjectilesController().setup(position.x, position.y, Gdx.input.getX(), 720 - Gdx.input.getY());
         }
 
         tmp.set(dst).sub(position).nor().scl(speed); //вектор скорости
