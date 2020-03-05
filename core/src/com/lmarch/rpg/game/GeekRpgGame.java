@@ -1,68 +1,32 @@
 package com.lmarch.rpg.game;
 
-import com.badlogic.gdx.ApplicationAdapter;
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
-public class GeekRpgGame extends ApplicationAdapter {
+public class GeekRpgGame extends Game { //Меняем на Game для управления экранами
 	private SpriteBatch batch; //
-	private BitmapFont font24;
-	private TextureAtlas atlas;
-	private TextureRegion textureGrass;
-	private ProjectilesController projectilesController;
-	private Hero hero;
-
-	public ProjectilesController getProjectilesController() {
-		return projectilesController;
-	}
 
 	//Домашнее задание:
-	// 1. Добавить на экран яблоко и попроббовать отследить попадание стрелы в яблоко.
-	//    При попадании яблоко должно появиться в новом месте.
-	// 2. ** Попробуйте заставить героя выпускать несколько стрел.
+	// 1. Если здоровье монстра падает до 0, перекидываем его в другую точку
+	//   и залечиваем полностью, герою даем монетку (от 3 до 10)
+	// 2. ** Если монстр подошел близко к герою, то раз в 0.5 сек он должен
+	//   наносить герою 1 урона
 	
 	@Override
 	public void create () {
 		this.batch = new SpriteBatch();
-		this.atlas = new TextureAtlas("game.pack"); //Загрузка атласа текстур в память
-		this.projectilesController = new ProjectilesController(atlas);
-		this.hero = new Hero(this, atlas);
-		this.textureGrass = atlas.findRegion("grass");
-		this.font24 = new BitmapFont(Gdx.files.internal("font24.fnt"));
+		ScreenManager.getInstance().init(this, batch);
+		ScreenManager.getInstance().changeScreen(ScreenManager.ScreenType.GAME);
 	}
 
 	@Override
 	public void render () {
-		//x += v(100px/sec)*dt
-		float dt = Gdx.graphics.getDeltaTime();
-
-		update(dt);
-
-		//Цвет очистки экрана: выбор цвета
 		Gdx.gl.glClearColor(1, 1, 1, 1);
-		//Очистка экрана
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-		batch.begin();
-
-		for (int i = 0; i < 16; i++) {
-			for (int j = 0; j < 9; j++) {
-				batch.draw(textureGrass, i * 80, j * 80);
-			}
-		}
-		hero.render(batch);
-		projectilesController.render(batch);
-		hero.renderGUI(batch, font24);//GUI желательно рисовать отдельно
-		batch.end();
-	}
-
-	public void update(float dt){
-		hero.update(dt);
-		projectilesController.update(dt);
+		float dt = Gdx.graphics.getDeltaTime();
+		getScreen().render(dt); //Рисуем текущий экран
 	}
 	
 	@Override

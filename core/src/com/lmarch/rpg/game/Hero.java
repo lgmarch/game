@@ -4,12 +4,11 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
 public class Hero {
-    private GeekRpgGame game;
+    private GameScreen gameScreen;
     private TextureRegion texture;
     private TextureRegion texturePointer;
     private TextureRegion textureHp;
@@ -24,11 +23,11 @@ public class Hero {
 
     private Vector2 angle;
 
-    public Hero(GeekRpgGame game, TextureAtlas atlas){
-        this.game = game;
-        this.texture = atlas.findRegion("pig1");
-        this.texturePointer = atlas.findRegion("pointer");
-        this.textureHp = atlas.findRegion("hp");
+    public Hero(GameScreen gameScreen){
+        this.gameScreen = gameScreen;
+        this.texture = Assets.getInstance().getAtlas().findRegion("pig1");
+        this.texturePointer = Assets.getInstance().getAtlas().findRegion("pointer");
+        this.textureHp = Assets.getInstance().getAtlas().findRegion("hp");
         this.position = new Vector2(100, 100);
         this.dst = new Vector2(position);
         this.tmp = new Vector2(0, 0);
@@ -61,27 +60,22 @@ public class Hero {
     //логика движения персонажа - расчет
     public void update(float dt){
         rotation +=dt;
-
         if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)){
             dst.set(Gdx.input.getX(), 720 - Gdx.input.getY());
         }
-
         if (Gdx.input.isButtonJustPressed(Input.Buttons.RIGHT)){
-            game.getProjectilesController().setup(position.x, position.y, Gdx.input.getX(), 720 - Gdx.input.getY());
+            gameScreen.getProjectilesController().setup(position.x, position.y, Gdx.input.getX(), 720 - Gdx.input.getY());
         }
-
         tmp.set(dst).sub(position).nor().scl(speed); //вектор скорости
+
         angle.set(tmp);
         System.out.println(angle.angle());
-//        if (position.x < dst.x) angle = dst.angle();
-//        if (position.x > dst.x) angle = dst.angle() - 180.0f;
 
         if (position.dst(dst) > speed * dt){
             position.mulAdd(tmp, dt);
         }else {
             position.set(dst);
         }
-        //position.mulAdd(tmp, dt);
 
         //Данную строку использовать нельзя (метод cpy()...)
         //position.mulAdd(dst.cpy().sub(position).nor().scl(speed), dt);
