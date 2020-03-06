@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class ScreenManager {
     public enum ScreenType {
-        MENU, GAME
+        LOAD, MENU, GAME
     }
 
     public static final int WORLD_WIDTH = 1280;
@@ -23,7 +23,6 @@ public class ScreenManager {
 
     //Синглтон - глобальный объект в единствнном экземпляре
     private static ScreenManager ourInstance = new ScreenManager();
-
     public static ScreenManager getInstance() {
         return ourInstance;
     }
@@ -68,8 +67,12 @@ public class ScreenManager {
         }
 
 //        resetCamera();
-        game.setScreen(loadingScreen);
+        //game.setScreen(loadingScreen);
         switch (type) {
+            case LOAD:
+                targetScreen = loadingScreen;
+                Assets.getInstance().loadAssets(ScreenType.LOAD);
+                break;
             case GAME:
 //                game.setScreen(gameScreen);
                 targetScreen = gameScreen;
