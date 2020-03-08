@@ -84,11 +84,11 @@ public class Hero {
         //position.mulAdd(dst.cpy().sub(position).nor().scl(speed), dt);
     }
 
-    public void reducingHealthHero(int reducing){
+    public void reducingHealth(int reducing){
         hp -= reducing;
     }
 
-    public void setCoin(int coin) {
+    public void addCoin(int coin) {
         this.coin += coin;
     }
 

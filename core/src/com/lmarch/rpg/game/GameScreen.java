@@ -72,15 +72,15 @@ public class GameScreen extends AbstractScreen {
                 p.deactivate();
                 if (monster.takeDamage(20)){
                     monster.reincarnation();
-                    hero.setCoin(3);
-                };
+                    hero.addCoin(3);
+                }
             }
         }
         if (hero.getPosition().dst(monster.getPosition()) < 20){
             halfSecond += dt;
             if (halfSecond > 0.5f){
                 halfSecond = 0.0f;
-                hero.reducingHealthHero(1);
+                hero.reducingHealth(1);
             }
         }
     }
