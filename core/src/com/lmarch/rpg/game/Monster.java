@@ -2,6 +2,7 @@ package com.lmarch.rpg.game;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
 public class Monster {
@@ -12,6 +13,7 @@ public class Monster {
     private Vector2 dst; //Позиция поинтера
     private Vector2 tmp;
     private float lifeTime; //lifeTime
+    private float attackTime;
     private float speed;
     private int hp; //здоровье героя
     private int hpMax;
@@ -26,6 +28,7 @@ public class Monster {
         this.speed = 100.0f;
         this.hp = 30;
         this.hpMax = 30;
+
     }
 
     public void render(SpriteBatch batch){ //Прорисовка
@@ -39,6 +42,13 @@ public class Monster {
     //логика движения персонажа - расчет
     public void update(float dt){
         lifeTime +=dt;
+        if (this.position.dst(gameScreen.getHero().getPosition()) < 40){
+            attackTime += dt;
+            if (attackTime > 0.3f) {
+                attackTime = 0.0f;
+                gameScreen.getHero().takeDamage(1);
+            }
+        }
 
         tmp.set(gameScreen.getHero().getPosition()).sub(position).nor().scl(speed); //вектор скорости
         position.mulAdd(tmp, dt);
@@ -49,6 +59,11 @@ public class Monster {
 
     public boolean takeDamage(int amount){
         return (hp -= amount) <= 0;
+    }
+
+    public void recreate(){
+        this.position.set(MathUtils.random(0, 1280), MathUtils.random(0, 720));
+        this.hp = this.hpMax;
     }
 
     public Vector2 getPosition() {

@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.MathUtils;
 
 public class GameScreen extends AbstractScreen {
     private BitmapFont font24;
@@ -68,7 +69,10 @@ public class GameScreen extends AbstractScreen {
             Projectile p = projectilesController.getActiveList().get(i);
             if (p.getPosition().dst(monster.getPosition()) < 24) {
                 p.deactivate();
-                monster.takeDamage(1);
+                if (monster.takeDamage(1)){
+                    hero.addCoins(MathUtils.random(1, 10));
+                    monster.recreate();
+                }
             }
         }
     }

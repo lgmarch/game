@@ -20,6 +20,7 @@ public class Hero {
     private float rotation; //lifeTime
     private int hp; //здоровье героя
     private int hpMax;
+    private int coins;
 
     private Vector2 angle;
 
@@ -54,6 +55,7 @@ public class Hero {
         strBuilder.setLength(0); //Очистка
         strBuilder.append("Class: ").append("Pig").append("\n");
         strBuilder.append("HP: ").append(hp).append(" / ").append(hpMax).append("\n");
+        strBuilder.append("Coins: ").append(coins).append("\n");
         font.draw(batch, strBuilder, 10, 710);
     }
 
@@ -81,7 +83,19 @@ public class Hero {
         //position.mulAdd(dst.cpy().sub(position).nor().scl(speed), dt);
     }
 
+    public void addCoins(int amount){
+        coins += amount;
+    }
+
     public Vector2 getPosition() {
         return position;
+    }
+
+    public void takeDamage(int amount) {
+        hp -= amount;
+        if (hp <= 0){
+            hp = hpMax;
+            coins = 0;
+        }
     }
 }
