@@ -71,7 +71,6 @@ public class GameScreen extends AbstractScreen {
                 p.deactivate();
                 if (monster.takeDamage(1)){
                     hero.addCoins(MathUtils.random(1, 10));
-                    monster.recreate();
                 }
             }
         }
