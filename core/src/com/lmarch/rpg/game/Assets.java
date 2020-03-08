@@ -14,7 +14,6 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
 public class Assets {
     //Кусок синглтона
     private static final Assets ourInstance = new Assets();
-
     public static Assets getInstance() {
         return ourInstance;
     }
@@ -36,6 +35,9 @@ public class Assets {
 
     public void loadAssets(ScreenManager.ScreenType type) {
         switch (type) {
+            case LOAD:
+                assetManager.load("images/game.pack", TextureAtlas.class);
+                break;
             case MENU:
                 assetManager.load("images/game.pack", TextureAtlas.class);
                 createStandardFont(24);
@@ -48,6 +50,7 @@ public class Assets {
                 createStandardFont(16);
                 createStandardFont(20);
                 createStandardFont(24);
+                createStandardFont(32);
                 break;
         }
     }
