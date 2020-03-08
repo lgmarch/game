@@ -5,14 +5,12 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
 public class Monster extends GameCharacter{
-    private Vector2 dst;
     private float attackTime;
 
     public Monster(GameScreen gameScreen){
         super(gameScreen, 20, 100.0f);
         this.texture = Assets.getInstance().getAtlas().findRegion("knight");
         this.position = new Vector2(800, 300);
-        this.dst = new Vector2(position);
     }
 
     @Override
@@ -32,6 +30,8 @@ public class Monster extends GameCharacter{
     //логика движения персонажа - расчет
     public void update(float dt){
         super.update(dt);
+
+        dst.set(gameScreen.getHero().getPosition());
         if (this.position.dst(gameScreen.getHero().getPosition()) < 40){
             attackTime += dt;
             if (attackTime > 0.3f) {
@@ -39,9 +39,6 @@ public class Monster extends GameCharacter{
                 gameScreen.getHero().takeDamage(1);
             }
         }
-
-        tmp.set(gameScreen.getHero().getPosition()).sub(position).nor().scl(speed); //вектор скорости
-        position.mulAdd(tmp, dt);
     }
 
     public Vector2 getPosition() {

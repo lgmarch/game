@@ -9,7 +9,6 @@ import com.badlogic.gdx.math.Vector2;
 
 public class Hero extends GameCharacter{
     private TextureRegion texturePointer;
-    private Vector2 dst; //Позиция поинтера
     private int coins;
     private StringBuilder strBuilder;
 
@@ -20,7 +19,7 @@ public class Hero extends GameCharacter{
         this.texture = Assets.getInstance().getAtlas().findRegion("pig1");
         this.texturePointer = Assets.getInstance().getAtlas().findRegion("pointer");
         this.position = new Vector2(100, 100);
-        this.dst = new Vector2(position);
+        this.dst.set(position);
         this.strBuilder = new StringBuilder();
 
         this.angle = new Vector2(0, 0); //Вращение героя
@@ -48,22 +47,16 @@ public class Hero extends GameCharacter{
     @Override
     public void update(float dt){
         super.update(dt);
+
         if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)){
             dst.set(Gdx.input.getX(), 720 - Gdx.input.getY());
         }
         if (Gdx.input.isButtonJustPressed(Input.Buttons.RIGHT)){
             gameScreen.getProjectilesController().setup(position.x, position.y, Gdx.input.getX(), 720 - Gdx.input.getY());
         }
-        tmp.set(dst).sub(position).nor().scl(speed); //вектор скорости
 
         angle.set(tmp);
         //System.out.println(angle.angle());
-
-        if (position.dst(dst) > speed * dt){
-            position.mulAdd(tmp, dt);
-        }else {
-            position.set(dst);
-        }
     }
 
     @Override

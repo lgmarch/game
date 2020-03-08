@@ -11,6 +11,7 @@ public abstract class GameCharacter {
     protected TextureRegion textureHp;  //Показатель здоровья
 
     protected Vector2 position;
+    protected Vector2 dst; //Точка, к которой двигаемся
     protected Vector2 tmp;
 
     protected float lifeTime;
@@ -21,6 +22,7 @@ public abstract class GameCharacter {
         this.gameScreen = gameScreen;
         this.textureHp = Assets.getInstance().getAtlas().findRegion("hp");
         this.tmp = new Vector2(0.0f, 0.0f);
+        this.dst = new Vector2(0.0f, 0.0f);
         this.speed = speed;
         this.hpMax = hpMax;
         this.hp = this.hpMax;
@@ -32,6 +34,13 @@ public abstract class GameCharacter {
 
     public void update(float dt) {
         lifeTime += dt;
+
+        tmp.set(dst).sub(position).nor().scl(speed); //вектор скорости
+        if (position.dst(dst) > speed * dt){
+            position.mulAdd(tmp, dt);
+        }else {
+            position.set(dst);
+        }
     }
 
     public boolean takeDamage(int amount) {
