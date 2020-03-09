@@ -18,7 +18,7 @@ public class Hero extends GameCharacter{
         super(gameScreen, 10, 200.0f);
         this.texture = Assets.getInstance().getAtlas().findRegion("pig1");
         this.texturePointer = Assets.getInstance().getAtlas().findRegion("pointer");
-        this.position = new Vector2(100, 100);
+        this.changePosition(100.0f, 100.0f);
         this.dst.set(position);
         this.strBuilder = new StringBuilder();
 

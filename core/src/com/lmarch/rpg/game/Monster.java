@@ -10,7 +10,7 @@ public class Monster extends GameCharacter{
     public Monster(GameScreen gameScreen){
         super(gameScreen, 20, 100.0f);
         this.texture = Assets.getInstance().getAtlas().findRegion("knight");
-        this.position = new Vector2(800, 300);
+        this.changePosition(800.0f, 300.0f);
     }
 
     @Override
@@ -21,8 +21,8 @@ public class Monster extends GameCharacter{
 
     public void render(SpriteBatch batch){ //Прорисовка
         batch.setColor(1, 0 , 0, 1);
-        batch.draw(texture, position.x - 32, position.y - 32,
-                32, 32, 64,64, 1, 1, 0);
+        batch.draw(texture, position.x - 30, position.y - 30,
+                30, 30, 60,60, 1, 1, 0);
         batch.setColor(1, 1 , 1, 1);
         batch.draw(textureHp, position.x - 35, position.y + 35, 60 * ((float) hp / hpMax), 8);
     }

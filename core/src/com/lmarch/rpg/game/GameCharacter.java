@@ -2,6 +2,7 @@ package com.lmarch.rpg.game;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Vector2;
 
 public abstract class GameCharacter {
@@ -14,6 +15,8 @@ public abstract class GameCharacter {
     protected Vector2 dst; //Точка, к которой двигаемся
     protected Vector2 tmp;
 
+    protected Circle area; //окружности под ногами
+
     protected float lifeTime;
     protected float speed;
     protected int hp, hpMax;
@@ -23,13 +26,19 @@ public abstract class GameCharacter {
         this.textureHp = Assets.getInstance().getAtlas().findRegion("hp");
         this.tmp = new Vector2(0.0f, 0.0f);
         this.dst = new Vector2(0.0f, 0.0f);
-        this.speed = speed;
+        this.position = new Vector2(0.0f, 0.0f);
+        this.area = new Circle(0.0f, 0.0f, 15);
         this.hpMax = hpMax;
         this.hp = this.hpMax;
+        this.speed = speed;
     }
 
     public Vector2 getPosition() {
         return position;
+    }
+
+    public Circle getArea() {
+        return area;
     }
 
     public void update(float dt) {
@@ -41,6 +50,7 @@ public abstract class GameCharacter {
         }else {
             position.set(dst);
         }
+        area.setPosition(position.x, position.y - 20);
     }
 
     public boolean takeDamage(int amount) {
@@ -55,4 +65,13 @@ public abstract class GameCharacter {
     public abstract void onDeath();
 
     public abstract void render(SpriteBatch batch);
+
+    public void changePosition(float x, float y){
+        position.set(x, y);
+        area.setPosition(x, y - 20);
+    }
+
+    public void changePosition(Vector2 newPosition){
+        changePosition(newPosition.x, newPosition.y);
+    }
 }
