@@ -4,14 +4,13 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
 public class GameScreen extends AbstractScreen {
     private BitmapFont font24;
-    private TextureRegion textureGrass;
     private ProjectilesController projectilesController;
+    private Map map;
     private Hero hero;
     private Monster monster;
     private Vector2 tmp, tmp2;
@@ -33,7 +32,7 @@ public class GameScreen extends AbstractScreen {
         this.projectilesController = new ProjectilesController();
         this.hero = new Hero(this);
         this.monster = new Monster(this);
-        this.textureGrass = Assets.getInstance().getAtlas().findRegion("grass");
+        this.map = new Map();
         this.font24 = Assets.getInstance().getAssetManager().get("fonts/font24.ttf");
         this.tmp = new Vector2(0, 0);
         this.tmp2 = new Vector2(0, 0);
@@ -48,11 +47,7 @@ public class GameScreen extends AbstractScreen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         batch.begin();
-        for (int i = 0; i < 16; i++) {
-            for (int j = 0; j < 9; j++) {
-                batch.draw(textureGrass, i * 80, j * 80);
-            }
-        }
+        map.render(batch);
         hero.render(batch);
         monster.render(batch);
         projectilesController.render(batch);
