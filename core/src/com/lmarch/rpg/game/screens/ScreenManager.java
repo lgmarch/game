@@ -1,7 +1,9 @@
-package com.lmarch.rpg.game;
+package com.lmarch.rpg.game.screens;
 
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.lmarch.rpg.game.GeekRpgGame;
+import com.lmarch.rpg.game.screens.utils.Assets;
 
 public class ScreenManager {
     public enum ScreenType {

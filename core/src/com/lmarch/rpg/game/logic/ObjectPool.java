@@ -1,4 +1,4 @@
-package com.lmarch.rpg.game;
+package com.lmarch.rpg.game.logic;
 
 import java.util.ArrayList;
 import java.util.List;

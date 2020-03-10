@@ -1,8 +1,8 @@
-package com.lmarch.rpg.game;
+package com.lmarch.rpg.game.logic;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.lmarch.rpg.game.screens.utils.Assets;
 
 public class ProjectilesController extends ObjectPool<Projectile>{
     private TextureRegion projectileTextureRegion;
@@ -23,7 +23,7 @@ public class ProjectilesController extends ObjectPool<Projectile>{
     
     public void render(SpriteBatch batch){
         for (int i = 0; i < getActiveList().size(); i++) {
-            getActiveList().get(i).render(batch);
+            getActiveList().get(i).render(batch, null);
         }
     }
 

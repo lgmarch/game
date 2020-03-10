@@ -1,4 +1,4 @@
-package com.lmarch.rpg.game;
+package com.lmarch.rpg.game.screens.utils;
 
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.FileHandleResolver;
@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGeneratorLoader;
 import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
+import com.lmarch.rpg.game.screens.ScreenManager;
 
 //Глобальный менеджер ресурсов
 public class Assets {
