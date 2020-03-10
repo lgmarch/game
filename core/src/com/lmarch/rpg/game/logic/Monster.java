@@ -8,9 +8,11 @@ import com.lmarch.rpg.game.screens.utils.Assets;
 
 public class Monster extends GameCharacter{
     private float attackTime;
+    protected Vector2 trackedPositionHero; //Отслеживаемая позиция Героя
 
     public Monster(GameController gameController){
         super(gameController, 20, 100.0f);
+        this.trackedPositionHero = new Vector2(0.0f, 0.0f); //Куда бежать за героем
         this.texture = Assets.getInstance().getAtlas().findRegion("knight");
         this.changePosition(800.0f, 300.0f);
     }
@@ -34,13 +36,22 @@ public class Monster extends GameCharacter{
     public void update(float dt){
         super.update(dt);
 
-        dst.set(gc.getHero().getPosition());
         if (this.position.dst(gc.getHero().getPosition()) < 40){
             attackTime += dt;
             if (attackTime > 0.3f) {
                 attackTime = 0.0f;
                 gc.getHero().takeDamage(1);
             }
+        }
+
+        if (gc.getHero().getArea().overlaps(this.getAttackCircle())) { //Если Герой попал в круг атаки
+            this.dst.set(gc.getHero().getPosition()); //Бежим к герою
+            trackedPositionHero.set(gc.getHero().getPosition()); //Запоминаем позицию Героя
+            return;
+        }
+        if (this.position.epsilonEquals(this.trackedPositionHero, 0.01f)) { //Добежали до точки, где был Герой
+            this.dst.set(MathUtils.random(0, 1280), MathUtils.random(0, 720)); //бежим в случайную точку
+            trackedPositionHero.set(this.dst); //Запоминаем эту позицию
         }
     }
 
