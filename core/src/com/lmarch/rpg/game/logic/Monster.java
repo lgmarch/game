@@ -6,21 +6,29 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.lmarch.rpg.game.screens.utils.Assets;
 
-public class Monster extends GameCharacter{
+public class Monster extends GameCharacter implements Poolable {
     private float attackTime;
+    private boolean active;
     protected Vector2 trackedPositionHero; //Отслеживаемая позиция Героя
 
     public Monster(GameController gameController){
-        super(gameController, 20, 100.0f);
+        super(gameController, 20, 50.0f);
         this.trackedPositionHero = new Vector2(0.0f, 0.0f); //Куда бежать за героем
         this.texture = Assets.getInstance().getAtlas().findRegion("knight");
-        this.changePosition(800.0f, 300.0f);
+        this.changePosition(0.0f, 0.0f);
+        this.active = true;
+    }
+
+    public void setup(){
+        this.active = true;
     }
 
     @Override
     public void onDeath() {
+        this.active = false;
         this.position.set(MathUtils.random(0, 1280), MathUtils.random(0, 720));
         this.hp = this.hpMax;
+        this.speed = MathUtils.random(40, 100);
     }
 
     @Override
@@ -57,5 +65,10 @@ public class Monster extends GameCharacter{
 
     public Vector2 getPosition() {
         return position;
+    }
+
+    @Override
+    public boolean isActive() {
+        return active;
     }
 }

@@ -85,9 +85,9 @@ public abstract class GameCharacter implements MapElement {
     }
 
     public boolean takeDamage(int amount) {
-        hp -= amount;
-        if (hp <= 0) {
-            onDeath();
+        this.hp -= amount;
+        if (this.hp <= 0) {
+            this.onDeath();
             return true;
         }
         return false;

@@ -16,6 +16,10 @@ public abstract class ObjectPool <T extends Poolable> {
         return activeList;
     }
 
+    public List<T> getFreeList() {
+        return freeList;
+    }
+
     //Обход ограничения дженерика
     protected abstract T newObject();
 
@@ -27,8 +31,15 @@ public abstract class ObjectPool <T extends Poolable> {
         if (freeList.size() == 0){
             freeList.add(newObject());
         }
+        //Пыталась достать тип дженерика (с помощью черной магии...)
+//        T temp = freeList.remove(freeList.size() - 1);
+//        ParameterizedType t = (ParameterizedType)temp.getClass().getGenericSuperclass();
+//        Class<?> cls = (Class<?>) t.getActualTypeArguments()[0];
+//        System.out.println("*********** " + cls);
+
         T temp = freeList.remove(freeList.size() - 1);
         activeList.add(temp);
+
         return temp;
     }
 

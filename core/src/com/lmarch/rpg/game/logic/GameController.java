@@ -4,22 +4,18 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
 /**
- * Считает только логику игры. Вся прорисовка в WorldRenderer
+ * Считает только общую логику игры. Вся прорисовка в WorldRenderer
  * Теперь отрисовка не перемешена с update()
  */
 public class GameController {
     private ProjectilesController projectilesController;
+    private MonsterController monsterController;
     private Map map;
     private Hero hero;
-    private Monster monster;
     private Vector2 tmp, tmp2;
 
     public Hero getHero() {
         return hero;
-    }
-
-    public Monster getMonster() {
-        return monster;
     }
 
     public Map getMap() {
@@ -30,10 +26,14 @@ public class GameController {
         return projectilesController;
     }
 
+    public MonsterController getMonsterController() {
+        return monsterController;
+    }
+
     public GameController() {
         this.projectilesController = new ProjectilesController();
+        this.monsterController = new MonsterController(this);
         this.hero = new Hero(this);
-        this.monster = new Monster(this);
         this.map = new Map();
         this.tmp = new Vector2(0, 0);
         this.tmp2 = new Vector2(0, 0);
@@ -41,10 +41,12 @@ public class GameController {
 
     public void update(float dt){
         hero.update(dt);
-        monster.update(dt);
+        monsterController.update(dt);
 
         checkCollisions();
-        collideUnits(hero, monster);
+        //Не вижу смысла в переборе всех объектов, надо заполнять,
+        //например, карту позиций объектов и для каждого объекта брать из нее ближайшие координаты на проверку пересечений
+        //collideUnits(hero, monster);
         projectilesController.update(dt);
     }
 
@@ -74,10 +76,13 @@ public class GameController {
                 p.deactivate();
                 continue;
             }
-            if (p.getPosition().dst(monster.getPosition()) < 24) {
-                p.deactivate();
-                if (monster.takeDamage(1)){
-                    hero.addCoins(MathUtils.random(1, 10));
+            for (Monster o : monsterController.getActiveList()) {
+                if (p.getPosition().dst(o.getPosition()) < 24) {
+                    p.deactivate();
+                    if (o.takeDamage(1)){
+                        hero.addCoins(MathUtils.random(1, 10));
+                        o.onDeath();
+                    }
                 }
             }
         }
