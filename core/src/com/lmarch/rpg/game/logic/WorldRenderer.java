@@ -31,7 +31,9 @@ public class WorldRenderer {
             drawables[i].clear();
         }
         drawables[gc.getHero().getCellY()].add(gc.getHero());
-        drawables[gc.getMonster().getCellY()].add(gc.getMonster());
+        for (Monster monster : gc.getMonsterController().getActiveList()) {
+            drawables[monster.getCellY()].add(monster);
+        }
         for (int i = 0; i < gc.getProjectilesController().getActiveList().size(); i++) {
             Projectile p = gc.getProjectilesController().getActiveList().get(i);
             drawables[p.getCellY()].add(p);
