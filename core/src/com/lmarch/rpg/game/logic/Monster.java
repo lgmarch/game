@@ -23,11 +23,13 @@ public class Monster extends GameCharacter implements Poolable {
 
         this.position.set(MathUtils.random(0, 1280), MathUtils.random(0, 720));
         this.speed = MathUtils.random(40, 100);
+        hpMax = 20;
+        hp = hpMax;
     }
 
     @Override
     public void onDeath() {
-        this.hp = hpMax;
+        //super.onDeath();
     }
 
     @Override
@@ -53,10 +55,11 @@ public class Monster extends GameCharacter implements Poolable {
             }
             stateTimer = MathUtils.random(2.0f, 5.0f);
         }
+
         if (this.position.dst(gc.getHero().getPosition()) < visionRadius) {
             state = State.ATTACK;
             target = gc.getHero();
-            stateTimer = 5.0f;
+            stateTimer = 10.0f;
         }
 
         //Преследование героя

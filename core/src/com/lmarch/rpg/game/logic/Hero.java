@@ -45,16 +45,27 @@ public class Hero extends GameCharacter{
         super.update(dt);
 
         if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)){
+            for (int i = 0; i < gc.getMonstersController().getActiveList().size(); i++) {
+                Monster m = gc.getMonstersController().getActiveList().get(i);
+                if (m.getPosition().dst(Gdx.input.getX(), 720.0f - Gdx.input.getY()) < 30.0f) {
+                    state = State.ATTACK;
+                    target = m;
+                    return;
+                }
+            }
             dst.set(Gdx.input.getX(), 720 - Gdx.input.getY());
+            state = State.MOVE;
+            target = null;
         }
-        if (Gdx.input.isButtonJustPressed(Input.Buttons.RIGHT)){
-            gc.getProjectilesController().setup(position.x, position.y, Gdx.input.getX(), 720 - Gdx.input.getY());
-        }
+//        if (Gdx.input.isButtonJustPressed(Input.Buttons.RIGHT)){
+//            gc.getProjectilesController().setup(position.x, position.y, Gdx.input.getX(), 720 - Gdx.input.getY());
+//        }
         //System.out.println(angle.angle());
     }
 
     @Override
     public void onDeath() {
+        //super.onDeath();
         coins = 0;
         hp = hpMax;
     }

@@ -21,7 +21,7 @@ public class MonstersController extends ObjectPool<Monster>{
     public void update(float dt){
         innerTimer += dt;
 
-        if (innerTimer > spawnPeriod) {  //10 seconds
+        if (innerTimer > spawnPeriod) {  //30 seconds
             innerTimer = 0.0f;
             getActiveElement().setup();
         }
