@@ -1,11 +1,16 @@
 package com.lmarch.rpg.game.logic;
 
-public class MonsterController extends ObjectPool<Monster>{
+public class MonstersController extends ObjectPool<Monster>{
     private GameController gameController;
-    private float frequencyAdventMonster;
+    private float innerTimer;
+    private float spawnPeriod;
 
-    public MonsterController(GameController gameController) {
+    public MonstersController(GameController gameController, int initialCount) {
         this.gameController = gameController;
+        this.spawnPeriod = 10.0f;
+        for (int i = 0; i < initialCount; i++) {
+            getActiveElement().setup();
+        }
     }
 
     @Override
@@ -14,10 +19,10 @@ public class MonsterController extends ObjectPool<Monster>{
     }
 
     public void update(float dt){
-        frequencyAdventMonster += dt;
+        innerTimer += dt;
 
-        if (frequencyAdventMonster > 10.0f) {
-            frequencyAdventMonster = 0.0f;
+        if (innerTimer > spawnPeriod) {  //10 seconds
+            innerTimer = 0.0f;
             getActiveElement().setup();
         }
 

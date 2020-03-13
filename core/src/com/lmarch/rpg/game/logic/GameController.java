@@ -9,7 +9,7 @@ import com.badlogic.gdx.math.Vector2;
  */
 public class GameController {
     private ProjectilesController projectilesController;
-    private MonsterController monsterController;
+    private MonstersController monstersController;
     private Map map;
     private Hero hero;
     private Vector2 tmp, tmp2;
@@ -26,27 +26,24 @@ public class GameController {
         return projectilesController;
     }
 
-    public MonsterController getMonsterController() {
-        return monsterController;
+    public MonstersController getMonstersController() {
+        return monstersController;
     }
 
     public GameController() {
         this.projectilesController = new ProjectilesController();
-        this.monsterController = new MonsterController(this);
         this.hero = new Hero(this);
         this.map = new Map();
+        this.monstersController = new MonstersController(this, 5);
         this.tmp = new Vector2(0, 0);
         this.tmp2 = new Vector2(0, 0);
     }
 
     public void update(float dt){
         hero.update(dt);
-        monsterController.update(dt);
+        monstersController.update(dt);
 
         checkCollisions();
-        //Не вижу смысла в переборе всех объектов, надо заполнять,
-        //например, карту позиций объектов и для каждого объекта брать из нее ближайшие координаты на проверку пересечений
-        //collideUnits(hero, monster);
         projectilesController.update(dt);
     }
 
@@ -69,19 +66,30 @@ public class GameController {
     }
 
     public void checkCollisions(){
+        //Проверка столкновений
+        for (int i = 0; i < monstersController.getActiveList().size(); i++) {
+            Monster m = monstersController.getActiveList().get(i);
+            collideUnits(hero, m);
+        }
+        for (int i = 0; i < monstersController.getActiveList().size(); i++) {
+            Monster m = monstersController.getActiveList().get(i);
+            for (int j = 0; j < monstersController.getActiveList().size(); j++) {
+                Monster m2 = monstersController.getActiveList().get(i);
+                collideUnits(m, m2);
+            }
+        }
+
         for (int i = 0; i < projectilesController.getActiveList().size(); i++) {
-            //Ссылка на один из активных снарядов
             Projectile p = projectilesController.getActiveList().get(i);
             if (!map.isAirPassable(p.getCellX(), p.getCellY())) { //Проверка прохождения ч/з стену
                 p.deactivate();
                 continue;
             }
-            for (Monster o : monsterController.getActiveList()) {
+            for (Monster o : monstersController.getActiveList()) {
                 if (p.getPosition().dst(o.getPosition()) < 24) {
                     p.deactivate();
                     if (o.takeDamage(1)){
                         hero.addCoins(MathUtils.random(1, 10));
-                        o.onDeath();
                     }
                 }
             }

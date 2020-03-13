@@ -8,27 +8,27 @@ import com.lmarch.rpg.game.screens.utils.Assets;
 
 public class Monster extends GameCharacter implements Poolable {
     private float attackTime;
-    private boolean active;
 
     public Monster(GameController gameController){
         super(gameController, 20, 50.0f);
         this.texture = Assets.getInstance().getAtlas().findRegion("knight");
-        this.changePosition(0.0f, 0.0f);
+        this.changePosition(MathUtils.random(0, 1280), MathUtils.random(0, 720));
         this.dst.set(this.position);
         this.visionRadius = 100.0f;
-        this.active = true;
     }
 
     public void setup(){
-        this.active = true;
+        do {
+            changePosition(MathUtils.random(0, 1280), MathUtils.random(0, 720));
+        } while (!gc.getMap().isGroundPassable(position));
+
+        this.position.set(MathUtils.random(0, 1280), MathUtils.random(0, 720));
+        this.speed = MathUtils.random(40, 100);
     }
 
     @Override
     public void onDeath() {
-        this.active = false;
-        this.position.set(MathUtils.random(0, 1280), MathUtils.random(0, 720));
-        this.hp = this.hpMax;
-        this.speed = MathUtils.random(40, 100);
+        this.hp = hpMax;
     }
 
     @Override
@@ -67,6 +67,6 @@ public class Monster extends GameCharacter implements Poolable {
 
     @Override
     public boolean isActive() {
-        return active;
+        return hp > 0;
     }
 }
