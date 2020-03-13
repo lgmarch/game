@@ -6,6 +6,14 @@ import com.badlogic.gdx.math.Vector2;
 import com.lmarch.rpg.game.screens.utils.Assets;
 
 public abstract class GameCharacter implements MapElement {
+    public enum State {
+        IDLE, MOVE, ATTACK, PURSUIT
+    }
+
+    protected State state;
+    protected float stateTimer;
+    protected GameCharacter target;
+
     protected GameController gc;
 
     protected TextureRegion texture;
@@ -18,6 +26,7 @@ public abstract class GameCharacter implements MapElement {
 
     protected Circle area; //окружности под ногами
     protected float visionRadius; //Дальность просмотра
+    private float attackTime;
 
     protected float lifeTime;
     protected float speed;
@@ -42,6 +51,9 @@ public abstract class GameCharacter implements MapElement {
         this.hpMax = hpMax;
         this.hp = this.hpMax;
         this.speed = speed;
+        this.state = State.IDLE;
+        this.stateTimer = 1.0f;
+        this.target = null;
     }
 
     public Vector2 getPosition() {
@@ -55,6 +67,9 @@ public abstract class GameCharacter implements MapElement {
     public void update(float dt) {
         lifeTime += dt;
 
+        if (state == State.ATTACK) {
+            dst.set(target.getPosition());
+        }
         tmp.set(dst).sub(position).nor().scl(speed); //вектор скорости
         tmp2.set(position); //Запомнили позицию
         if (position.dst(dst) > speed * dt){
@@ -75,6 +90,15 @@ public abstract class GameCharacter implements MapElement {
                 }
             }
         }
+        //Нанесение урона противнику
+        if (state == State.ATTACK && this.position.dst(gc.getHero().getPosition()) < 40){
+            attackTime += dt;
+            if (attackTime > 0.3f) {
+                attackTime = 0.0f;
+                gc.getHero().takeDamage(1);
+            }
+        }
+
         area.setPosition(position.x, position.y - 20);
     }
 
