@@ -100,7 +100,7 @@ public class GameController {
             }
             if (p.getPosition().dst(hero.getPosition()) < 24 && p.getOwner() != hero) {
                 p.deactivate();
-                hero.takeDamage(1);
+                hero.takeDamage(p.getOwner(), 1);
             }
             for (Monster o : monstersController.getActiveList()) {
                 if (p.getOwner() == o) {
@@ -108,7 +108,7 @@ public class GameController {
                 }
                 if (p.getPosition().dst(o.getPosition()) < 24) {
                     p.deactivate();
-                    if (o.takeDamage(1)){
+                    if (o.takeDamage(p.getOwner(), 1)){
                         hero.addCoins(MathUtils.random(1, 10));
                     }
                 }

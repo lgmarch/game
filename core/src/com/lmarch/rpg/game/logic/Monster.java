@@ -8,6 +8,15 @@ import com.lmarch.rpg.game.screens.utils.Assets;
 
 public class Monster extends GameCharacter implements Poolable {
 
+    public Vector2 getPosition() {
+        return position;
+    }
+
+    @Override
+    public boolean isActive() {
+        return hp > 0;
+    }
+
     public Monster(GameController gameController){
         super(gameController, 20, 50.0f);
         this.texture = Assets.getInstance().getAtlas().findRegion("knight");
@@ -15,7 +24,7 @@ public class Monster extends GameCharacter implements Poolable {
         this.dst.set(this.position);
         this.visionRadius = 160.0f;
         this.type = Type.RANGED;
-        this.attackRadius = 150.0f;
+        this.attackRadius = 100.0f;
     }
 
     public void setup(){
@@ -24,7 +33,7 @@ public class Monster extends GameCharacter implements Poolable {
         } while (!gc.getMap().isGroundPassable(position));
 
         this.position.set(MathUtils.random(0, 1280), MathUtils.random(0, 720));
-        this.speed = MathUtils.random(40, 100);
+        this.speed = MathUtils.random(100, 150);
         hpMax = 20;
         hp = hpMax;
     }
@@ -58,10 +67,17 @@ public class Monster extends GameCharacter implements Poolable {
             stateTimer = MathUtils.random(2.0f, 5.0f);
         }
 
-        if (this.position.dst(gc.getHero().getPosition()) < visionRadius) {
+        if (state != State.RETREAT && this.position.dst(gc.getHero().getPosition()) < visionRadius) {
             state = State.ATTACK;
             target = gc.getHero();
             stateTimer = 10.0f;
+        }
+        //Если здоровье меньше, чем..., то монстр убегает
+        if (hp < hpMax * 0.2 && state != State.RETREAT) {
+            state = State.RETREAT;
+            stateTimer = 1.0f;
+            dst.set(position.x + MathUtils.random(100, 200) * Math.signum(position.x - lastAttacker.position.x),
+                    position.y + MathUtils.random(100, 200) * Math.signum(position.y - lastAttacker.position.y));
         }
 
         //Преследование героя
@@ -71,14 +87,5 @@ public class Monster extends GameCharacter implements Poolable {
 //        if (position.dst(dst) < 2.0f) {
 //            dst.set(MathUtils.random(0, 1280), MathUtils.random(0, 720));
 //        }
-    }
-
-    public Vector2 getPosition() {
-        return position;
-    }
-
-    @Override
-    public boolean isActive() {
-        return hp > 0;
     }
 }

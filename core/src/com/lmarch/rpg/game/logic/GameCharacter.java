@@ -24,6 +24,7 @@ public abstract class GameCharacter implements MapElement {
     protected float stateTimer;
     protected float attackRadius; //Радиус атаки оружия
 
+    protected GameCharacter lastAttacker;
     protected GameCharacter target;
 
     protected Vector2 position;
@@ -45,6 +46,15 @@ public abstract class GameCharacter implements MapElement {
 
     public int getCellY(){
         return (int) (position.y - 20) / 80;
+    }
+
+    public void changePosition(float x, float y){
+        position.set(x, y);
+        area.setPosition(x, y - 20);
+    }
+
+    public void changePosition(Vector2 newPosition){
+        changePosition(newPosition.x, newPosition.y);
     }
 
     public boolean isAlive() {
@@ -81,7 +91,7 @@ public abstract class GameCharacter implements MapElement {
         if (state == State.ATTACK) {
             dst.set(target.getPosition());
         }
-        if (state == State.MOVE ||
+        if (state == State.MOVE || state == State.RETREAT ||
                 (state == State.ATTACK && this.position.dst(target.getPosition()) > attackRadius - 5)) {
             moveToDst(dt);
         }
@@ -91,7 +101,7 @@ public abstract class GameCharacter implements MapElement {
             if (attackTime > 0.3f) {
                 attackTime = 0.0f;
                 if (type == Type.MELEE) {
-                    target.takeDamage(1);
+                    target.takeDamage(this, 1);
                 }
                 if (type == Type.RANGED) {
                     gc.getProjectilesController().setup(this, position.x, position.y, target.getPosition().x, target.getPosition().y);
@@ -99,6 +109,7 @@ public abstract class GameCharacter implements MapElement {
             }
         }
         area.setPosition(position.x, position.y - 20);
+        checkBounds();
     }
 
     public void moveToDst(float dt) {
@@ -124,7 +135,25 @@ public abstract class GameCharacter implements MapElement {
         }
     }
 
-    public boolean takeDamage(int amount) {
+    public void checkBounds() {
+        //Чтобы персонаж не убежал за экран
+        if (position.x < 0.1f) {
+            position.x = 0.1f;
+        }
+        if (position.x > 1279.0f) {
+            position.x = 1279.0f;
+        }
+        if (position.y < 0.1f) {
+            position.y = 0.1f;
+        }
+        if (position.y > 720.0f) {
+            position.y = 720.0f;
+        }
+    }
+
+    public boolean takeDamage(GameCharacter attacker, int amount) {
+        lastAttacker = attacker;
+
         this.hp -= amount;
         if (hp <= 0) {
             onDeath();
@@ -145,14 +174,5 @@ public abstract class GameCharacter implements MapElement {
                 gameCharacter.resetAttackState();
             }
         }
-    }
-
-    public void changePosition(float x, float y){
-        position.set(x, y);
-        area.setPosition(x, y - 20);
-    }
-
-    public void changePosition(Vector2 newPosition){
-        changePosition(newPosition.x, newPosition.y);
     }
 }

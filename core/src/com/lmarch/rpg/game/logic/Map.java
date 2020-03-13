@@ -20,11 +20,14 @@ public class Map {
     }
 
     public boolean isGroundPassable(int cellX, int cellY){
+        if (cellX < 0 || cellY < 0 || cellX >= MAP_CELLS_WIDTH || cellY >= MAP_CELLS_HEIGHT) {
+            return false;
+        }
         return data[cellX][cellY]  == 0;
     }
 
     public boolean isGroundPassable(Vector2 position){
-        return data[(int) position.x / 80][(int) position.y / 80]  == 0;
+        return isGroundPassable((int) (position.x / 80), (int) (position.y / 80));
     }
 
     public Map() {
