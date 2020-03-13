@@ -3,6 +3,9 @@ package com.lmarch.rpg.game.logic;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Считает только общую логику игры. Вся прорисовка в WorldRenderer
  * Теперь отрисовка не перемешена с update()
@@ -10,6 +13,7 @@ import com.badlogic.gdx.math.Vector2;
 public class GameController {
     private ProjectilesController projectilesController;
     private MonstersController monstersController;
+    private List<GameCharacter> allCharacters;
     private Map map;
     private Hero hero;
     private Vector2 tmp, tmp2;
@@ -22,6 +26,10 @@ public class GameController {
         return map;
     }
 
+    public List<GameCharacter> getAllCharacters() {
+        return allCharacters;
+    }
+
     public ProjectilesController getProjectilesController() {
         return projectilesController;
     }
@@ -32,6 +40,7 @@ public class GameController {
 
     public GameController() {
         this.projectilesController = new ProjectilesController();
+        this.allCharacters = new ArrayList<>();
         this.hero = new Hero(this);
         this.map = new Map();
         this.monstersController = new MonstersController(this, 5);
@@ -40,6 +49,10 @@ public class GameController {
     }
 
     public void update(float dt){
+        allCharacters.clear();
+        allCharacters.add(hero);
+        allCharacters.addAll(monstersController.getActiveList());
+
         hero.update(dt);
         monstersController.update(dt);
 
@@ -85,7 +98,14 @@ public class GameController {
                 p.deactivate();
                 continue;
             }
+            if (p.getPosition().dst(hero.getPosition()) < 24 && p.getOwner() != hero) {
+                p.deactivate();
+                hero.takeDamage(1);
+            }
             for (Monster o : monstersController.getActiveList()) {
+                if (p.getOwner() == o) {
+                    continue;
+                }
                 if (p.getPosition().dst(o.getPosition()) < 24) {
                     p.deactivate();
                     if (o.takeDamage(1)){

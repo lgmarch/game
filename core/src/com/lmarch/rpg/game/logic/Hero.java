@@ -19,6 +19,8 @@ public class Hero extends GameCharacter{
         this.changePosition(100.0f, 100.0f);
         this.dst.set(position);
         this.strBuilder = new StringBuilder();
+        this.type = Type.RANGED;
+        this.attackRadius = 150.0f;
     }
 
     @Override
@@ -65,7 +67,7 @@ public class Hero extends GameCharacter{
 
     @Override
     public void onDeath() {
-        //super.onDeath();
+        super.onDeath();
         coins = 0;
         hp = hpMax;
     }

@@ -13,7 +13,9 @@ public class Monster extends GameCharacter implements Poolable {
         this.texture = Assets.getInstance().getAtlas().findRegion("knight");
         this.changePosition(MathUtils.random(0, 1280), MathUtils.random(0, 720));
         this.dst.set(this.position);
-        this.visionRadius = 100.0f;
+        this.visionRadius = 160.0f;
+        this.type = Type.RANGED;
+        this.attackRadius = 150.0f;
     }
 
     public void setup(){
@@ -29,7 +31,7 @@ public class Monster extends GameCharacter implements Poolable {
 
     @Override
     public void onDeath() {
-        //super.onDeath();
+        super.onDeath();
     }
 
     @Override

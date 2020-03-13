@@ -10,14 +10,21 @@ public abstract class GameCharacter implements MapElement {
         IDLE, MOVE, ATTACK, PURSUIT, RETREAT
     }
 
-    protected State state;
-    protected float stateTimer;
-    protected GameCharacter target;
+    public enum Type {
+        MELEE, RANGED
+    }
 
     protected GameController gc;
 
     protected TextureRegion texture;
     protected TextureRegion textureHp;  //Показатель здоровья
+
+    protected Type type;
+    protected State state;
+    protected float stateTimer;
+    protected float attackRadius; //Радиус атаки оружия
+
+    protected GameCharacter target;
 
     protected Vector2 position;
     protected Vector2 dst; //Точка, к которой двигаемся
@@ -25,10 +32,10 @@ public abstract class GameCharacter implements MapElement {
     protected Vector2 tmp2;
 
     protected Circle area; //окружности под ногами
-    protected float visionRadius; //Дальность просмотра
-    private float attackTime;
 
     protected float lifeTime;
+    protected float visionRadius; //Дальность просмотра
+    private float attackTime;
     protected float speed;
     protected int hp, hpMax;
 
@@ -38,6 +45,10 @@ public abstract class GameCharacter implements MapElement {
 
     public int getCellY(){
         return (int) (position.y - 20) / 80;
+    }
+
+    public boolean isAlive() {
+        return hp > 0;
     }
 
     public GameCharacter(GameController gameController, int hpMax, float speed) {
@@ -70,15 +81,21 @@ public abstract class GameCharacter implements MapElement {
         if (state == State.ATTACK) {
             dst.set(target.getPosition());
         }
-        if (state == State.MOVE || (state == State.ATTACK && this.position.dst(target.getPosition()) > 35)) {
+        if (state == State.MOVE ||
+                (state == State.ATTACK && this.position.dst(target.getPosition()) > attackRadius - 5)) {
             moveToDst(dt);
         }
         //Нанесение урона противнику
-        if (state == State.ATTACK && this.position.dst(target.getPosition()) < 40){
+        if (state == State.ATTACK && this.position.dst(target.getPosition()) < attackRadius) {
             attackTime += dt;
             if (attackTime > 0.3f) {
                 attackTime = 0.0f;
-                target.takeDamage(1);
+                if (type == Type.MELEE) {
+                    target.takeDamage(1);
+                }
+                if (type == Type.RANGED) {
+                    gc.getProjectilesController().setup(this, position.x, position.y, target.getPosition().x, target.getPosition().y);
+                }
             }
         }
         area.setPosition(position.x, position.y - 20);
@@ -116,7 +133,19 @@ public abstract class GameCharacter implements MapElement {
         return false;
     }
 
-    public abstract void onDeath();
+    public void resetAttackState() {
+        dst.set(position);
+        state = State.IDLE;
+        target = null;
+    }
+
+    public void onDeath() {
+        for (GameCharacter gameCharacter : gc.getAllCharacters()) {
+            if (gameCharacter.target == this) {
+                gameCharacter.resetAttackState();
+            }
+        }
+    }
 
     public void changePosition(float x, float y){
         position.set(x, y);

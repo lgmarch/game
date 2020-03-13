@@ -7,12 +7,17 @@ import com.badlogic.gdx.math.Vector2;
 
 public class Projectile implements Poolable, MapElement{
     private TextureRegion textureRegion;
+    private GameCharacter owner;
     private Vector2 position;
     private Vector2 velocity;
     private boolean active;
 
     public Vector2 getPosition() {
         return position;
+    }
+
+    public GameCharacter getOwner() {
+        return owner;
     }
 
     @Override
@@ -38,8 +43,9 @@ public class Projectile implements Poolable, MapElement{
         this.active = false;
     }
 
-    public void setup(TextureRegion textureRegion, float x, float y, float targetX, float targetY){
+    public void setup(GameCharacter owner, TextureRegion textureRegion, float x, float y, float targetX, float targetY){
         this.textureRegion = textureRegion;
+        this.owner = owner;
         this.position.set(x, y);
         //tmp.set(targetX, targetY).sub(x, y).nor().scl(500.0f);
         this.velocity.set(targetX, targetY).sub(x, y).nor().scl(800.0f);
