@@ -17,7 +17,7 @@ public abstract class GameCharacter implements MapElement {
     protected Vector2 tmp2;
 
     protected Circle area; //окружности под ногами
-    private Circle attackCircle; //Круг атаки
+    protected float visionRadius; //Дальность просмотра
 
     protected float lifeTime;
     protected float speed;
@@ -39,7 +39,6 @@ public abstract class GameCharacter implements MapElement {
         this.dst = new Vector2(0.0f, 0.0f);
         this.position = new Vector2(0.0f, 0.0f);
         this.area = new Circle(0.0f, 0.0f, 15);
-        this.attackCircle = new Circle(0.0f, 0.0f, 200); //Круг действия радара
         this.hpMax = hpMax;
         this.hp = this.hpMax;
         this.speed = speed;
@@ -51,10 +50,6 @@ public abstract class GameCharacter implements MapElement {
 
     public Circle getArea() {
         return area;
-    }
-
-    public Circle getAttackCircle() {
-        return attackCircle;
     }
 
     public void update(float dt) {
@@ -81,7 +76,6 @@ public abstract class GameCharacter implements MapElement {
             }
         }
         area.setPosition(position.x, position.y - 20);
-        attackCircle.setPosition(position.x, position.y - 20);//Перемещаем круг действия радара
     }
 
     public boolean takeDamage(int amount) {
@@ -98,7 +92,6 @@ public abstract class GameCharacter implements MapElement {
     public void changePosition(float x, float y){
         position.set(x, y);
         area.setPosition(x, y - 20);
-        attackCircle.setPosition(x, y - 20);
     }
 
     public void changePosition(Vector2 newPosition){
