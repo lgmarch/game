@@ -3,35 +3,18 @@ package com.lmarch.rpg.game.logic;
 /**
  * Реализация лука
  */
-public class ArrowAction implements WeaponAction{
-    private float attackRadius; //дальность атаки
-    private float damage;       // урон
-    private float attackTime; // скорость атаки
+public class ArrowAction extends Weapons{
 
     @Override
     public void battle() {
 
     }
 
-    public float getAttackRadius() {
-        return attackRadius;
-    }
-
-    public float getAttackTime() {
-        return attackTime;
-    }
-
-    public float getDamage() {
-        return damage;
-    }
-
-    public int getTypeWeapon() {
-        return 1;
-    }
-
     public ArrowAction() {
+        //Радиус выбран не случайно. Он равен радиусу видимости у Монстра. Чтобы Герой с расстояния монстров не валил
         this.attackRadius = 150;
         this.attackTime = 0.2f;
         this.damage = 1;
+        this.typeWeapon = TypeWeapon.ARROW;
     }
 }

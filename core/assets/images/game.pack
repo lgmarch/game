@@ -38,16 +38,37 @@ pig1
   orig: 64, 64
   offset: 0, 0
   index: -1
-knight
+sword
   rotate: false
   xy: 84, 104
   size: 60, 60
   orig: 60, 60
   offset: 0, 0
   index: -1
-arrow
+knight
   rotate: false
   xy: 84, 166
+  size: 60, 60
+  orig: 60, 60
+  offset: 0, 0
+  index: -1
+crossbow
+  rotate: false
+  xy: 146, 104
+  size: 60, 60
+  orig: 60, 60
+  offset: 0, 0
+  index: -1
+axe
+  rotate: false
+  xy: 146, 166
+  size: 60, 60
+  orig: 60, 60
+  offset: 0, 0
+  index: -1
+arrow
+  rotate: false
+  xy: 208, 104
   size: 60, 60
   orig: 60, 60
   offset: 0, 0

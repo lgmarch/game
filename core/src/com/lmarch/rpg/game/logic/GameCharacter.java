@@ -6,7 +6,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.lmarch.rpg.game.screens.utils.Assets;
 
 public abstract class GameCharacter implements MapElement {
-    WeaponAction weaponAction; //Ссылка на интерфейс
 
     public enum State {
         IDLE, MOVE, ATTACK, PURSUIT, RETREAT
@@ -17,14 +16,15 @@ public abstract class GameCharacter implements MapElement {
     }
 
     protected GameController gc;
+    protected WeaponAction weaponAction; //Ссылка на интерфейс
 
     protected TextureRegion texture;
     protected TextureRegion textureHp;  //Показатель здоровья
+    protected TextureRegion textureWeapon; //Показатель оружия
 
     protected Type type;
     protected State state;
     protected float stateTimer;
-    //TODO
     protected float attackRadius; //Радиус атаки оружия
     protected float attackTime; //Период атаки
     protected float damage; //Урон, наносимый оружием
@@ -45,10 +45,6 @@ public abstract class GameCharacter implements MapElement {
 
     public void useWeapon() {
         weaponAction.battle();
-    }
-
-    public void setWeaponAction(WeaponAction weapon) {
-        weaponAction = weapon;
     }
 
     public int getCellX(){
@@ -88,13 +84,28 @@ public abstract class GameCharacter implements MapElement {
         this.target = null;
     }
 
-    public void setWeaponsProperty(){
+    public void setWeaponAction(WeaponAction weaponAction){
+        this.weaponAction = weaponAction;
         this.attackTime = weaponAction.getAttackTime();
         this.attackRadius = weaponAction.getAttackRadius();
         this.damage = weaponAction.getDamage();
         if (weaponAction.getAttackRadius() == 1) {
             this.type = Type.MELEE;}
         else {this.type = Type.RANGED;}
+        setTextureWeapon(weaponAction);
+    }
+
+    private void setTextureWeapon(WeaponAction weaponAction) {
+        //выбор текстуры для оружия
+        if (weaponAction.getTypeWeapon() == Weapons.TypeWeapon.ARROW) {
+            this.textureWeapon = Assets.getInstance().getAtlas().findRegion("crossbow");
+        }
+        if (weaponAction.getTypeWeapon() == Weapons.TypeWeapon.AXE) {
+            this.textureWeapon = Assets.getInstance().getAtlas().findRegion("axe");
+        }
+        if (weaponAction.getTypeWeapon() == Weapons.TypeWeapon.SWORD) {
+            this.textureWeapon = Assets.getInstance().getAtlas().findRegion("sword");
+        }
     }
 
     public Vector2 getPosition() {

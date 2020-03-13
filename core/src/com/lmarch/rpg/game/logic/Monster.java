@@ -19,8 +19,8 @@ public class Monster extends GameCharacter implements Poolable {
 
     public Monster(GameController gameController){
         super(gameController, 20, 50.0f);
-        weaponAction = new AxeAction();  //Изначально у монстра только топор
-        setWeaponsProperty();
+        //weaponAction = new AxeAction();  //Изначально у монстра только топор
+        setWeaponAction(new AxeAction());
         this.texture = Assets.getInstance().getAtlas().findRegion("knight");
         this.changePosition(MathUtils.random(0, 1280), MathUtils.random(0, 720));
         this.dst.set(this.position);
@@ -50,6 +50,7 @@ public class Monster extends GameCharacter implements Poolable {
                 30, 30, 60,60, 1, 1, 0);
         batch.setColor(1, 1 , 1, 1);
         batch.draw(textureHp, position.x - 35, position.y + 35, 60 * ((float) hp / hpMax), 8);
+        batch.draw(textureWeapon, position.x - 35, position.y + 15, 15, 15);
     }
 
     public void update(float dt){
