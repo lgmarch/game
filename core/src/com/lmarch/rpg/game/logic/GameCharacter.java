@@ -7,7 +7,7 @@ import com.lmarch.rpg.game.screens.utils.Assets;
 
 public abstract class GameCharacter implements MapElement {
     public enum State {
-        IDLE, MOVE, ATTACK, PURSUIT
+        IDLE, MOVE, ATTACK, PURSUIT, RETREAT
     }
 
     protected State state;
@@ -70,14 +70,29 @@ public abstract class GameCharacter implements MapElement {
         if (state == State.ATTACK) {
             dst.set(target.getPosition());
         }
+        if (state == State.MOVE || (state == State.ATTACK && this.position.dst(target.getPosition()) > 35)) {
+            moveToDst(dt);
+        }
+        //Нанесение урона противнику
+        if (state == State.ATTACK && this.position.dst(target.getPosition()) < 40){
+            attackTime += dt;
+            if (attackTime > 0.3f) {
+                attackTime = 0.0f;
+                target.takeDamage(1);
+            }
+        }
+        area.setPosition(position.x, position.y - 20);
+    }
+
+    public void moveToDst(float dt) {
         tmp.set(dst).sub(position).nor().scl(speed); //вектор скорости
         tmp2.set(position); //Запомнили позицию
         if (position.dst(dst) > speed * dt){
             position.mulAdd(tmp, dt);
         }else {
-            position.set(dst);
+            position.set(dst); //Добрались до dst
+            state = State.IDLE;
         }
-
         //Обход стен
         if (!gc.getMap().isGroundPassable(getCellX(), getCellY())) {
             position.set(tmp2);
@@ -90,22 +105,12 @@ public abstract class GameCharacter implements MapElement {
                 }
             }
         }
-        //Нанесение урона противнику
-        if (state == State.ATTACK && this.position.dst(gc.getHero().getPosition()) < 40){
-            attackTime += dt;
-            if (attackTime > 0.3f) {
-                attackTime = 0.0f;
-                gc.getHero().takeDamage(1);
-            }
-        }
-
-        area.setPosition(position.x, position.y - 20);
     }
 
     public boolean takeDamage(int amount) {
         this.hp -= amount;
-        if (this.hp <= 0) {
-            this.onDeath();
+        if (hp <= 0) {
+            onDeath();
             return true;
         }
         return false;
