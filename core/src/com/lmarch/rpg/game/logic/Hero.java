@@ -13,14 +13,14 @@ public class Hero extends GameCharacter{
     private StringBuilder strBuilder;
 
     public Hero(GameController gc){
-        super(gc, 10, 200.0f);
+        super(gc, 20, 200.0f);
+        weaponAction = new ArrowAction();  //Изначально у Героя лук
+        setWeaponsProperty();
         this.texture = Assets.getInstance().getAtlas().findRegion("pig1");
         this.texturePointer = Assets.getInstance().getAtlas().findRegion("pointer");
         this.changePosition(100.0f, 100.0f);
         this.dst.set(position);
         this.strBuilder = new StringBuilder();
-        this.type = Type.RANGED;
-        this.attackRadius = 150.0f;
     }
 
     @Override

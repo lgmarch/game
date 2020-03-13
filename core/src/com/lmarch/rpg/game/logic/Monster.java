@@ -19,12 +19,12 @@ public class Monster extends GameCharacter implements Poolable {
 
     public Monster(GameController gameController){
         super(gameController, 20, 50.0f);
+        weaponAction = new AxeAction();  //Изначально у монстра только топор
+        setWeaponsProperty();
         this.texture = Assets.getInstance().getAtlas().findRegion("knight");
         this.changePosition(MathUtils.random(0, 1280), MathUtils.random(0, 720));
         this.dst.set(this.position);
-        this.visionRadius = 160.0f;
-        this.type = Type.RANGED;
-        this.attackRadius = 100.0f;
+        this.visionRadius = 150.0f;
     }
 
     public void setup(){

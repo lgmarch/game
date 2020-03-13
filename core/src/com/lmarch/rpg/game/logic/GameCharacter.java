@@ -6,6 +6,8 @@ import com.badlogic.gdx.math.Vector2;
 import com.lmarch.rpg.game.screens.utils.Assets;
 
 public abstract class GameCharacter implements MapElement {
+    WeaponAction weaponAction; //Ссылка на интерфейс
+
     public enum State {
         IDLE, MOVE, ATTACK, PURSUIT, RETREAT
     }
@@ -22,9 +24,11 @@ public abstract class GameCharacter implements MapElement {
     protected Type type;
     protected State state;
     protected float stateTimer;
+    //TODO
     protected float attackRadius; //Радиус атаки оружия
-
-    protected GameCharacter lastAttacker;
+    protected float attackTime; //Период атаки
+    protected float damage; //Урон, наносимый оружием
+    protected GameCharacter lastAttacker; //последний атакующий
     protected GameCharacter target;
 
     protected Vector2 position;
@@ -36,9 +40,16 @@ public abstract class GameCharacter implements MapElement {
 
     protected float lifeTime;
     protected float visionRadius; //Дальность просмотра
-    private float attackTime;
     protected float speed;
     protected int hp, hpMax;
+
+    public void useWeapon() {
+        weaponAction.battle();
+    }
+
+    public void setWeaponAction(WeaponAction weapon) {
+        weaponAction = weapon;
+    }
 
     public int getCellX(){
         return (int) position.x / 80;
@@ -77,6 +88,15 @@ public abstract class GameCharacter implements MapElement {
         this.target = null;
     }
 
+    public void setWeaponsProperty(){
+        this.attackTime = weaponAction.getAttackTime();
+        this.attackRadius = weaponAction.getAttackRadius();
+        this.damage = weaponAction.getDamage();
+        if (weaponAction.getAttackRadius() == 1) {
+            this.type = Type.MELEE;}
+        else {this.type = Type.RANGED;}
+    }
+
     public Vector2 getPosition() {
         return position;
     }
@@ -97,11 +117,11 @@ public abstract class GameCharacter implements MapElement {
         }
         //Нанесение урона противнику
         if (state == State.ATTACK && this.position.dst(target.getPosition()) < attackRadius) {
-            attackTime += dt;
-            if (attackTime > 0.3f) {
-                attackTime = 0.0f;
+            attackTime -= dt;
+            if (attackTime <= 0.0f) {
+                attackTime = weaponAction.getAttackTime();
                 if (type == Type.MELEE) {
-                    target.takeDamage(this, 1);
+                    target.takeDamage(this);
                 }
                 if (type == Type.RANGED) {
                     gc.getProjectilesController().setup(this, position.x, position.y, target.getPosition().x, target.getPosition().y);
@@ -151,10 +171,10 @@ public abstract class GameCharacter implements MapElement {
         }
     }
 
-    public boolean takeDamage(GameCharacter attacker, int amount) {
+    public boolean takeDamage(GameCharacter attacker) {
         lastAttacker = attacker;
 
-        this.hp -= amount;
+        this.hp -= attacker.damage;
         if (hp <= 0) {
             onDeath();
             return true;
