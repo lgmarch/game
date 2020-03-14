@@ -16,18 +16,21 @@ public abstract class GameCharacter implements MapElement {
     }
 
     protected GameController gc;
-    protected WeaponAction weaponAction; //Ссылка на интерфейс
+    protected WeaponsController wc;
 
     protected TextureRegion texture;
-    protected TextureRegion textureHp;  //Показатель здоровья
-    protected TextureRegion textureWeapon; //Показатель оружия
+    protected TextureRegion textureHp;  //картинка здоровья
+    protected TextureRegion textureWeapon; //рисунок оружия
 
     protected Type type;
     protected State state;
     protected float stateTimer;
+
+    protected WeaponAction weaponAction; //Ссылка на интерфейс
     protected float attackRadius; //Радиус атаки оружия
     protected float attackTime; //Период атаки
     protected float damage; //Урон, наносимый оружием
+
     protected GameCharacter lastAttacker; //последний атакующий
     protected GameCharacter target;
 
@@ -42,10 +45,6 @@ public abstract class GameCharacter implements MapElement {
     protected float visionRadius; //Дальность просмотра
     protected float speed;
     protected int hp, hpMax;
-
-    public void useWeapon() {
-        weaponAction.battle();
-    }
 
     public int getCellX(){
         return (int) position.x / 80;
@@ -64,12 +63,9 @@ public abstract class GameCharacter implements MapElement {
         changePosition(newPosition.x, newPosition.y);
     }
 
-    public boolean isAlive() {
-        return hp > 0;
-    }
-
-    public GameCharacter(GameController gameController, int hpMax, float speed) {
+    public GameCharacter(GameController gameController, WeaponsController weaponsController, int hpMax, float speed) {
         this.gc = gameController;
+        this.wc = weaponsController;
         this.textureHp = Assets.getInstance().getAtlas().findRegion("hp");
         this.tmp = new Vector2(0.0f, 0.0f);
         this.tmp2 = new Vector2(0.0f, 0.0f);
@@ -84,28 +80,38 @@ public abstract class GameCharacter implements MapElement {
         this.target = null;
     }
 
-    public void setWeaponAction(WeaponAction weaponAction){
-        this.weaponAction = weaponAction;
+    public void initWeapon(WeaponAction wc){
+        //Создаем оружие
+        if (wc.getTypeWeapon() == Weapons.TypeWeapon.ARROW) {
+            this.weaponAction = new ArrowAction();
+        }
+        if (wc.getTypeWeapon() == Weapons.TypeWeapon.SWORD) {
+            this.weaponAction = new SwordAction();
+        }
+        if (wc.getTypeWeapon() == Weapons.TypeWeapon.AXE) {
+            this.weaponAction = new AxeAction();
+        }
+        setWeaponProperty(wc);
+    }
+
+    public void changeWeapon(Treasure treasure) {
+        this.weaponAction.setActive(false); //Старое оружие в пул...
+        this.weaponAction = treasure.getWeaponActions(); //Ссылке новое оружие
+        setWeaponProperty(this.weaponAction);
+    }
+
+    public void setWeaponProperty(WeaponAction wc){
+        //Устанавливаем его свойства
         this.attackTime = weaponAction.getAttackTime();
         this.attackRadius = weaponAction.getAttackRadius();
         this.damage = weaponAction.getDamage();
-        if (weaponAction.getAttackRadius() == 1) {
-            this.type = Type.MELEE;}
-        else {this.type = Type.RANGED;}
-        setTextureWeapon(weaponAction);
-    }
-
-    private void setTextureWeapon(WeaponAction weaponAction) {
-        //выбор текстуры для оружия
+        //установка типа поведения Объекта по типу оружия
         if (weaponAction.getTypeWeapon() == Weapons.TypeWeapon.ARROW) {
-            this.textureWeapon = Assets.getInstance().getAtlas().findRegion("crossbow");
-        }
-        if (weaponAction.getTypeWeapon() == Weapons.TypeWeapon.AXE) {
-            this.textureWeapon = Assets.getInstance().getAtlas().findRegion("axe");
-        }
-        if (weaponAction.getTypeWeapon() == Weapons.TypeWeapon.SWORD) {
-            this.textureWeapon = Assets.getInstance().getAtlas().findRegion("sword");
-        }
+            this.type = Type.RANGED;}
+        else {this.type = Type.MELEE;}
+        //Выбираем текстуру для прорисовки оружия
+        this.textureWeapon = weaponAction.getTextureWeapon();
+        this.weaponAction.setActive(true);
     }
 
     public Vector2 getPosition() {
@@ -140,6 +146,8 @@ public abstract class GameCharacter implements MapElement {
             }
         }
         area.setPosition(position.x, position.y - 20);
+
+        //changeWeapons();
         checkBounds();
     }
 

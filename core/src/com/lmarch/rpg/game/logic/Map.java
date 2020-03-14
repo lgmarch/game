@@ -6,7 +6,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.lmarch.rpg.game.screens.utils.Assets;
 
-public class Map {
+public class Map<W, V> {
     public static final int MAP_CELLS_WIDTH = 16;
     public static final int MAP_CELLS_HEIGHT = 9;
 
@@ -49,5 +49,11 @@ public class Map {
         if (data[x][y]  == 1) {
             batch.draw(wallTexture, x * 80, y * 80);
         }
+    }
+
+    //Отрисовка оставшегося оружия
+    public void renderFreeWeapons(SpriteBatch batch, TextureRegion tr, int x, int y) {
+        //batch.draw(Assets.getInstance().getAtlas().findRegion("metal"), x, y, 35, 35);
+        batch.draw(tr, x, y, 55, 55);
     }
 }

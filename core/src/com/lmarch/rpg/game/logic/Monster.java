@@ -17,10 +17,11 @@ public class Monster extends GameCharacter implements Poolable {
         return hp > 0;
     }
 
-    public Monster(GameController gameController){
-        super(gameController, 20, 50.0f);
+    public Monster(GameController gameController, WeaponsController wc){
+        super(gameController, wc, 20, 50.0f);
         //weaponAction = new AxeAction();  //Изначально у монстра только топор
-        setWeaponAction(new AxeAction());
+        weaponAction = wc.getActiveElement();
+        initWeapon(weaponAction);
         this.texture = Assets.getInstance().getAtlas().findRegion("knight");
         this.changePosition(MathUtils.random(0, 1280), MathUtils.random(0, 720));
         this.dst.set(this.position);
@@ -33,7 +34,7 @@ public class Monster extends GameCharacter implements Poolable {
         } while (!gc.getMap().isGroundPassable(position));
 
         this.position.set(MathUtils.random(0, 1280), MathUtils.random(0, 720));
-        this.speed = MathUtils.random(100, 150);
+        this.speed = MathUtils.random(80, 120);
         hpMax = 20;
         hp = hpMax;
     }
@@ -41,6 +42,8 @@ public class Monster extends GameCharacter implements Poolable {
     @Override
     public void onDeath() {
         super.onDeath();
+        //Монстр после гибели оставил оружие
+        gc.getTreasureController().getActiveElement().setup(this.weaponAction, (int)this.position.x, (int)this.position.y);
     }
 
     @Override
@@ -50,7 +53,7 @@ public class Monster extends GameCharacter implements Poolable {
                 30, 30, 60,60, 1, 1, 0);
         batch.setColor(1, 1 , 1, 1);
         batch.draw(textureHp, position.x - 35, position.y + 35, 60 * ((float) hp / hpMax), 8);
-        batch.draw(textureWeapon, position.x - 35, position.y + 15, 15, 15);
+        batch.draw(textureWeapon, position.x - 35, position.y + 15, 30, 30);
     }
 
     public void update(float dt){

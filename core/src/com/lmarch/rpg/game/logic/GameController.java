@@ -2,7 +2,6 @@ package com.lmarch.rpg.game.logic;
 
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,7 +12,10 @@ import java.util.List;
 public class GameController {
     private ProjectilesController projectilesController;
     private MonstersController monstersController;
+    private WeaponsController weaponsController;
+    private TreasureController treasureController; //Сокровище
     private List<GameCharacter> allCharacters;
+
     private Map map;
     private Hero hero;
     private Vector2 tmp, tmp2;
@@ -38,12 +40,18 @@ public class GameController {
         return monstersController;
     }
 
+    public TreasureController getTreasureController() {
+        return treasureController;
+    }
+
     public GameController() {
         this.projectilesController = new ProjectilesController();
         this.allCharacters = new ArrayList<>();
-        this.hero = new Hero(this);
+        this.weaponsController = new WeaponsController();
+        this.treasureController = new TreasureController();
+        this.hero = new Hero(this, weaponsController);
         this.map = new Map();
-        this.monstersController = new MonstersController(this, 5);
+        this.monstersController = new MonstersController(this, weaponsController, 5);
         this.tmp = new Vector2(0, 0);
         this.tmp2 = new Vector2(0, 0);
     }
@@ -55,7 +63,10 @@ public class GameController {
 
         hero.update(dt);
         monstersController.update(dt);
+        treasureController.update(dt);
+        weaponsController.update(dt);
 
+        checkChangeWeapons();
         checkCollisions();
         projectilesController.update(dt);
     }
@@ -112,6 +123,26 @@ public class GameController {
                         hero.addCoins(MathUtils.random(1, 10));
                     }
                 }
+            }
+        }
+    }
+
+    public void checkChangeWeapons(){
+        for (Treasure treasure : getTreasureController().getActiveList()) {
+            tmp2.set(treasure.getCellX(), treasure.getCellY());
+            for (Monster monster : monstersController.getActiveList()) {
+                if (monster.position.dst(tmp2) < 15.0f) {
+                    //меняю оружие
+                    monster.changeWeapon(treasure);
+                    //Уходит в пул
+                    treasure.setLifeTime(0.0f);
+                }
+            }
+            if (hero.position.dst(tmp2) < 15.0f) {
+                //меняю оружие
+                hero.changeWeapon(treasure);
+                //Уходит в пул
+                treasure.setLifeTime(0.0f);
             }
         }
     }

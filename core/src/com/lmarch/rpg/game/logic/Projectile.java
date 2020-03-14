@@ -47,7 +47,6 @@ public class Projectile implements Poolable, MapElement{
         this.textureRegion = textureRegion;
         this.owner = owner;
         this.position.set(x, y);
-        //tmp.set(targetX, targetY).sub(x, y).nor().scl(500.0f);
         this.velocity.set(targetX, targetY).sub(x, y).nor().scl(800.0f);
         this.active = true;
     }

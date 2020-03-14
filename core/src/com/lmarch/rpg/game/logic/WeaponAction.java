@@ -1,7 +1,9 @@
 package com.lmarch.rpg.game.logic;
 
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+
 public interface WeaponAction {
-    void battle();  //На будущее. Реализация удара оружием
+    //void battle();  //На будущее. Реализация удара оружием
 
     float getAttackRadius();
 
@@ -10,4 +12,8 @@ public interface WeaponAction {
     float getDamage();
 
     Weapons.TypeWeapon getTypeWeapon();
+
+    TextureRegion getTextureWeapon();
+
+    void setActive(boolean active);
 }

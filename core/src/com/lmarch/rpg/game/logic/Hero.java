@@ -12,10 +12,11 @@ public class Hero extends GameCharacter{
     private int coins;
     private StringBuilder strBuilder;
 
-    public Hero(GameController gc){
-        super(gc, 20, 200.0f);
-        //weaponAction = new ArrowAction();  //Изначально у Героя лук
-        setWeaponAction(new ArrowAction());
+    public Hero(GameController gc, WeaponsController wc){
+        super(gc, wc, 20, 200.0f);
+        weaponAction = new ArrowAction();  //Отладка
+        //weaponAction = wc.getActiveElement();
+        initWeapon(weaponAction);
         this.texture = Assets.getInstance().getAtlas().findRegion("pig1");
         this.texturePointer = Assets.getInstance().getAtlas().findRegion("pointer");
         this.changePosition(100.0f, 100.0f);
@@ -32,7 +33,7 @@ public class Hero extends GameCharacter{
                 32, 32, 64,64, 1, 1, 1);
 
         batch.draw(textureHp, position.x - 35, position.y + 35, 60 * ((float) hp / hpMax), 8);
-        batch.draw(textureWeapon, position.x - 35, position.y + 15, 15, 15);
+        batch.draw(textureWeapon, position.x - 35, position.y + 15, 30, 30);
     }
 
     public void renderGUI(SpriteBatch batch, BitmapFont font){

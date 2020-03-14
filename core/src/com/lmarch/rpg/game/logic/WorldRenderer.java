@@ -4,6 +4,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector2;
 import com.lmarch.rpg.game.screens.utils.Assets;
 import java.util.ArrayList;
 import java.util.List;
@@ -49,6 +51,12 @@ public class WorldRenderer {
         for (int y = Map.MAP_CELLS_HEIGHT - 1; y >= 0; y--) {
             for (int x = 0; x < Map.MAP_CELLS_WIDTH; x++) {
                 gc.getMap().renderGround(batch, x, y);
+            }
+            //Прорисовка сокровищ
+            for (Treasure treasure : gc.getTreasureController().getActiveList()) {
+                for (int x = 0; x < Map.MAP_CELLS_WIDTH; x++) {
+                    gc.getMap().renderFreeWeapons(batch, treasure.getTextureRegion(), treasure.getCellX(), treasure.getCellY());
+                }
             }
         }
         //Рисуем сверху
