@@ -6,7 +6,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.lmarch.rpg.game.screens.utils.Assets;
 
-public class Map<W, V> {
+public class Map {
     public static final int MAP_CELLS_WIDTH = 16;
     public static final int MAP_CELLS_HEIGHT = 9;
 
