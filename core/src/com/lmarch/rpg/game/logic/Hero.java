@@ -19,8 +19,7 @@ public class Hero extends GameCharacter{
         this.changePosition(100.0f, 100.0f);
         this.dst.set(position);
         this.strBuilder = new StringBuilder();
-        this.type = Type.RANGED;
-        this.attackRadius = 150.0f;
+        this.weapon = Weapon.createSimpleMeleeWeapon();
     }
 
     @Override
