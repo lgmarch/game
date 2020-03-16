@@ -56,6 +56,7 @@ public abstract class GameCharacter implements MapElement {
 
     public void changePosition(float x, float y){
         position.set(x, y);
+        checkBounds();
         area.setPosition(x, y - 20);
     }
 
@@ -145,30 +146,25 @@ public abstract class GameCharacter implements MapElement {
                 }
             }
         }
-        area.setPosition(position.x, position.y - 20);
-
         //changeWeapons();
-        checkBounds();
     }
 
     public void moveToDst(float dt) {
         tmp.set(dst).sub(position).nor().scl(speed); //вектор скорости
         tmp2.set(position); //Запомнили позицию
         if (position.dst(dst) > speed * dt){
-            position.mulAdd(tmp, dt);
+            changePosition(position.x + tmp.x * dt, position.y + tmp.y * dt);
         }else {
-            position.set(dst); //Добрались до dst
+            changePosition(dst); //Добрались до dst
             state = State.IDLE;
         }
         //Обход стен
         if (!gc.getMap().isGroundPassable(getCellX(), getCellY())) {
-            position.set(tmp2);
-            position.add(tmp.x * dt, 0);
-            if (!gc.getMap().isGroundPassable(getCellX(), getCellY())) {
-                position.set(tmp2);
-                position.add(0, tmp.y * dt);
+            changePosition(tmp2.x + tmp.x * dt, tmp2.y); //смещаемся по компоненте х
+            if (!gc.getMap().isGroundPassable(getCellX(), getCellY())) { //если вновь влипли
+                changePosition(tmp2.x, tmp2.y + tmp.y * dt); //по у
                 if (!gc.getMap().isGroundPassable(getCellX(), getCellY())) {
-                    position.set(tmp2);
+                    changePosition(tmp2); //ждем
                 }
             }
         }
@@ -176,17 +172,17 @@ public abstract class GameCharacter implements MapElement {
 
     public void checkBounds() {
         //Чтобы персонаж не убежал за экран
-        if (position.x < 0.1f) {
-            position.x = 0.1f;
+        if (position.x - 20 < 0.1f) {
+            position.x = 20.1f;
         }
-        if (position.x > 1279.0f) {
-            position.x = 1279.0f;
+        if (position.y - 20 < 0.1f) {
+            position.y = 20.1f;
         }
-        if (position.y < 0.1f) {
-            position.y = 0.1f;
+        if (position.x> Map.MAP_CELLS_WIDTH * 80 - 20) {
+            position.x = Map.MAP_CELLS_WIDTH * 80 - 1 - 20;
         }
-        if (position.y > 720.0f) {
-            position.y = 720.0f;
+        if (position.y > Map.MAP_CELLS_HEIGHT * 80 - 20) {
+            position.y = Map.MAP_CELLS_HEIGHT * 80 - 1 - 20;
         }
     }
 
