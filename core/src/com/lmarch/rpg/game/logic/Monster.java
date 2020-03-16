@@ -2,6 +2,7 @@ package com.lmarch.rpg.game.logic;
 
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.lmarch.rpg.game.screens.utils.Assets;
@@ -19,7 +20,7 @@ public class Monster extends GameCharacter implements Poolable {
 
     public Monster(GameController gameController){
         super(gameController, 20, 50.0f);
-        this.texture = Assets.getInstance().getAtlas().findRegion("knight");
+        this.texture = new TextureRegion(Assets.getInstance().getAtlas().findRegion("dwarf60")).split(60, 60);
         this.changePosition(MathUtils.random(0, 1280), MathUtils.random(0, 720));
         this.dst.set(this.position);
         this.visionRadius = 160.0f;
@@ -45,10 +46,20 @@ public class Monster extends GameCharacter implements Poolable {
 
     @Override
     public void render(SpriteBatch batch, BitmapFont font){ //Прорисовка
-        batch.setColor(1, 0 , 0, 1);
-        batch.draw(texture, position.x - 30, position.y - 30,
-                30, 30, 60,60, 1, 1, 0);
-        batch.setColor(1, 1 , 1, 1);
+        //batch.setColor(1, 0 , 0, 1);
+        TextureRegion currentRegion = texture[0][getCurrentFrameIndex()];
+        if (dst.x > position.x) {
+            if (currentRegion.isFlipX()) {
+                currentRegion.flip(true, false);
+            }
+        }else {
+            if (!currentRegion.isFlipX()) {
+                currentRegion.flip(true, false);
+            }
+        }
+        batch.draw(currentRegion, position.x - 30, position.y - 30,
+                30, 30, 60,60, 1.5f, 1.5f, 0);
+        //batch.setColor(1, 1 , 1, 1);
         batch.draw(textureHp, position.x - 35, position.y + 35, 60 * ((float) hp / hpMax), 8);
     }
 

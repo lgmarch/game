@@ -14,7 +14,7 @@ public class Hero extends GameCharacter{
 
     public Hero(GameController gc){
         super(gc, 10, 200.0f);
-        this.texture = Assets.getInstance().getAtlas().findRegion("pig1");
+        this.texture = new TextureRegion(Assets.getInstance().getAtlas().findRegion("pig1")).split(60, 60);
         this.texturePointer = Assets.getInstance().getAtlas().findRegion("pointer");
         this.changePosition(100.0f, 100.0f);
         this.dst.set(position);
@@ -28,7 +28,7 @@ public class Hero extends GameCharacter{
         batch.draw(texturePointer, dst.x - 32, dst.y - 32,
                 32, 32, 64, 64, 0.5f, 0.5f, lifeTime * 90.0f);
 
-        batch.draw(texture, position.x - 32, position.y - 32,
+        batch.draw(texture[0][0], position.x - 32, position.y - 32,
                 32, 32, 64,64, 1, 1, 1);
 
         batch.draw(textureHp, position.x - 35, position.y + 35, 60 * ((float) hp / hpMax), 8);

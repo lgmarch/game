@@ -20,7 +20,7 @@ public class GeekRpgGame extends Game { //Меняем на Game для упра
 	public void create () {
 		this.batch = new SpriteBatch();
 		ScreenManager.getInstance().init(this, batch);
-		ScreenManager.getInstance().changeScreen(ScreenManager.ScreenType.MENU);
+		ScreenManager.getInstance().changeScreen(ScreenManager.ScreenType.GAME);
 	}
 
 	@Override

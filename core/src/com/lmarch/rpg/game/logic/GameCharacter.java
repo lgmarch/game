@@ -14,9 +14,12 @@ public abstract class GameCharacter implements MapElement {
         MELEE, RANGED
     }
 
+    static final int WIDTH = 60;
+    static final int HEIGHT = 60;
+
     protected GameController gc;
 
-    protected TextureRegion texture;
+    protected TextureRegion[][] texture;
     protected TextureRegion textureHp;  //Показатель здоровья
 
     protected Type type;
@@ -35,8 +38,11 @@ public abstract class GameCharacter implements MapElement {
     protected Circle area; //окружности под ногами
 
     protected float lifeTime;
+    protected float attackTime;
+    protected float walkTime;
+    protected float timePerFrame;
+
     protected float visionRadius; //Дальность просмотра
-    private float attackTime;
     protected float speed;
     protected int hp, hpMax;
 
@@ -75,7 +81,13 @@ public abstract class GameCharacter implements MapElement {
         this.speed = speed;
         this.state = State.IDLE;
         this.stateTimer = 1.0f;
+        this.timePerFrame = 0.2f; //8 кадров меняются каждые 0.2 сек.
         this.target = null;
+    }
+
+    public int getCurrentFrameIndex() {
+        // ТекущееВремя / ВремяОдного кадра % КоличествоКадров
+        return (int)(walkTime / timePerFrame) % texture[0].length;
     }
 
     public Vector2 getPosition() {
@@ -116,6 +128,7 @@ public abstract class GameCharacter implements MapElement {
     public void moveToDst(float dt) {
         tmp.set(dst).sub(position).nor().scl(speed); //вектор скорости
         tmp2.set(position); //Запомнили позицию
+        walkTime += dt;
         if (position.dst(dst) > speed * dt){
             changePosition(position.x + tmp.x * dt, position.y + tmp.y * dt);
         }else {

@@ -73,6 +73,7 @@ public class ScreenManager {
 
 //        resetCamera();
         game.setScreen(loadingScreen);
+
         switch (type) {
             case MENU:
                 targetScreen = menuScreen;
