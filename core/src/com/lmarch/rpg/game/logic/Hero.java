@@ -13,7 +13,7 @@ public class Hero extends GameCharacter{
     private StringBuilder strBuilder;
 
     public Hero(GameController gc){
-        super(gc, 10, 200.0f);
+        super(gc, 80, 200.0f);
         this.texture = new TextureRegion(Assets.getInstance().getAtlas().findRegion("pig1")).split(60, 60);
         this.texturePointer = Assets.getInstance().getAtlas().findRegion("pointer");
         this.changePosition(100.0f, 100.0f);
@@ -38,6 +38,8 @@ public class Hero extends GameCharacter{
         strBuilder.append("Class: ").append("Pig").append("\n");
         strBuilder.append("HP: ").append(hp).append(" / ").append(hpMax).append("\n");
         strBuilder.append("Coins: ").append(coins).append("\n");
+        strBuilder.append("Weapon: ").append(weapon.getTitle()).append(" [").append(weapon.getMinDamage()).
+                append("-").append(weapon.getMaxDamage()).append("]").append("\n");
         font.draw(batch, strBuilder, 10, 710);
     }
 

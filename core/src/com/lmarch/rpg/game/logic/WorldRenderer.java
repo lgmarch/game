@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.lmarch.rpg.game.logic.utils.MapElement;
 import com.lmarch.rpg.game.screens.utils.Assets;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,6 +38,11 @@ public class WorldRenderer {
         for (int i = 0; i < gc.getProjectilesController().getActiveList().size(); i++) {
             Projectile p = gc.getProjectilesController().getActiveList().get(i);
             drawables[p.getCellY()].add(p);
+        }
+
+        for (int i = 0; i < gc.getWeaponsController().getActiveList().size(); i++) {
+            Weapon w = gc.getWeaponsController().getActiveList().get(i);
+            drawables[w.getCellY()].add(w);
         }
 
         //Цвет очистки экрана: выбор цвета

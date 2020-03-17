@@ -13,6 +13,7 @@ import java.util.List;
 public class GameController {
     private ProjectilesController projectilesController;
     private MonstersController monstersController;
+    private WeaponsController weaponsController;
     private List<GameCharacter> allCharacters;
     private Map map;
     private Hero hero;
@@ -38,9 +39,14 @@ public class GameController {
         return monstersController;
     }
 
+    public WeaponsController getWeaponsController() {
+        return weaponsController;
+    }
+
     public GameController() {
-        this.projectilesController = new ProjectilesController();
         this.allCharacters = new ArrayList<>();
+        this.projectilesController = new ProjectilesController();
+        this.weaponsController = new WeaponsController(this);
         this.hero = new Hero(this);
         this.map = new Map();
         this.monstersController = new MonstersController(this, 5);
@@ -58,6 +64,7 @@ public class GameController {
 
         checkCollisions();
         projectilesController.update(dt);
+        weaponsController.update(dt);
     }
 
     public void collideUnits(GameCharacter u1, GameCharacter u2){
@@ -91,7 +98,12 @@ public class GameController {
                 collideUnits(m, m2);
             }
         }
-
+        for (int i = 0; i < weaponsController.getActiveList().size(); i++) {
+            Weapon w = weaponsController.getActiveList().get(i);
+            if (hero.getPosition().dst(w.getPosition()) < 20) {
+                w.consume(hero);
+            }
+        }
         for (int i = 0; i < projectilesController.getActiveList().size(); i++) {
             Projectile p = projectilesController.getActiveList().get(i);
             if (!map.isAirPassable(p.getCellX(), p.getCellY())) { //Проверка прохождения ч/з стену
@@ -108,9 +120,7 @@ public class GameController {
                 }
                 if (p.getPosition().dst(o.getPosition()) < 24) {
                     p.deactivate();
-                    if (o.takeDamage(p.getOwner(), p.getDamage())){
-                        hero.addCoins(MathUtils.random(1, 10));
-                    }
+                    o.takeDamage(p.getOwner(), p.getDamage());
                 }
             }
         }

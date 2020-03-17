@@ -3,6 +3,7 @@ package com.lmarch.rpg.game.logic;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Vector2;
+import com.lmarch.rpg.game.logic.utils.MapElement;
 import com.lmarch.rpg.game.screens.utils.Assets;
 
 public abstract class GameCharacter implements MapElement {
@@ -54,6 +55,10 @@ public abstract class GameCharacter implements MapElement {
         position.set(x, y);
         checkBounds();
         area.setPosition(x, y - 20);
+    }
+
+    public void setWeapon(Weapon weapon) {
+        this.weapon = weapon;
     }
 
     public void changePosition(Vector2 newPosition){
@@ -112,7 +117,7 @@ public abstract class GameCharacter implements MapElement {
                 if (weapon.getType() == Weapon.Type.MELEE) {
                     target.takeDamage(this, weapon.generateDamage());
                 }
-                if (weapon.getType() == Weapon.Type.RANGED) {
+                if (weapon.getType() == Weapon.Type.RANGED && target != null) {
                     gc.getProjectilesController().setup(this, position.x, position.y, target.getPosition().x,
                             target.getPosition().y, weapon.generateDamage());
                 }

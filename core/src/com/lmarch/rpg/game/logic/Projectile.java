@@ -4,8 +4,10 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
+import com.lmarch.rpg.game.logic.utils.MapElement;
+import com.lmarch.rpg.game.logic.utils.Poolable;
 
-public class Projectile implements Poolable, MapElement{
+public class Projectile implements Poolable, MapElement {
     private TextureRegion textureRegion;
     private GameCharacter owner;
     private Vector2 position;

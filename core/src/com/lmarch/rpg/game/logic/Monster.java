@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import com.lmarch.rpg.game.logic.utils.Poolable;
 import com.lmarch.rpg.game.screens.utils.Assets;
 
 public class Monster extends GameCharacter implements Poolable {
@@ -45,6 +46,7 @@ public class Monster extends GameCharacter implements Poolable {
     @Override
     public void onDeath() {
         super.onDeath();
+        gc.getWeaponsController().setup(position.x, position.y);
     }
 
     @Override

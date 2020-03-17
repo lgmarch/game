@@ -1,6 +1,8 @@
 package com.lmarch.rpg.game.logic;
 
-public class MonstersController extends ObjectPool<Monster>{
+import com.lmarch.rpg.game.logic.utils.ObjectPool;
+
+public class MonstersController extends ObjectPool<Monster> {
     private GameController gameController;
     private float innerTimer;
     private float spawnPeriod;

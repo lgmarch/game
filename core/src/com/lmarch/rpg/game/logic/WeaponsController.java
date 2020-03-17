@@ -1,6 +1,7 @@
 package com.lmarch.rpg.game.logic;
 
 import com.badlogic.gdx.math.MathUtils;
+import com.lmarch.rpg.game.logic.utils.ObjectPool;
 
 public class WeaponsController extends ObjectPool<Weapon> {
     private GameController gc;

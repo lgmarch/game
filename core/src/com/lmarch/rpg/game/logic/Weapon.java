@@ -5,10 +5,12 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import com.lmarch.rpg.game.logic.utils.Consumable;
+import com.lmarch.rpg.game.logic.utils.MapElement;
+import com.lmarch.rpg.game.logic.utils.Poolable;
 import com.lmarch.rpg.game.screens.utils.Assets;
-import com.badlogic.gdx.math.MathUtils;
 
-public class Weapon implements MapElement, Poolable {
+public class Weapon implements MapElement, Poolable, Consumable {
     public enum Type {
         MELEE, RANGED
     }
@@ -32,11 +34,11 @@ public class Weapon implements MapElement, Poolable {
         return position;
     }
 
-//    @Override
-//    public void consume(GameCharacter gameCharacter) {
-//        gameCharacter.setWeapon(this);
-//        active = false;
-//    }
+    @Override
+    public void consume(GameCharacter gameCharacter) {
+        gameCharacter.setWeapon(this);
+        active = false;
+    }
 
     @Override
     public void render(SpriteBatch batch, BitmapFont font) {

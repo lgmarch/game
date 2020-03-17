@@ -1,5 +1,6 @@
 package com.lmarch.rpg.game.screens;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.lmarch.rpg.game.GeekRpgGame;
@@ -67,6 +68,7 @@ public class ScreenManager {
     public void changeScreen(ScreenType type) {
         Screen screen = game.getScreen();
         Assets.getInstance().clear();
+        Gdx.input.setInputProcessor(null); //!!! чтобы забыть о прошлом экране!
         if (screen != null) {
             screen.dispose();
         }

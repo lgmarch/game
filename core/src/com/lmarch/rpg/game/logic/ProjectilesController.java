@@ -1,9 +1,10 @@
 package com.lmarch.rpg.game.logic;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.lmarch.rpg.game.logic.utils.ObjectPool;
 import com.lmarch.rpg.game.screens.utils.Assets;
 
-public class ProjectilesController extends ObjectPool<Projectile>{
+public class ProjectilesController extends ObjectPool<Projectile> {
     private TextureRegion projectileTextureRegion;
 
     @Override

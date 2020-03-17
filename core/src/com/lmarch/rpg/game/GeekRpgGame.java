@@ -10,17 +10,14 @@ public class GeekRpgGame extends Game { //Меняем на Game для упра
 	private SpriteBatch batch; //
 
 	//Домашнее задание:
-	// -  Добавить класс Weapon (оружие) и раздать каждому персонажу по оружию.
-	//    Оружие определяет тип бойца - ближний/дальный бой. Свойства оружия:
-	//    дальность атаки, урон, скорость атаки.
-	// - *Из монстров может выпадать оружие (рисуем картинку оружия), которое
-	// -  подбирается как монстрами, так и Героем, заменяя имеющееся.
+	// -  На экран добавить Stage и сделайте две кнопки: пауза и выход в меню
+	// -  Сделайте полезные выпадающие вещи из монстров: бутыль со здоровьем, монеты.
 	
 	@Override
 	public void create () {
 		this.batch = new SpriteBatch();
 		ScreenManager.getInstance().init(this, batch);
-		ScreenManager.getInstance().changeScreen(ScreenManager.ScreenType.GAME);
+		ScreenManager.getInstance().changeScreen(ScreenManager.ScreenType.MENU);
 	}
 
 	@Override

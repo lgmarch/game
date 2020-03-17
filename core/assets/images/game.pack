@@ -3,79 +3,93 @@ images1.png
 format: RGBA8888
 filter: Linear,Linear
 repeat: none
-dwarf60
-  rotate: false
-  xy: 2, 2
-  size: 480, 60
-  orig: 480, 60
-  offset: 0, 0
-  index: -1
-simpleButton
-  rotate: false
-  xy: 2, 64
-  size: 320, 80
-  orig: 320, 80
-  offset: 0, 0
-  index: -1
-smButton
-  rotate: false
-  xy: 2, 146
-  size: 120, 32
-  orig: 120, 32
-  offset: 0, 0
-  index: -1
 wall
   rotate: false
-  xy: 324, 64
+  xy: 2, 2
   size: 80, 120
   orig: 80, 120
   offset: 0, 0
   index: -1
+simpleButton
+  rotate: false
+  xy: 84, 2
+  size: 320, 80
+  orig: 320, 80
+  offset: 0, 0
+  index: -1
 shortButton
   rotate: false
-  xy: 124, 146
+  xy: 2, 124
   size: 80, 80
   orig: 80, 80
   offset: 0, 0
   index: -1
 grass
   rotate: false
-  xy: 206, 146
+  xy: 84, 84
   size: 80, 80
   orig: 80, 80
   offset: 0, 0
   index: -1
+weaponRanged
+  rotate: false
+  xy: 84, 166
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+weaponMelee
+  rotate: false
+  xy: 166, 84
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
 pointer
   rotate: false
-  xy: 2, 180
+  xy: 166, 150
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 pig1
   rotate: false
-  xy: 324, 186
+  xy: 232, 84
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
+dwarf60
+  rotate: false
+  xy: 406, 2
+  size: 480, 60
+  orig: 480, 60
+  offset: 0, 0
+  index: -1
 knight
   rotate: false
-  xy: 406, 64
+  xy: 232, 150
   size: 60, 60
   orig: 60, 60
   offset: 0, 0
   index: -1
 arrow
   rotate: false
-  xy: 406, 126
+  xy: 298, 84
   size: 60, 60
   orig: 60, 60
   offset: 0, 0
   index: -1
+smButton
+  rotate: false
+  xy: 888, 2
+  size: 120, 32
+  orig: 120, 32
+  offset: 0, 0
+  index: -1
 hp
   rotate: false
-  xy: 2, 246
+  xy: 2, 206
   size: 60, 8
   orig: 60, 8
   offset: 0, 0
