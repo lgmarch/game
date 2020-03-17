@@ -66,6 +66,7 @@ public class Monster extends GameCharacter implements Poolable {
                 30, 30, 60,60, 1.5f, 1.5f, 0);
         //batch.setColor(1, 1 , 1, 1);
         batch.draw(textureHp, position.x - 35, position.y + 35, 60 * ((float) hp / hpMax), 8);
+        renderHills(batch, font);
     }
 
     public void update(float dt){

@@ -31,6 +31,7 @@ public class Hero extends GameCharacter{
                 32, 32, 64,64, 1, 1, 1);
 
         batch.draw(textureHp, position.x - 35, position.y + 35, 60 * ((float) hp / hpMax), 8);
+        renderHills(batch, font);
     }
 
     public void renderGUI(SpriteBatch batch, BitmapFont font){
@@ -38,7 +39,7 @@ public class Hero extends GameCharacter{
         strBuilder.append("Class: ").append("Pig").append("\n");
         strBuilder.append("HP: ").append(hp).append(" / ").append(hpMax).append("\n");
         strBuilder.append("Coins: ").append(coins).append("\n");
-        strBuilder.append("Weapon: ").append(weapon.getTitle()).append(" [").append(weapon.getMinDamage()).
+        strBuilder.append("Weapon: ").append(weapon.getType()).append(" [").append(weapon.getMinDamage()).
                 append("-").append(weapon.getMaxDamage()).append("]").append("\n");
         font.draw(batch, strBuilder, 10, 710);
     }

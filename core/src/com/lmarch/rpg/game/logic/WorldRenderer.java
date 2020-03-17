@@ -13,11 +13,13 @@ public class WorldRenderer {
     private GameController gc;
     private SpriteBatch batch;
     private BitmapFont font24;
+    private BitmapFont font8;
     private List<MapElement>[] drawables; //Список объектов по полосам
 
     public WorldRenderer(GameController gameController, SpriteBatch batch) {
         this.gc = gameController;
         this.font24 = Assets.getInstance().getAssetManager().get("fonts/font24.ttf");
+        this.font8 = Assets.getInstance().getAssetManager().get("fonts/font24.ttf");
         this.batch = batch;
         //Список объектов, находящихся на определенной линии карты. Инициализация
         this.drawables = new ArrayList[Map.MAP_CELLS_HEIGHT];
@@ -61,7 +63,7 @@ public class WorldRenderer {
         for (int y = Map.MAP_CELLS_HEIGHT - 1; y >= 0; y--) {
             //Рисуем персонажей
             for (int i = 0; i < drawables[y].size(); i++) {
-                drawables[y].get(i).render(batch, null);
+                drawables[y].get(i).render(batch, font8);
             }
             //Рисуем объекты карты
             for (int x = 0; x < Map.MAP_CELLS_WIDTH; x++) {

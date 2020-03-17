@@ -1,5 +1,7 @@
 package com.lmarch.rpg.game.logic;
 
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Vector2;
@@ -18,6 +20,7 @@ public abstract class GameCharacter implements MapElement {
 
     protected TextureRegion[][] texture;
     protected TextureRegion textureHp;  //Показатель здоровья
+    protected StringBuilder strBuilder;
 
     protected State state;
     protected float stateTimer;
@@ -65,13 +68,14 @@ public abstract class GameCharacter implements MapElement {
         changePosition(newPosition.x, newPosition.y);
     }
 
-    public boolean isAlive() {
-        return hp > 0;
-    }
+//    public boolean isAlive() {
+//        return hp > 0;
+//    }
 
     public GameCharacter(GameController gameController, int hpMax, float speed) {
         this.gc = gameController;
         this.textureHp = Assets.getInstance().getAtlas().findRegion("hp");
+        this.strBuilder = new StringBuilder();
         this.tmp = new Vector2(0.0f, 0.0f);
         this.tmp2 = new Vector2(0.0f, 0.0f);
         this.dst = new Vector2(0.0f, 0.0f);
@@ -178,6 +182,13 @@ public abstract class GameCharacter implements MapElement {
         dst.set(position);
         state = State.IDLE;
         target = null;
+    }
+
+
+    public void renderHills(SpriteBatch batch, BitmapFont font) {
+        strBuilder.setLength(0); //Очистка
+        strBuilder.append(this.hp);
+        font.draw(batch, strBuilder, this.position.x -20, this.position.y + 50);
     }
 
     public void onDeath() {
