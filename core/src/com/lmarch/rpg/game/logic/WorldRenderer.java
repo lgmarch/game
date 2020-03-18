@@ -30,8 +30,8 @@ public class WorldRenderer {
 
     public void render() {
         //На каждом кадре перераскладываем объекты в массив
-        for (int i = 0; i < drawables.length; i++) {
-            drawables[i].clear();
+        for (List<MapElement> drawable : drawables) {
+            drawable.clear();
         }
         drawables[gc.getHero().getCellY()].add(gc.getHero());
 
@@ -72,7 +72,9 @@ public class WorldRenderer {
             }
             //Рисуем объекты карты
             for (int x = 0; x < Map.MAP_CELLS_WIDTH; x++) {
-                gc.getMap().renderUpper(batch, x, y);
+                gc.getMap().renderTree(batch, x, y);
+                gc.getMap().renderStone(batch, x, y);
+                gc.getMap().renderOak(batch, x, y);
             }
         }
 

@@ -12,7 +12,9 @@ public class Map {
 
     private byte[][] data;
     private TextureRegion grassTexture;
-    private TextureRegion wallTexture;
+    private TextureRegion stoneTexture;
+    private TextureRegion treeTexture;
+    private TextureRegion oakTexture;
 
     //Проверка проходжения летящего объекта через ячейку (вода, стена)
     public boolean isAirPassable(int cellX, int cellY){
@@ -32,11 +34,11 @@ public class Map {
 
     public Map() {
         this.data = new byte[MAP_CELLS_WIDTH][MAP_CELLS_HEIGHT];
-        for (int i = 0; i < 5; i++) {
-            data[MathUtils.random(15)][MathUtils.random(8)] = 1;
-        }
+        calculateBarrierMatrix();
         this.grassTexture = Assets.getInstance().getAtlas().findRegion("grass");
-        this.wallTexture = Assets.getInstance().getAtlas().findRegion("wall");
+        this.stoneTexture = Assets.getInstance().getAtlas().findRegion("stoun");
+        this.treeTexture = Assets.getInstance().getAtlas().findRegion("tree");
+        this.oakTexture = Assets.getInstance().getAtlas().findRegion("wool");
     }
 
     //Отрисовка земли в клетке
@@ -45,9 +47,38 @@ public class Map {
     }
 
     //Отрисовка объекта в клетке на земле
-    public void renderUpper(SpriteBatch batch, int x, int y) {
+    public void renderTree(SpriteBatch batch, int x, int y) {
         if (data[x][y]  == 1) {
-            batch.draw(wallTexture, x * 80, y * 80);
+            batch.draw(treeTexture, x * 80, y * 80);
+        }
+    }
+
+    //Отрисовка объекта в клетке на земле
+    public void renderStone(SpriteBatch batch, int x, int y) {
+        if (data[x][y]  == 2) {
+            batch.draw(stoneTexture, x * 80, y * 80);
+        }
+    }
+
+    //Отрисовка объекта в клетке на земле
+    public void renderOak(SpriteBatch batch, int x, int y) {
+        if (data[x][y]  == 3) {
+            batch.draw(oakTexture, x * 80, y * 80);
+        }
+    }
+
+    public void calculateBarrierMatrix() {
+        //Tree
+        for (int i = 0; i < 3; i++) {
+            data[MathUtils.random(15)][MathUtils.random(8)] = 1;
+        }
+        //Stone
+        for (int i = 0; i < 2; i++) {
+            data[MathUtils.random(15)][MathUtils.random(8)] = 2;
+        }
+        //Oak
+        for (int i = 0; i < 3; i++) {
+            data[MathUtils.random(15)][MathUtils.random(8)] = 3;
         }
     }
 }
