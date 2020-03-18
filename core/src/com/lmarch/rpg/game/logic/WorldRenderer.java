@@ -34,17 +34,22 @@ public class WorldRenderer {
             drawables[i].clear();
         }
         drawables[gc.getHero().getCellY()].add(gc.getHero());
+
+        for (int i = 0; i < gc.getWeaponsController().getActiveList().size(); i++) {
+            Weapon w = gc.getWeaponsController().getActiveList().get(i);
+            drawables[w.getCellY()].add(w);
+        }
+
+        for (Treasure treasure : gc.getTreasureController().getActiveList()) {
+            if (treasure.isFree()) drawables[treasure.getCellY()].add(treasure);
+        }
+
         for (Monster monster : gc.getMonstersController().getActiveList()) {
             drawables[monster.getCellY()].add(monster);
         }
         for (int i = 0; i < gc.getProjectilesController().getActiveList().size(); i++) {
             Projectile p = gc.getProjectilesController().getActiveList().get(i);
             drawables[p.getCellY()].add(p);
-        }
-
-        for (int i = 0; i < gc.getWeaponsController().getActiveList().size(); i++) {
-            Weapon w = gc.getWeaponsController().getActiveList().get(i);
-            drawables[w.getCellY()].add(w);
         }
 
         //Цвет очистки экрана: выбор цвета

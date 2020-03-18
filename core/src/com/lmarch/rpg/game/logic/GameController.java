@@ -14,6 +14,7 @@ public class GameController {
     private ProjectilesController projectilesController;
     private MonstersController monstersController;
     private WeaponsController weaponsController;
+    private TreasureController treasureController;
     private List<GameCharacter> allCharacters;
     private Map map;
     private Hero hero;
@@ -43,10 +44,15 @@ public class GameController {
         return weaponsController;
     }
 
+    public TreasureController getTreasureController() {
+        return treasureController;
+    }
+
     public GameController() {
         this.allCharacters = new ArrayList<>();
         this.projectilesController = new ProjectilesController();
         this.weaponsController = new WeaponsController(this);
+        this.treasureController = new TreasureController();
         this.hero = new Hero(this);
         this.map = new Map();
         this.monstersController = new MonstersController(this, 5);
@@ -65,6 +71,7 @@ public class GameController {
         checkCollisions();
         projectilesController.update(dt);
         weaponsController.update(dt);
+        treasureController.update(dt);
     }
 
     public void collideUnits(GameCharacter u1, GameCharacter u2){
@@ -102,6 +109,21 @@ public class GameController {
             Weapon w = weaponsController.getActiveList().get(i);
             if (hero.getPosition().dst(w.getPosition()) < 20) {
                 w.consume(hero);
+            }
+        }
+        //Подбираем сокровища
+        for (Treasure treasure : treasureController.getActiveList()) {
+            if (hero.getPosition().dst(treasure.getPosition()) < 20) {
+                if (treasure.getType() == Treasure.Type.ELIXIR) {
+                    hero.addElixir(treasure.getQuantity());
+                    treasure.setActive(false);
+                    treasure.setFree(false);
+                }
+                if (treasure.getType() == Treasure.Type.MONEY) {
+                    hero.addCoins(treasure.getQuantity());
+                    treasure.setActive(false);
+                    treasure.setFree(false);
+                }
             }
         }
         for (int i = 0; i < projectilesController.getActiveList().size(); i++) {

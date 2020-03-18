@@ -1,6 +1,7 @@
 package com.lmarch.rpg.game.screens;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -51,17 +52,22 @@ public class GameScreen extends AbstractScreen {
         BitmapFont font14 = Assets.getInstance().getAssetManager().get("fonts/font24.ttf");
 
         TextButton.TextButtonStyle menuBtnStyle = new TextButton.TextButtonStyle(
-                skin.getDrawable("stop"), null, null, font14);
+                skin.getDrawable("pusk"), null, null, font14);
 
         TextButton btnPause = new TextButton("P", menuBtnStyle);
-        btnPause.setPosition(1170, 650);
+        btnPause.setPosition(1220, 650);
         TextButton btnExit = new TextButton("E", menuBtnStyle);
-        btnExit.setPosition(1100, 650);
+        btnExit.setPosition(1150, 650);
 
         btnPause.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 paused = !paused;
+                if (paused) {
+                    stage.getActors().get(0).setColor(Color.BLUE);
+                } else {
+                    stage.getActors().get(0).setColor(Color.GREEN);
+                }
             }
         });
 

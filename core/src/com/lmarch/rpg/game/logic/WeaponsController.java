@@ -15,6 +15,7 @@ public class WeaponsController extends ObjectPool<Weapon> {
         this.gc = gc;
     }
 
+    //Попадают сюда, после того, как выпадают из Монстра...
     public void setup(float x, float y) {
         Weapon w = getActiveElement();
         int maxDamage = MathUtils.random(3, 4);
