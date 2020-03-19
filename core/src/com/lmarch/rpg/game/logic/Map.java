@@ -53,12 +53,12 @@ public class Map {
         }
     }
 
-    //Отрисовка объекта в клетке на земле
-    public void renderStone(SpriteBatch batch, int x, int y) {
-        if (data[x][y]  == 2) {
-            batch.draw(stoneTexture, x * 80, y * 80);
-        }
-    }
+//    //Отрисовка объекта в клетке на земле
+//    public void renderStone(SpriteBatch batch, int x, int y) {
+//        if (data[x][y]  == 2) {
+//            batch.draw(stoneTexture, x * 80, y * 80);
+//        }
+//    }
 
     //Отрисовка объекта в клетке на земле
     public void renderOak(SpriteBatch batch, int x, int y) {
@@ -72,10 +72,10 @@ public class Map {
         for (int i = 0; i < 3; i++) {
             data[MathUtils.random(15)][MathUtils.random(8)] = 1;
         }
-        //Stone
-        for (int i = 0; i < 2; i++) {
-            data[MathUtils.random(15)][MathUtils.random(8)] = 2;
-        }
+//        //Stone
+//        for (int i = 0; i < 2; i++) {
+//            data[MathUtils.random(15)][MathUtils.random(8)] = 2;
+//        }
         //Oak
         for (int i = 0; i < 3; i++) {
             data[MathUtils.random(15)][MathUtils.random(8)] = 3;

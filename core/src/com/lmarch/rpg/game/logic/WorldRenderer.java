@@ -73,7 +73,7 @@ public class WorldRenderer {
             //Рисуем объекты карты
             for (int x = 0; x < Map.MAP_CELLS_WIDTH; x++) {
                 gc.getMap().renderTree(batch, x, y);
-                gc.getMap().renderStone(batch, x, y);
+                //gc.getMap().renderStone(batch, x, y);
                 gc.getMap().renderOak(batch, x, y);
             }
         }
