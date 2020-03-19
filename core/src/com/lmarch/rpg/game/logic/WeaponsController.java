@@ -15,7 +15,6 @@ public class WeaponsController extends ObjectPool<Weapon> {
         this.gc = gc;
     }
 
-    //Попадают сюда, после того, как выпадают из Монстра...
     public void setup(float x, float y) {
         Weapon w = getActiveElement();
         int maxDamage = MathUtils.random(3, 4);
@@ -25,10 +24,13 @@ public class WeaponsController extends ObjectPool<Weapon> {
             }
         }
         Weapon.Type type = Weapon.Type.MELEE;
+        String title;
         float range = 60.0f;
+        title = "Melee";
         float attackSpeed = 0.4f;
         if (MathUtils.random(100) < 40) {
             type = Weapon.Type.RANGED;
+            title = "Ranged";
             range = 160.0f;
             attackSpeed = 0.5f;
         }

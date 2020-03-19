@@ -4,7 +4,6 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
-import com.lmarch.rpg.game.logic.utils.Consumable;
 import com.lmarch.rpg.game.logic.utils.MapElement;
 import com.lmarch.rpg.game.logic.utils.Poolable;
 import com.lmarch.rpg.game.screens.utils.Assets;
@@ -12,7 +11,7 @@ import com.lmarch.rpg.game.screens.utils.Assets;
 /**
  * Класс для отображения на игровом поле выпадающих из Монстров сокровищ и хранения ссылки на WeaponAction (оружие)
  */
-public class Treasure implements MapElement, Poolable, Consumable {
+public class Treasure implements MapElement, Poolable {
 
     public enum Type {
         ELIXIR, MONEY
@@ -21,25 +20,15 @@ public class Treasure implements MapElement, Poolable, Consumable {
     private Type type;
     private TextureRegion texture;
     private Vector2 position;
-    //private float lifeTime; //Время сохранности клада, потом он исчезает
+    private float lifeTime;
     private int quantity;
-    private boolean active;
     private boolean free; //Оружие свободно
 
     public Treasure() {
         this.position = new Vector2(0, 0);
         this.free = false;
+        this.lifeTime = 30.0f;
     }
-//
-//    public Treasure(Treasure.Type type, TextureRegion texture, int quantity) {
-//        this.type = type;
-//        this.texture = texture;
-//        //this.position = position;
-//        this.quantity = quantity;
-//        this.active = true;
-//        this.free = false;
-//        //this.lifeTime = 50.0f;
-//    }
 
     @Override
     public void render(SpriteBatch batch, BitmapFont font) {
@@ -48,22 +37,19 @@ public class Treasure implements MapElement, Poolable, Consumable {
 
     @Override
     public boolean isActive() {
-        return active;
+        return lifeTime > 0;
     }
 
-    @Override
-    public void consume(GameCharacter gameCharacter) {
-        //gameCharacter.setTreasure(this);
+    public void setLifeTime(float time) {
+        this.lifeTime = time;
     }
 
-//    public void setLifeTime(float time) {
-//        this.lifeTime = time;
-//    }
-//
-//    public void subtractLifeTime(float dt) {
-//        lifeTime -= dt;
-//        if (lifeTime < 0) setLifeTime(0.0f); //Если не подобрали, оно уходитв пул....
-//    }
+    public void subtractLifeTime(float dt) {
+        this.lifeTime -= dt;
+        if (this.lifeTime < 0) {
+            this.lifeTime = 0.0f;
+        }
+    }
 
     public Type getType() {
         return type;
@@ -89,14 +75,6 @@ public class Treasure implements MapElement, Poolable, Consumable {
         return (int) (position.y / 80);
     }
 
-    public void setPosition(Vector2 position) {
-        this.position = position;
-    }
-
-    public void setActive(boolean active) {
-        this.active = active;
-    }
-
     public boolean isFree() {
         return free;
     }
@@ -109,14 +87,13 @@ public class Treasure implements MapElement, Poolable, Consumable {
         this.position.x = position.x;
         this.position.y = position.y;
         this.free = true;
-        this.active = true;
     }
 
     public Treasure setMoney() {
         this.type = Type.MONEY;
         this.texture = Assets.getInstance().getAtlas().findRegion("coin");
         this.quantity = 1; //MathUtils.random(1,20);
-        this.active = true;
+        this.lifeTime = 30.0f;
         this.free = false;
         return this;
     }
@@ -125,7 +102,7 @@ public class Treasure implements MapElement, Poolable, Consumable {
         this.type = Type.ELIXIR;
         this.texture = Assets.getInstance().getAtlas().findRegion("potionBlue");
         this.quantity = 1; //MathUtils.random(1,20);
-        this.active = true;
+        this.lifeTime = 30.0f;
         this.free = false;
         return this;
     }

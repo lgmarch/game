@@ -9,9 +9,11 @@ public class TreasureController extends ObjectPool<Treasure> {
     }
 
     public void update(float dt){
-//        for(Treasure treasure : getActiveList()){
-//            treasure.subtractLifeTime(dt);
-//        }
+        for(Treasure treasure : getActiveList()){
+            if (!treasure.isFree()) { //Если что-то вывалилось из монстра...
+                treasure.subtractLifeTime(dt);
+            }
+        }
         checkPool();
     }
 }

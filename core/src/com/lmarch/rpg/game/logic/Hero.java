@@ -42,7 +42,7 @@ public class Hero extends GameCharacter{
         strBuilder.append("HP: ").append(hp).append(" / ").append(hpMax).append("\n");
         strBuilder.append("Coins: ").append(coins).append("\n");
         strBuilder.append("Elixir: ").append(elixir).append("\n");
-        strBuilder.append("Weapon: ").append(weapon.getType()).append(" [").append(weapon.getMinDamage()).
+        strBuilder.append("Weapon: ").append(weapon.getTitle()).append(" [").append(weapon.getMinDamage()).
                 append("-").append(weapon.getMaxDamage()).append("]").append("\n");
         font.draw(batch, strBuilder, 10, 710);
     }
@@ -67,7 +67,6 @@ public class Hero extends GameCharacter{
 //        if (Gdx.input.isButtonJustPressed(Input.Buttons.RIGHT)){
 //            gc.getProjectilesController().setup(position.x, position.y, Gdx.input.getX(), 720 - Gdx.input.getY());
 //        }
-        //System.out.println(angle.angle());
     }
 
     @Override

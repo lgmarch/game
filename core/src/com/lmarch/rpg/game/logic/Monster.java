@@ -31,12 +31,6 @@ public class Monster extends GameCharacter implements Poolable {
         } else {
             this.weapon = Weapon.createSimpleMeleeWeapon();
         }
-
-        if (MathUtils.random(0,50) > 25) {
-            treasure = gc.getTreasureController().getActiveElement().setMoney();
-        } else {
-            treasure = gc.getTreasureController().getActiveElement().setElixir();
-        }
     }
 
     public void setup(){
@@ -48,14 +42,23 @@ public class Monster extends GameCharacter implements Poolable {
         this.speed = MathUtils.random(100, 150);
         hpMax = 20;
         hp = hpMax;
+
+        if (MathUtils.random(0,50) > 25) {
+            treasure = gc.getTreasureController().getActiveElement().setMoney();
+        } else {
+            treasure = gc.getTreasureController().getActiveElement().setElixir();
+        }
+        //TODO
+        System.out.println("Active: " + gc.getTreasureController().getActiveList().size() +
+                "  Free: " + gc.getTreasureController().getFreeList().size());
     }
 
     @Override
     public void onDeath() {
         super.onDeath();
+        treasure.setupFree(position);
         gc.getWeaponsController().setup(position.x, position.y);
         //gc.getTreasureController().getActiveElement().setup(position, this.treasure);
-        treasure.setupFree(position);
     }
 
     @Override

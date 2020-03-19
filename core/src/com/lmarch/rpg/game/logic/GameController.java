@@ -113,16 +113,18 @@ public class GameController {
         }
         //Подбираем сокровища
         for (Treasure treasure : treasureController.getActiveList()) {
-            if (hero.getPosition().dst(treasure.getPosition()) < 20) {
-                if (treasure.getType() == Treasure.Type.ELIXIR) {
-                    hero.addElixir(treasure.getQuantity());
-                    treasure.setActive(false);
-                    treasure.setFree(false);
-                }
-                if (treasure.getType() == Treasure.Type.MONEY) {
-                    hero.addCoins(treasure.getQuantity());
-                    treasure.setActive(false);
-                    treasure.setFree(false);
+            if (treasure.isFree()) {
+                if (hero.getPosition().dst(treasure.getPosition()) < 20) {
+                    if (treasure.getType() == Treasure.Type.ELIXIR) {
+                        hero.addElixir(treasure.getQuantity());
+                        treasure.setLifeTime(5.0f);
+                        treasure.setFree(false);
+                    }
+                    if (treasure.getType() == Treasure.Type.MONEY) {
+                        hero.addCoins(treasure.getQuantity());
+                        treasure.setLifeTime(5.0f);
+                        treasure.setFree(false);
+                    }
                 }
             }
         }
