@@ -46,6 +46,11 @@ public class Weapon implements MapElement, Poolable, Consumable {
     }
 
     @Override
+    public float getY() {
+        return position.y;
+    }
+
+    @Override
     public int getCellX() {
         return (int) (position.x / 80);
     }

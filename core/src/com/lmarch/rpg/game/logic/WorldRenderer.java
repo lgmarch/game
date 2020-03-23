@@ -7,6 +7,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.lmarch.rpg.game.logic.utils.MapElement;
 import com.lmarch.rpg.game.screens.utils.Assets;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class WorldRenderer {
@@ -15,6 +17,7 @@ public class WorldRenderer {
     private BitmapFont font24;
     private BitmapFont font8;
     private List<MapElement>[] drawables; //Список объектов по полосам
+    private Comparator<MapElement> yComparator;
 
     public WorldRenderer(GameController gameController, SpriteBatch batch) {
         this.gc = gameController;
@@ -26,6 +29,12 @@ public class WorldRenderer {
         for (int i = 0; i < drawables.length; i++) {
             drawables[i] = new ArrayList<>();
         }
+        this.yComparator = new Comparator<MapElement>() {
+            @Override
+            public int compare(MapElement o1, MapElement o2) {
+                return (int) (o2.getY() - o1.getY());
+            }
+        };
     }
 
     public void render() {
@@ -50,6 +59,10 @@ public class WorldRenderer {
         for (int i = 0; i < gc.getProjectilesController().getActiveList().size(); i++) {
             Projectile p = gc.getProjectilesController().getActiveList().get(i);
             drawables[p.getCellY()].add(p);
+        }
+
+        for (int i = 0; i < drawables.length; i++) {
+            Collections.sort(drawables[i], yComparator);
         }
 
         //Цвет очистки экрана: выбор цвета

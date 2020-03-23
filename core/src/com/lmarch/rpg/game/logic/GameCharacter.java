@@ -52,6 +52,11 @@ public abstract class GameCharacter implements MapElement {
         return (int) (position.y - 20) / 80;
     }
 
+    @Override
+    public float getY() {
+        return position.y;
+    }
+
     public void changePosition(float x, float y){
         position.set(x, y);
         checkBounds();

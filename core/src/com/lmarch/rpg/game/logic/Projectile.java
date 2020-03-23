@@ -19,6 +19,11 @@ public class Projectile implements Poolable, MapElement {
         return position;
     }
 
+    @Override
+    public float getY() {
+        return position.y;
+    }
+
     public GameCharacter getOwner() {
         return owner;
     }

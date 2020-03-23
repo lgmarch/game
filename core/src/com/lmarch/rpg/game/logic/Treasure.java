@@ -63,6 +63,11 @@ public class Treasure implements MapElement, Poolable {
         return position;
     }
 
+    @Override
+    public float getY() {
+        return position.y;
+    }
+
     public int getQuantity() {
         return quantity;
     }
