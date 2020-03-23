@@ -34,7 +34,7 @@ public class WeaponsController extends ObjectPool<Weapon> {
             range = 160.0f;
             attackSpeed = 0.5f;
         }
-        w.setup(type, "Weapon", MathUtils.random(1, 4), maxDamage, 0.4f, range);
+        w.setup(type, title, MathUtils.random(1, 4), maxDamage, 0.4f, range);
         w.setPosition(x, y);
     }
 

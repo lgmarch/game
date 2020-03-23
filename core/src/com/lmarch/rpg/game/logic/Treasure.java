@@ -9,7 +9,7 @@ import com.lmarch.rpg.game.logic.utils.Poolable;
 import com.lmarch.rpg.game.screens.utils.Assets;
 
 /**
- * Класс для отображения на игровом поле выпадающих из Монстров сокровищ и хранения ссылки на WeaponAction (оружие)
+ * Класс для отображения на игровом поле выпадающих из Монстров сокровищ
  */
 public class Treasure implements MapElement, Poolable {
 
