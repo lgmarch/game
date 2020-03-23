@@ -8,7 +8,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.lmarch.rpg.game.screens.utils.Assets;
 
 public class Hero extends GameCharacter{
-    private TextureRegion texturePointer;
+    //private TextureRegion texturePointer;
     private StringBuilder strBuilder;
     private int coins;
     private int elixir;
@@ -16,7 +16,7 @@ public class Hero extends GameCharacter{
     public Hero(GameController gc){
         super(gc, 80, 200.0f);
         this.texture = new TextureRegion(Assets.getInstance().getAtlas().findRegion("pig1")).split(60, 60);
-        this.texturePointer = Assets.getInstance().getAtlas().findRegion("pointer");
+        //this.texturePointer = Assets.getInstance().getAtlas().findRegion("pointer");
         this.changePosition(100.0f, 100.0f);
         this.dst.set(position);
         this.strBuilder = new StringBuilder();
@@ -47,7 +47,7 @@ public class Hero extends GameCharacter{
                     return;
                 }
             }
-            dst.set(Gdx.input.getX(), 720 - Gdx.input.getY());
+            dst.set(gc.getMouse());
             state = State.MOVE;
             target = null;
         }

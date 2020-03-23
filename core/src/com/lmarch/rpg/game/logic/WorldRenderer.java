@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.badlogic.gdx.math.Vector2;
 import com.lmarch.rpg.game.logic.utils.MapElement;
 import com.lmarch.rpg.game.screens.ScreenManager;
 import com.lmarch.rpg.game.screens.utils.Assets;
@@ -21,6 +22,7 @@ public class WorldRenderer {
     private BitmapFont font20;
     private BitmapFont font12;
     private List<MapElement>[] drawables; //Список объектов по полосам
+    private Vector2 pov;
 
     private Comparator<MapElement> yComparator;
 
@@ -33,6 +35,7 @@ public class WorldRenderer {
         this.font20 = Assets.getInstance().getAssetManager().get("fonts/font20.ttf");
         this.font12 = Assets.getInstance().getAssetManager().get("fonts/font12.ttf");
         this.batch = batch;
+        this.pov = new Vector2(0, 0);
         //Список объектов, находящихся на определенной линии карты. Инициализация
         this.drawables = new ArrayList[Map.MAP_CELLS_HEIGHT];
         for (int i = 0; i < drawables.length; i++) {
@@ -56,6 +59,22 @@ public class WorldRenderer {
     }
 
     public void render() {
+        pov.set(gc.getHero().getPosition());
+        if (pov.x < ScreenManager.HALF_WORLD_WIDTH) {
+            pov.x = ScreenManager.HALF_WORLD_WIDTH;
+        }
+        if (pov.y < ScreenManager.HALF_WORLD_HEIGHT) {
+            pov.y = ScreenManager.HALF_WORLD_HEIGHT;
+        }
+        if (pov.x > gc.getMap().getWidthLimit() - ScreenManager.HALF_WORLD_WIDTH) {
+            pov.x = gc.getMap().getWidthLimit() - ScreenManager.HALF_WORLD_WIDTH;
+        }
+        if (pov.y > gc.getMap().getHeightLimit() - ScreenManager.HALF_WORLD_HEIGHT) {
+            pov.y = gc.getMap().getHeightLimit() - ScreenManager.HALF_WORLD_HEIGHT;
+        }
+
+        ScreenManager.getInstance().pointCameraTo(pov);
+
         //На каждом кадре перераскладываем объекты в массив
         for (List<MapElement> drawable : drawables) {
             drawable.clear();
@@ -112,7 +131,7 @@ public class WorldRenderer {
         batch.end();
         frameBuffer.end();
 
-        //ScreenManager.getInstance().resetCamera();
+        ScreenManager.getInstance().resetCamera();
 
         batch.begin();
         batch.setShader(shaderProgram); //Устанавливаем шейдерную программу
@@ -128,5 +147,7 @@ public class WorldRenderer {
         batch.begin();
         gc.getHero().renderGUI(batch, font20);
         batch.end();
+
+        ScreenManager.getInstance().pointCameraTo(pov);
     }
 }

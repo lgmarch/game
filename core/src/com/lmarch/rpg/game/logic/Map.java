@@ -21,8 +21,8 @@ public class Map {
         }
     }
 
-    public static final int MAP_CELLS_WIDTH = 16;
-    public static final int MAP_CELLS_HEIGHT = 12;
+    public static final int MAP_CELLS_WIDTH = 24;
+    public static final int MAP_CELLS_HEIGHT = 16;
 
     public static final int CELL_WIDTH = 80;
     public static final int CELL_HEIGHT = 60;
@@ -30,6 +30,14 @@ public class Map {
     private Obstacle[][] data;
     private TextureRegion grassTexture;
     private TextureRegion[] obstaclesTexture;
+
+    public int getWidthLimit() {
+        return MAP_CELLS_WIDTH * CELL_WIDTH;
+    }
+
+    public int getHeightLimit() {
+        return MAP_CELLS_HEIGHT * CELL_HEIGHT;
+    }
 
     //Проверка проходжения летящего объекта через ячейку (вода, стена)
     public boolean isAirPassable(int cellX, int cellY){
