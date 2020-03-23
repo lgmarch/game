@@ -7,7 +7,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.lmarch.rpg.game.logic.utils.MapElement;
 import com.lmarch.rpg.game.screens.utils.Assets;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
@@ -29,12 +28,7 @@ public class WorldRenderer {
         for (int i = 0; i < drawables.length; i++) {
             drawables[i] = new ArrayList<>();
         }
-        this.yComparator = new Comparator<MapElement>() {
-            @Override
-            public int compare(MapElement o1, MapElement o2) {
-                return (int) (o2.getY() - o1.getY());
-            }
-        };
+        this.yComparator = (o1, o2) -> (int) (o2.getY() - o1.getY());
     }
 
     public void render() {
@@ -61,8 +55,8 @@ public class WorldRenderer {
             drawables[p.getCellY()].add(p);
         }
 
-        for (int i = 0; i < drawables.length; i++) {
-            Collections.sort(drawables[i], yComparator);
+        for (List<MapElement> drawable : drawables) {
+            drawable.sort(yComparator);
         }
 
         //Цвет очистки экрана: выбор цвета
