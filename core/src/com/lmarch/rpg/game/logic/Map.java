@@ -7,27 +7,40 @@ import com.badlogic.gdx.math.Vector2;
 import com.lmarch.rpg.game.screens.utils.Assets;
 
 public class Map {
+    private class Obstacle {
+        int index;
+        float scale;
+        float offset;
+        boolean isAirPassable;
+
+        public Obstacle() {
+            this.index = MathUtils.random(0, 6);
+            this.scale = MathUtils.random(0.7f, 1.4f);
+            this.offset = MathUtils.random(-12, 12);
+            this.isAirPassable = false;
+        }
+    }
+
     public static final int MAP_CELLS_WIDTH = 16;
     public static final int MAP_CELLS_HEIGHT = 12;
 
     public static final int CELL_WIDTH = 80;
     public static final int CELL_HEIGHT = 60;
 
-    private byte[][] data;
+    private Obstacle[][] data;
     private TextureRegion grassTexture;
-    private TextureRegion treeTexture;
-    private TextureRegion oakTexture;
+    private TextureRegion[] obstaclesTexture;
 
     //Проверка проходжения летящего объекта через ячейку (вода, стена)
     public boolean isAirPassable(int cellX, int cellY){
-        return data[cellX][cellY]  == 0;
+        return data[cellX][cellY] == null || data[cellX][cellY].isAirPassable;
     }
 
     public boolean isGroundPassable(int cellX, int cellY){
         if (cellX < 0 || cellY < 0 || cellX >= MAP_CELLS_WIDTH || cellY >= MAP_CELLS_HEIGHT) {
             return false;
         }
-        return data[cellX][cellY]  == 0;
+        return data[cellX][cellY]  == null;
     }
 
     public boolean isGroundPassable(Vector2 position){
@@ -35,11 +48,14 @@ public class Map {
     }
 
     public Map() {
-        this.data = new byte[MAP_CELLS_WIDTH][MAP_CELLS_HEIGHT];
-        calculateBarrierMatrix();
+        this.data = new Obstacle[MAP_CELLS_WIDTH][MAP_CELLS_HEIGHT];
+        for (int i = 0; i < 25; i++) {
+            int x = MathUtils.random(MAP_CELLS_WIDTH - 1);
+            int y = MathUtils.random(MAP_CELLS_HEIGHT - 1);
+            data[x][y] = new Obstacle();
+        }
         this.grassTexture = Assets.getInstance().getAtlas().findRegion("grass");
-        this.treeTexture = Assets.getInstance().getAtlas().findRegion("tree");
-        this.oakTexture = Assets.getInstance().getAtlas().findRegion("wool");
+        this.obstaclesTexture = new TextureRegion(Assets.getInstance().getAtlas().findRegion("trees")).split(80, 120)[0];
     }
 
     //Отрисовка земли в клетке
@@ -49,37 +65,9 @@ public class Map {
 
     //Отрисовка объекта в клетке на земле
     public void renderTree(SpriteBatch batch, int x, int y) {
-        if (data[x][y]  == 1) {
-            batch.draw(treeTexture, x * CELL_WIDTH, y * CELL_HEIGHT);
-        }
-    }
-
-//    //Отрисовка объекта в клетке на земле
-//    public void renderStone(SpriteBatch batch, int x, int y) {
-//        if (data[x][y]  == 2) {
-//            batch.draw(stoneTexture, x * 80, y * 80);
-//        }
-//    }
-
-    //Отрисовка объекта в клетке на земле
-    public void renderOak(SpriteBatch batch, int x, int y) {
-        if (data[x][y]  == 3) {
-            batch.draw(oakTexture, x * CELL_WIDTH, y * CELL_HEIGHT);
-        }
-    }
-
-    public void calculateBarrierMatrix() {
-        //Tree
-        for (int i = 0; i < 3; i++) {
-            data[MathUtils.random(15)][MathUtils.random(8)] = 1;
-        }
-//        //Stone
-//        for (int i = 0; i < 2; i++) {
-//            data[MathUtils.random(15)][MathUtils.random(8)] = 2;
-//        }
-        //Oak
-        for (int i = 0; i < 3; i++) {
-            data[MathUtils.random(15)][MathUtils.random(8)] = 3;
+        if (data[x][y]  != null) {
+            batch.draw(obstaclesTexture[data[x][y].index], x * CELL_WIDTH + data[x][y].offset,y * CELL_HEIGHT,
+                    40, 30, 80, 120, data[x][y].scale, data[x][y].scale, 0);
         }
     }
 }

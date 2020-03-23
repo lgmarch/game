@@ -60,7 +60,7 @@ public abstract class GameCharacter implements MapElement {
     public void changePosition(float x, float y){
         position.set(x, y);
         checkBounds();
-        area.setPosition(x, y - 20);
+        area.setPosition(x, y);
     }
 
     public void setWeapon(Weapon weapon) {
@@ -126,6 +126,7 @@ public abstract class GameCharacter implements MapElement {
                 }
             }
         }
+        slideFromWall(dt);
     }
 
     public void moveToDst(float dt) {
@@ -183,11 +184,12 @@ public abstract class GameCharacter implements MapElement {
         target = null;
     }
 
-
-    public void renderHills(SpriteBatch batch, BitmapFont font) {
-        strBuilder.setLength(0); //Очистка
-        strBuilder.append(this.hp);
-        font.draw(batch, strBuilder, this.position.x -20, this.position.y + 50);
+    public void slideFromWall(float dt) {
+        if (!gc.getMap().isGroundPassable(position)) {
+            tmp.set(position).sub(getCellX() * Map.CELL_WIDTH + Map.CELL_WIDTH / 2,
+                    getCellY() * Map.CELL_HEIGHT + Map.CELL_HEIGHT / 2).nor().scl(60.0f);
+            changePosition(position.x + tmp.x * dt, position.y + tmp.y * dt);
+        }
     }
 
     public void onDeath() {
