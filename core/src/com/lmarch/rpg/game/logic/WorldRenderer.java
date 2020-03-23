@@ -2,9 +2,14 @@ package com.lmarch.rpg.game.logic;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.FrameBuffer;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.lmarch.rpg.game.logic.utils.MapElement;
+import com.lmarch.rpg.game.screens.ScreenManager;
 import com.lmarch.rpg.game.screens.utils.Assets;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -16,7 +21,12 @@ public class WorldRenderer {
     private BitmapFont font20;
     private BitmapFont font12;
     private List<MapElement>[] drawables; //Список объектов по полосам
+
     private Comparator<MapElement> yComparator;
+
+    private FrameBuffer frameBuffer; //Кадр экрана можно занести в буфер
+    private TextureRegion frameBufferRegion;
+    private ShaderProgram shaderProgram; //
 
     public WorldRenderer(GameController gameController, SpriteBatch batch) {
         this.gc = gameController;
@@ -34,6 +44,15 @@ public class WorldRenderer {
                 return (int) (o2.getY() - o1.getY());
             }
         };
+
+        this.frameBuffer = new FrameBuffer(Pixmap.Format.RGB888, ScreenManager.WORLD_WIDTH, ScreenManager.WORLD_HEIGHT, false);
+        this.frameBufferRegion = new TextureRegion(frameBuffer.getColorBufferTexture());
+        this.frameBufferRegion.flip(false, true);
+        this.shaderProgram = new ShaderProgram(Gdx.files.internal("shaders/vertex.glsl").readString(), Gdx.files.internal("shaders/fragment.glsl").readString());
+        //Компиляция Шейдера
+        if (!shaderProgram.isCompiled()) {
+            throw new IllegalArgumentException("Error compiling shader: " + shaderProgram.getLog());
+        }
     }
 
     public void render() {
@@ -64,12 +83,14 @@ public class WorldRenderer {
             drawable.sort(yComparator);
         }
 
+        frameBuffer.begin(); //Вывод во фрейм буфер
+        Gdx.gl.glClearColor(0, 0, 0, 1);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        batch.begin();
         //Цвет очистки экрана: выбор цвета
         Gdx.gl.glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
         //Очистка экрана
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-        batch.begin();
         //Рисуем всю землю
         for (int y = Map.MAP_CELLS_HEIGHT - 1; y >= 0; y--) {
             for (int x = 0; x < Map.MAP_CELLS_WIDTH; x++) {
@@ -87,7 +108,24 @@ public class WorldRenderer {
                 gc.getMap().renderTree(batch, x, y);
             }
         }
+        //gc.getSpecialEffectsController().render(batch);
+        batch.end();
+        frameBuffer.end();
 
+        //ScreenManager.getInstance().resetCamera();
+
+        batch.begin();
+        batch.setShader(shaderProgram); //Устанавливаем шейдерную программу
+        shaderProgram.setUniformf(shaderProgram.getUniformLocation("time"), gc.getWorldTimer());
+        shaderProgram.setUniformf(shaderProgram.getUniformLocation("px"), 640.f / 1280.0f);
+        shaderProgram.setUniformf(shaderProgram.getUniformLocation("py"), 360.f / 720.0f);
+        Gdx.gl.glClearColor(0, 0, 0, 1);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        batch.draw(frameBufferRegion, 0, 0); //Рисуем разом весь фрейм на экран
+        batch.end();
+        batch.setShader(null); //Сброс Шейдера
+
+        batch.begin();
         gc.getHero().renderGUI(batch, font20);
         batch.end();
     }

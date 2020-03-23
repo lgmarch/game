@@ -18,6 +18,11 @@ public class GameController {
     private Map map;
     private Hero hero;
     private Vector2 tmp, tmp2;
+    private float worldTimer;
+
+    public float getWorldTimer() {
+        return worldTimer;
+    }
 
     public Hero getHero() {
         return hero;
@@ -60,6 +65,7 @@ public class GameController {
     }
 
     public void update(float dt){
+        worldTimer += dt;
         allCharacters.clear();
         allCharacters.add(hero);
         allCharacters.addAll(monstersController.getActiveList());
