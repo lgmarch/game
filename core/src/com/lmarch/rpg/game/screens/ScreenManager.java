@@ -68,6 +68,7 @@ public class ScreenManager {
     public void resetCamera() {
         camera.position.set(HALF_WORLD_WIDTH, HALF_WORLD_HEIGHT, 0);
         camera.update();
+        viewport.apply();
         batch.setProjectionMatrix(camera.combined);
     }
 

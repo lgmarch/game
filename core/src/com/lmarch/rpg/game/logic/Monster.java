@@ -37,7 +37,7 @@ public class Monster extends GameCharacter implements Poolable {
         } while (!gc.getMap().isGroundPassable(position));
 
         this.position.set(MathUtils.random(0, 1280), MathUtils.random(0, 720));
-        this.speed = MathUtils.random(100, 150);
+        this.speed = MathUtils.random(60, 90);
         hpMax = 20;
         hp = hpMax;
 

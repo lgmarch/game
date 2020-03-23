@@ -106,10 +106,10 @@ public class WorldRenderer {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.begin();
-        //Цвет очистки экрана: выбор цвета
-        Gdx.gl.glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
-        //Очистка экрана
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+//        //Цвет очистки экрана: выбор цвета
+//        Gdx.gl.glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+//        //Очистка экрана
+//        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         //Рисуем всю землю
         for (int y = Map.MAP_CELLS_HEIGHT - 1; y >= 0; y--) {
             for (int x = 0; x < Map.MAP_CELLS_WIDTH; x++) {
@@ -136,8 +136,8 @@ public class WorldRenderer {
         batch.begin();
         batch.setShader(shaderProgram); //Устанавливаем шейдерную программу
         shaderProgram.setUniformf(shaderProgram.getUniformLocation("time"), gc.getWorldTimer());
-        shaderProgram.setUniformf(shaderProgram.getUniformLocation("px"), 640.f / 1280.0f);
-        shaderProgram.setUniformf(shaderProgram.getUniformLocation("py"), 360.f / 720.0f);
+        shaderProgram.setUniformf(shaderProgram.getUniformLocation("px"), pov.x / 1280.0f);
+        shaderProgram.setUniformf(shaderProgram.getUniformLocation("py"), pov.y / 720.0f);
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.draw(frameBufferRegion, 0, 0); //Рисуем разом весь фрейм на экран
