@@ -23,19 +23,6 @@ public class Hero extends GameCharacter{
         this.weapon = Weapon.createSimpleMeleeWeapon();
     }
 
-    @Override
-    public void render(SpriteBatch batch, BitmapFont font){
-        batch.draw(texturePointer, dst.x - 32, dst.y - 32,
-                32, 32, 64, 64, 0.5f, 0.5f, lifeTime * 90.0f);
-
-        batch.draw(texture[0][0], position.x - 32, position.y - 16,
-                32, 32, 64,64, 1, 1, 1);
-
-        batch.draw(textureHp, position.x - 25, position.y + 50, 60 * ((float) hp / hpMax), 8);
-        font.draw(batch, String.valueOf(hp), this.position.x - 25, this.position.y + 65, 60, 1, false);
-        batch.draw(weapon.getTexture(), position.x + 10, position.y + 35, 30, 30);
-    }
-
     public void renderGUI(SpriteBatch batch, BitmapFont font){
         strBuilder.setLength(0); //Очистка
         strBuilder.append("Class: ").append("Pig").append("\n");

@@ -13,15 +13,15 @@ import java.util.List;
 public class WorldRenderer {
     private GameController gc;
     private SpriteBatch batch;
-    private BitmapFont font24;
-    private BitmapFont font8;
+    private BitmapFont font20;
+    private BitmapFont font12;
     private List<MapElement>[] drawables; //Список объектов по полосам
     private Comparator<MapElement> yComparator;
 
     public WorldRenderer(GameController gameController, SpriteBatch batch) {
         this.gc = gameController;
-        this.font24 = Assets.getInstance().getAssetManager().get("fonts/font24.ttf");
-        this.font8 = Assets.getInstance().getAssetManager().get("fonts/font24.ttf");
+        this.font20 = Assets.getInstance().getAssetManager().get("fonts/font20.ttf");
+        this.font12 = Assets.getInstance().getAssetManager().get("fonts/font12.ttf");
         this.batch = batch;
         //Список объектов, находящихся на определенной линии карты. Инициализация
         this.drawables = new ArrayList[Map.MAP_CELLS_HEIGHT];
@@ -80,7 +80,7 @@ public class WorldRenderer {
         for (int y = Map.MAP_CELLS_HEIGHT - 1; y >= 0; y--) {
             //Рисуем персонажей
             for (int i = 0; i < drawables[y].size(); i++) {
-                drawables[y].get(i).render(batch, font8);
+                drawables[y].get(i).render(batch, font12);
             }
             //Рисуем объекты карты
             for (int x = 0; x < Map.MAP_CELLS_WIDTH; x++) {
@@ -88,7 +88,7 @@ public class WorldRenderer {
             }
         }
 
-        gc.getHero().renderGUI(batch, font24);
+        gc.getHero().renderGUI(batch, font20);
         batch.end();
     }
 }

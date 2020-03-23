@@ -1,7 +1,5 @@
 package com.lmarch.rpg.game.logic;
 
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
@@ -59,28 +57,6 @@ public class Monster extends GameCharacter implements Poolable {
         treasure.setupFree(position);
         gc.getWeaponsController().setup(position.x, position.y);
         //gc.getTreasureController().getActiveElement().setup(position, this.treasure);
-    }
-
-    @Override
-    public void render(SpriteBatch batch, BitmapFont font){ //Прорисовка
-        //batch.setColor(1, 0 , 0, 1);
-        TextureRegion currentRegion = texture[0][getCurrentFrameIndex()];
-        if (dst.x > position.x) {
-            if (currentRegion.isFlipX()) {
-                currentRegion.flip(true, false);
-            }
-        }else {
-            if (!currentRegion.isFlipX()) {
-                currentRegion.flip(true, false);
-            }
-        }
-        batch.draw(currentRegion, position.x - 30, position.y - 15,
-                30, 30, 60,60, 1.5f, 1.5f, 0);
-        //batch.setColor(1, 1 , 1, 1);
-        batch.draw(textureHp, position.x - 20, position.y + 50, 50 * ((float) hp / hpMax), 8);
-        font.draw(batch, String.valueOf(hp), this.position.x - 10, this.position.y + 65, 20, 1, false);
-        batch.draw(weapon.getTexture(), position.x + 10,position.y + 35, 30, 30);
-        batch.draw(treasure.getTexture(), position.x, position.y + 35, 30, 30);
     }
 
     public void update(float dt){
