@@ -8,11 +8,13 @@ import com.lmarch.rpg.game.screens.utils.Assets;
 
 public class Map {
     public static final int MAP_CELLS_WIDTH = 16;
-    public static final int MAP_CELLS_HEIGHT = 9;
+    public static final int MAP_CELLS_HEIGHT = 12;
+
+    public static final int CELL_WIDTH = 80;
+    public static final int CELL_HEIGHT = 60;
 
     private byte[][] data;
     private TextureRegion grassTexture;
-    private TextureRegion stoneTexture;
     private TextureRegion treeTexture;
     private TextureRegion oakTexture;
 
@@ -29,27 +31,26 @@ public class Map {
     }
 
     public boolean isGroundPassable(Vector2 position){
-        return isGroundPassable((int) (position.x / 80), (int) (position.y / 80));
+        return isGroundPassable((int) (position.x / CELL_WIDTH), (int) (position.y / CELL_HEIGHT));
     }
 
     public Map() {
         this.data = new byte[MAP_CELLS_WIDTH][MAP_CELLS_HEIGHT];
         calculateBarrierMatrix();
         this.grassTexture = Assets.getInstance().getAtlas().findRegion("grass");
-        this.stoneTexture = Assets.getInstance().getAtlas().findRegion("stoun");
         this.treeTexture = Assets.getInstance().getAtlas().findRegion("tree");
         this.oakTexture = Assets.getInstance().getAtlas().findRegion("wool");
     }
 
     //Отрисовка земли в клетке
     public void renderGround(SpriteBatch batch, int x, int y){
-        batch.draw(grassTexture, x * 80, y * 80);
+        batch.draw(grassTexture, x * CELL_WIDTH, y * CELL_HEIGHT, CELL_WIDTH, CELL_HEIGHT);
     }
 
     //Отрисовка объекта в клетке на земле
     public void renderTree(SpriteBatch batch, int x, int y) {
         if (data[x][y]  == 1) {
-            batch.draw(treeTexture, x * 80, y * 80);
+            batch.draw(treeTexture, x * CELL_WIDTH, y * CELL_HEIGHT);
         }
     }
 
@@ -63,7 +64,7 @@ public class Map {
     //Отрисовка объекта в клетке на земле
     public void renderOak(SpriteBatch batch, int x, int y) {
         if (data[x][y]  == 3) {
-            batch.draw(oakTexture, x * 80, y * 80);
+            batch.draw(oakTexture, x * CELL_WIDTH, y * CELL_HEIGHT);
         }
     }
 

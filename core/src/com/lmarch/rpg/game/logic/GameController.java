@@ -114,7 +114,7 @@ public class GameController {
         //Подбираем сокровища
         for (Treasure treasure : treasureController.getActiveList()) {
             if (treasure.isFree()) {
-                if (hero.getPosition().dst(treasure.getPosition()) < 20) {
+                if (hero.getPosition().dst(treasure.getPosition()) < 10) {
                     if (treasure.getType() == Treasure.Type.ELIXIR) {
                         hero.addElixir(treasure.getQuantity());
                         treasure.setLifeTime(5.0f);

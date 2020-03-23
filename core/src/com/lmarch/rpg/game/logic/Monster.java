@@ -74,13 +74,13 @@ public class Monster extends GameCharacter implements Poolable {
                 currentRegion.flip(true, false);
             }
         }
-        batch.draw(currentRegion, position.x - 30, position.y - 30,
+        batch.draw(currentRegion, position.x - 30, position.y - 15,
                 30, 30, 60,60, 1.5f, 1.5f, 0);
         //batch.setColor(1, 1 , 1, 1);
-        batch.draw(textureHp, position.x - 35, position.y + 35, 60 * ((float) hp / hpMax), 8);
-        renderHills(batch, font);
-        batch.draw(weapon.getTexture(), position.x - 3, position.y + 15, 30, 30);
-        batch.draw(treasure.getTexture(), position.x - 3, position.y + 35, 30, 30);
+        batch.draw(textureHp, position.x - 20, position.y + 50, 50 * ((float) hp / hpMax), 8);
+        font.draw(batch, String.valueOf(hp), this.position.x - 10, this.position.y + 65, 20, 1, false);
+        batch.draw(weapon.getTexture(), position.x + 10,position.y + 35, 30, 30);
+        batch.draw(treasure.getTexture(), position.x, position.y + 35, 30, 30);
     }
 
     public void update(float dt){

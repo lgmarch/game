@@ -45,11 +45,11 @@ public abstract class GameCharacter implements MapElement {
     protected Treasure treasure;
 
     public int getCellX(){
-        return (int) position.x / 80;
+        return (int) position.x / Map.CELL_WIDTH;
     }
 
     public int getCellY(){
-        return (int) (position.y - 20) / 80;
+        return (int) (position.y) / Map.CELL_HEIGHT;
     }
 
     @Override
@@ -156,13 +156,13 @@ public abstract class GameCharacter implements MapElement {
             position.x = 20.1f;
         }
         if (position.x> Map.MAP_CELLS_WIDTH * 80 - 20) {
-            position.x = Map.MAP_CELLS_WIDTH * 80 - 1 - 20;
+            position.x = Map.MAP_CELLS_WIDTH * 80 - 20;
         }
         if (position.y - 20 < 0.1f) {
             position.y = 20.1f;
         }
-        if (position.y > Map.MAP_CELLS_HEIGHT * 80 - 20) {
-            position.y = Map.MAP_CELLS_HEIGHT * 80 - 1 - 20;
+        if (position.y > Map.MAP_CELLS_HEIGHT * 80) {
+            position.y = Map.MAP_CELLS_HEIGHT * 80;
         }
     }
 

@@ -52,12 +52,12 @@ public class Weapon implements MapElement, Poolable, Consumable {
 
     @Override
     public int getCellX() {
-        return (int) (position.x / 80);
+        return (int) (position.x / Map.CELL_WIDTH);
     }
 
     @Override
     public int getCellY() {
-        return (int) (position.y / 80);
+        return (int) (position.y / Map.CELL_HEIGHT);
     }
 
     public Type getType() {
