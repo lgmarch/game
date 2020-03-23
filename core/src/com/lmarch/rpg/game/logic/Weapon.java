@@ -30,10 +30,6 @@ public class Weapon implements MapElement, Poolable, Consumable {
         return active;
     }
 
-    public Vector2 getPosition() {
-        return position;
-    }
-
     @Override
     public void consume(GameCharacter gameCharacter) {
         gameCharacter.setWeapon(this);
@@ -43,6 +39,10 @@ public class Weapon implements MapElement, Poolable, Consumable {
     @Override
     public void render(SpriteBatch batch, BitmapFont font) {
         batch.draw(texture, position.x - 32, position.y - 32);
+    }
+
+    public Vector2 getPosition() {
+        return position;
     }
 
     @Override
@@ -59,8 +59,8 @@ public class Weapon implements MapElement, Poolable, Consumable {
         return type;
     }
 
-    public String getTitle() {
-        return title;
+    public TextureRegion getTexture() {
+        return texture;
     }
 
     public int getMinDamage() {
@@ -83,6 +83,10 @@ public class Weapon implements MapElement, Poolable, Consumable {
         return range;
     }
 
+    public String getTitle() {
+        return title;
+    }
+
     public void setPosition(float x, float y) {
         this.position.set(x, y);
     }
@@ -91,8 +95,9 @@ public class Weapon implements MapElement, Poolable, Consumable {
         this.position = new Vector2(0, 0);
     }
 
-    public Weapon(Type type, String title, int minDamage, int maxDamage, float speed, float range) {
+    public Weapon(Type type, TextureRegion texture, String title, int minDamage, int maxDamage, float speed, float range) {
         this.type = type;
+        this.texture = texture;
         this.title = title;
         this.minDamage = minDamage;
         this.maxDamage = maxDamage;
@@ -118,6 +123,7 @@ public class Weapon implements MapElement, Poolable, Consumable {
     public static Weapon createSimpleRangedWeapon() {
         return new Weapon(
                 Type.RANGED,
+                Assets.getInstance().getAtlas().findRegion("weaponRanged"),
                 "Bow",
                 MathUtils.random(1, 2),
                 MathUtils.random(3, 5),
@@ -129,6 +135,7 @@ public class Weapon implements MapElement, Poolable, Consumable {
     public static Weapon createSimpleMeleeWeapon() {
         return new Weapon(
                 Type.MELEE,
+                Assets.getInstance().getAtlas().findRegion("weaponMelee"),
                 "Sword",
                 MathUtils.random(1, 2),
                 MathUtils.random(3, 4),

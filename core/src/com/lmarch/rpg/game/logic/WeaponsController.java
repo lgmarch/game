@@ -24,14 +24,17 @@ public class WeaponsController extends ObjectPool<Weapon> {
             }
         }
         Weapon.Type type = Weapon.Type.MELEE;
+        String title;
         float range = 60.0f;
+        title = "Melee";
         float attackSpeed = 0.4f;
         if (MathUtils.random(100) < 40) {
             type = Weapon.Type.RANGED;
+            title = "Ranged";
             range = 160.0f;
             attackSpeed = 0.5f;
         }
-        w.setup(type, "Weapon", MathUtils.random(1, 4), maxDamage, 0.4f, range);
+        w.setup(type, title, MathUtils.random(1, 4), maxDamage, 0.4f, range);
         w.setPosition(x, y);
     }
 

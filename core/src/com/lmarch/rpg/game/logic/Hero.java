@@ -9,8 +9,9 @@ import com.lmarch.rpg.game.screens.utils.Assets;
 
 public class Hero extends GameCharacter{
     private TextureRegion texturePointer;
-    private int coins;
     private StringBuilder strBuilder;
+    private int coins;
+    private int elixir;
 
     public Hero(GameController gc){
         super(gc, 80, 200.0f);
@@ -32,6 +33,7 @@ public class Hero extends GameCharacter{
 
         batch.draw(textureHp, position.x - 35, position.y + 35, 60 * ((float) hp / hpMax), 8);
         renderHills(batch, font);
+        batch.draw(weapon.getTexture(), position.x - 35, position.y + 15, 30, 30);
     }
 
     public void renderGUI(SpriteBatch batch, BitmapFont font){
@@ -39,7 +41,8 @@ public class Hero extends GameCharacter{
         strBuilder.append("Class: ").append("Pig").append("\n");
         strBuilder.append("HP: ").append(hp).append(" / ").append(hpMax).append("\n");
         strBuilder.append("Coins: ").append(coins).append("\n");
-        strBuilder.append("Weapon: ").append(weapon.getType()).append(" [").append(weapon.getMinDamage()).
+        strBuilder.append("Elixir: ").append(elixir).append("\n");
+        strBuilder.append("Weapon: ").append(weapon.getTitle()).append(" [").append(weapon.getMinDamage()).
                 append("-").append(weapon.getMaxDamage()).append("]").append("\n");
         font.draw(batch, strBuilder, 10, 710);
     }
@@ -64,17 +67,21 @@ public class Hero extends GameCharacter{
 //        if (Gdx.input.isButtonJustPressed(Input.Buttons.RIGHT)){
 //            gc.getProjectilesController().setup(position.x, position.y, Gdx.input.getX(), 720 - Gdx.input.getY());
 //        }
-        //System.out.println(angle.angle());
     }
 
     @Override
     public void onDeath() {
         super.onDeath();
         coins = 0;
+        elixir = 0;
         hp = hpMax;
     }
 
     public void addCoins(int amount){
         coins += amount;
+    }
+
+    public void addElixir(int amount){
+        elixir += amount;
     }
 }

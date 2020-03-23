@@ -1,7 +1,5 @@
 package com.lmarch.rpg.game.logic.utils;
 
-import com.lmarch.rpg.game.logic.utils.Poolable;
-
 import java.util.ArrayList;
 import java.util.List;
 

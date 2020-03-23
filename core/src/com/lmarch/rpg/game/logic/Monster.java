@@ -25,6 +25,7 @@ public class Monster extends GameCharacter implements Poolable {
         this.changePosition(MathUtils.random(0, 1280), MathUtils.random(0, 720));
         this.dst.set(this.position);
         this.visionRadius = 160.0f;
+
         if (MathUtils.random(100) < 30) {
             this.weapon = Weapon.createSimpleRangedWeapon();
         } else {
@@ -41,12 +42,23 @@ public class Monster extends GameCharacter implements Poolable {
         this.speed = MathUtils.random(100, 150);
         hpMax = 20;
         hp = hpMax;
+
+        if (MathUtils.random(0,50) > 25) {
+            treasure = gc.getTreasureController().getActiveElement().setMoney();
+        } else {
+            treasure = gc.getTreasureController().getActiveElement().setElixir();
+        }
+        //TODO
+        System.out.println("Active: " + gc.getTreasureController().getActiveList().size() +
+                "  Free: " + gc.getTreasureController().getFreeList().size());
     }
 
     @Override
     public void onDeath() {
         super.onDeath();
+        treasure.setupFree(position);
         gc.getWeaponsController().setup(position.x, position.y);
+        //gc.getTreasureController().getActiveElement().setup(position, this.treasure);
     }
 
     @Override
@@ -67,6 +79,8 @@ public class Monster extends GameCharacter implements Poolable {
         //batch.setColor(1, 1 , 1, 1);
         batch.draw(textureHp, position.x - 35, position.y + 35, 60 * ((float) hp / hpMax), 8);
         renderHills(batch, font);
+        batch.draw(weapon.getTexture(), position.x - 3, position.y + 15, 30, 30);
+        batch.draw(treasure.getTexture(), position.x - 3, position.y + 35, 30, 30);
     }
 
     public void update(float dt){

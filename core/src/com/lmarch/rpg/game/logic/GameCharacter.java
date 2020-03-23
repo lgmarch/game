@@ -13,9 +13,6 @@ public abstract class GameCharacter implements MapElement {
         IDLE, MOVE, ATTACK, PURSUIT, RETREAT
     }
 
-    static final int WIDTH = 60;
-    static final int HEIGHT = 60;
-
     protected GameController gc;
 
     protected TextureRegion[][] texture;
@@ -45,6 +42,7 @@ public abstract class GameCharacter implements MapElement {
     protected int hp, hpMax;
 
     protected Weapon weapon;
+    protected Treasure treasure;
 
     public int getCellX(){
         return (int) position.x / 80;
@@ -67,10 +65,6 @@ public abstract class GameCharacter implements MapElement {
     public void changePosition(Vector2 newPosition){
         changePosition(newPosition.x, newPosition.y);
     }
-
-//    public boolean isAlive() {
-//        return hp > 0;
-//    }
 
     public GameCharacter(GameController gameController, int hpMax, float speed) {
         this.gc = gameController;
