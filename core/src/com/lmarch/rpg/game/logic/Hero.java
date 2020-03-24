@@ -8,32 +8,19 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.lmarch.rpg.game.screens.utils.Assets;
 
 public class Hero extends GameCharacter{
-    private TextureRegion texturePointer;
+    //private TextureRegion texturePointer;
     private StringBuilder strBuilder;
     private int coins;
     private int elixir;
 
     public Hero(GameController gc){
-        super(gc, 80, 200.0f);
+        super(gc, 80, 120.0f);
         this.texture = new TextureRegion(Assets.getInstance().getAtlas().findRegion("pig1")).split(60, 60);
-        this.texturePointer = Assets.getInstance().getAtlas().findRegion("pointer");
+        //this.texturePointer = Assets.getInstance().getAtlas().findRegion("pointer");
         this.changePosition(100.0f, 100.0f);
         this.dst.set(position);
         this.strBuilder = new StringBuilder();
-        this.weapon = Weapon.createSimpleMeleeWeapon();
-    }
-
-    @Override
-    public void render(SpriteBatch batch, BitmapFont font){
-        batch.draw(texturePointer, dst.x - 32, dst.y - 32,
-                32, 32, 64, 64, 0.5f, 0.5f, lifeTime * 90.0f);
-
-        batch.draw(texture[0][0], position.x - 32, position.y - 32,
-                32, 32, 64,64, 1, 1, 1);
-
-        batch.draw(textureHp, position.x - 35, position.y + 35, 60 * ((float) hp / hpMax), 8);
-        renderHills(batch, font);
-        batch.draw(weapon.getTexture(), position.x - 35, position.y + 15, 30, 30);
+        this.weapon = gc.getWeaponsController().getOneFromAnyPrototype();
     }
 
     public void renderGUI(SpriteBatch batch, BitmapFont font){
@@ -60,7 +47,7 @@ public class Hero extends GameCharacter{
                     return;
                 }
             }
-            dst.set(Gdx.input.getX(), 720 - Gdx.input.getY());
+            dst.set(gc.getMouse());
             state = State.MOVE;
             target = null;
         }

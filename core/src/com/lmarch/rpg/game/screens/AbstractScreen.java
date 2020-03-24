@@ -12,6 +12,7 @@ public abstract class AbstractScreen implements Screen {
 
     @Override //Масштабирование
     public void resize(int width, int height) {
+        ScreenManager.getInstance().resize(width, height);
     }
 
     @Override //Режим ожидания приложения

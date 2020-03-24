@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Circle;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.lmarch.rpg.game.logic.utils.MapElement;
 import com.lmarch.rpg.game.screens.utils.Assets;
@@ -36,6 +37,7 @@ public abstract class GameCharacter implements MapElement {
     protected float attackTime;
     protected float walkTime;
     protected float timePerFrame;
+    protected float damageTimer;
 
     protected float visionRadius; //Дальность просмотра
     protected float speed;
@@ -45,17 +47,26 @@ public abstract class GameCharacter implements MapElement {
     protected Treasure treasure;
 
     public int getCellX(){
-        return (int) position.x / 80;
+        return (int) position.x / Map.CELL_WIDTH;
     }
 
     public int getCellY(){
-        return (int) (position.y - 20) / 80;
+        return (int) (position.y) / Map.CELL_HEIGHT;
+    }
+
+    public Weapon getWeapon() {
+        return weapon;
+    }
+
+    @Override
+    public float getY() {
+        return position.y;
     }
 
     public void changePosition(float x, float y){
         position.set(x, y);
         checkBounds();
-        area.setPosition(x, y - 20);
+        area.setPosition(x, y);
     }
 
     public void setWeapon(Weapon weapon) {
@@ -99,6 +110,10 @@ public abstract class GameCharacter implements MapElement {
 
     public void update(float dt) {
         lifeTime += dt;
+        damageTimer -= dt;
+        if (damageTimer < 0.0f) {
+            damageTimer = 0.0f;
+        }
 
         if (state == State.ATTACK) {
             dst.set(target.getPosition());
@@ -113,6 +128,8 @@ public abstract class GameCharacter implements MapElement {
             if (attackTime > weapon.getSpeed()) {
                 attackTime = 0.0f;
                 if (weapon.getType() == Weapon.Type.MELEE) {
+                    tmp.set(target.position).sub(position);
+                    gc.getEffectsController().setupSwordSwing(position.x, position.y, tmp.angle());
                     target.takeDamage(this, weapon.generateDamage());
                 }
                 if (weapon.getType() == Weapon.Type.RANGED && target != null) {
@@ -121,6 +138,7 @@ public abstract class GameCharacter implements MapElement {
                 }
             }
         }
+        slideFromWall(dt);
     }
 
     public void moveToDst(float dt) {
@@ -151,20 +169,24 @@ public abstract class GameCharacter implements MapElement {
             position.x = 20.1f;
         }
         if (position.x> Map.MAP_CELLS_WIDTH * 80 - 20) {
-            position.x = Map.MAP_CELLS_WIDTH * 80 - 1 - 20;
+            position.x = Map.MAP_CELLS_WIDTH * 80 - 20;
         }
         if (position.y - 20 < 0.1f) {
             position.y = 20.1f;
         }
-        if (position.y > Map.MAP_CELLS_HEIGHT * 80 - 20) {
-            position.y = Map.MAP_CELLS_HEIGHT * 80 - 1 - 20;
+        if (position.y > Map.MAP_CELLS_HEIGHT * 80) {
+            position.y = Map.MAP_CELLS_HEIGHT * 80;
         }
     }
 
     public boolean takeDamage(GameCharacter attacker, int amount) {
         lastAttacker = attacker;
-
         this.hp -= amount;
+        damageTimer += 0.4f; //увел. на 0.4 сек.
+
+        if (damageTimer > 1.0f) {
+            damageTimer = 1.0f;
+        }
         if (hp <= 0) {
             onDeath();
             return true;
@@ -178,11 +200,12 @@ public abstract class GameCharacter implements MapElement {
         target = null;
     }
 
-
-    public void renderHills(SpriteBatch batch, BitmapFont font) {
-        strBuilder.setLength(0); //Очистка
-        strBuilder.append(this.hp);
-        font.draw(batch, strBuilder, this.position.x -20, this.position.y + 50);
+    public void slideFromWall(float dt) {
+        if (!gc.getMap().isGroundPassable(position)) {
+            tmp.set(position).sub(getCellX() * Map.CELL_WIDTH + Map.CELL_WIDTH / 2,
+                    getCellY() * Map.CELL_HEIGHT + Map.CELL_HEIGHT / 2).nor().scl(60.0f);
+            changePosition(position.x + tmp.x * dt, position.y + tmp.y * dt);
+        }
     }
 
     public void onDeath() {
@@ -191,5 +214,40 @@ public abstract class GameCharacter implements MapElement {
                 gameCharacter.resetAttackState();
             }
         }
+    }
+
+    @Override
+    public void render(SpriteBatch batch, BitmapFont font) {
+        //batch.setColor(1, 0 , 0, 1);
+        TextureRegion currentRegion = texture[0][getCurrentFrameIndex()];
+        if (dst.x > position.x) {
+            if (currentRegion.isFlipX()) {
+                currentRegion.flip(true, false);
+            }
+        }else {
+            if (!currentRegion.isFlipX()) {
+                currentRegion.flip(true, false);
+            }
+        }
+
+        batch.setColor(1.0f, 1.0f - damageTimer, 1.0f - damageTimer, 1.0f);
+        batch.draw(currentRegion, position.x - 30, position.y - 15, 30, 30,
+                60, 60, 1.0f, 1.0f, 0);
+        batch.setColor(1.0f, 1.0f, 1.0f, 1.0f);
+
+        //Полоска жизни
+        batch.setColor(0.2f, 0.2f, 0.2f, 1.0f);
+        batch.draw(textureHp, position.x - 20, position.y + 45, 50, 8);
+        float n = (float) hp / hpMax;
+        float shock = damageTimer * 5.0f;
+        batch.setColor(1.0f - n, n, 0.0f, 1.0f);
+        batch.draw(textureHp, position.x - 20 + MathUtils.random(-shock, shock), position.y + 45 + MathUtils.random(-shock, shock), 50 * ((float) hp / hpMax), 8);
+
+        batch.setColor(1.0f, 1.0f, 1.0f, 1.0f);
+        font.draw(batch, String.valueOf(hp), position.x - 15 + MathUtils.random(-shock, shock), position.y + 55 + MathUtils.random(-shock, shock), 10, 1, false);
+
+        batch.draw(weapon.getTexture(), position.x + 10,position.y + 35, 30, 30);
+
+//        batch.draw(treasure.getTexture(), position.x, position.y + 35, 30, 30);
     }
 }

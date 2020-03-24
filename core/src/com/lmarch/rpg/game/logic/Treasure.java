@@ -63,16 +63,21 @@ public class Treasure implements MapElement, Poolable {
         return position;
     }
 
+    @Override
+    public float getY() {
+        return position.y;
+    }
+
     public int getQuantity() {
         return quantity;
     }
 
     public int getCellX(){
-        return (int) (position.x / 80);
+        return (int) (position.x / Map.CELL_WIDTH);
     }
 
     public int getCellY(){
-        return (int) (position.y / 80);
+        return (int) (position.y / Map.CELL_HEIGHT);
     }
 
     public boolean isFree() {

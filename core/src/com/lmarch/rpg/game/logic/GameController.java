@@ -1,7 +1,8 @@
 package com.lmarch.rpg.game.logic;
 
-import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
+import com.lmarch.rpg.game.screens.ScreenManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,11 +15,22 @@ public class GameController {
     private ProjectilesController projectilesController;
     private MonstersController monstersController;
     private WeaponsController weaponsController;
+    private SpecialEffectsController effectsController;
     private TreasureController treasureController;
     private List<GameCharacter> allCharacters;
     private Map map;
     private Hero hero;
     private Vector2 tmp, tmp2;
+    private Vector2 mouse; //Точка в Мире
+    private float worldTimer;
+
+    public Vector2 getMouse() {
+        return mouse;
+    }
+
+    public float getWorldTimer() {
+        return worldTimer;
+    }
 
     public Hero getHero() {
         return hero;
@@ -26,6 +38,10 @@ public class GameController {
 
     public Map getMap() {
         return map;
+    }
+
+    public SpecialEffectsController getEffectsController() {
+        return effectsController;
     }
 
     public List<GameCharacter> getAllCharacters() {
@@ -50,27 +66,33 @@ public class GameController {
 
     public GameController() {
         this.allCharacters = new ArrayList<>();
-        this.projectilesController = new ProjectilesController();
+        this.projectilesController = new ProjectilesController(this);
         this.weaponsController = new WeaponsController(this);
+        this.effectsController = new SpecialEffectsController();
         this.treasureController = new TreasureController();
         this.hero = new Hero(this);
         this.map = new Map();
         this.monstersController = new MonstersController(this, 5);
         this.tmp = new Vector2(0, 0);
         this.tmp2 = new Vector2(0, 0);
+        this.mouse = new Vector2(0, 0);
     }
 
     public void update(float dt){
+        mouse.set(Gdx.input.getX(), Gdx.input.getY()); //В мышку зашиваем координаты x, y
+        ScreenManager.getInstance().getViewport().unproject(mouse); //Преобразование координат в мировые
+
+        worldTimer += dt;
         allCharacters.clear();
         allCharacters.add(hero);
         allCharacters.addAll(monstersController.getActiveList());
 
         hero.update(dt);
         monstersController.update(dt);
-
         checkCollisions();
         projectilesController.update(dt);
         weaponsController.update(dt);
+        effectsController.update(dt);
         treasureController.update(dt);
     }
 
@@ -111,23 +133,6 @@ public class GameController {
                 w.consume(hero);
             }
         }
-        //Подбираем сокровища
-        for (Treasure treasure : treasureController.getActiveList()) {
-            if (treasure.isFree()) {
-                if (hero.getPosition().dst(treasure.getPosition()) < 20) {
-                    if (treasure.getType() == Treasure.Type.ELIXIR) {
-                        hero.addElixir(treasure.getQuantity());
-                        treasure.setLifeTime(5.0f);
-                        treasure.setFree(false);
-                    }
-                    if (treasure.getType() == Treasure.Type.MONEY) {
-                        hero.addCoins(treasure.getQuantity());
-                        treasure.setLifeTime(5.0f);
-                        treasure.setFree(false);
-                    }
-                }
-            }
-        }
         for (int i = 0; i < projectilesController.getActiveList().size(); i++) {
             Projectile p = projectilesController.getActiveList().get(i);
             if (!map.isAirPassable(p.getCellX(), p.getCellY())) { //Проверка прохождения ч/з стену
@@ -145,6 +150,23 @@ public class GameController {
                 if (p.getPosition().dst(o.getPosition()) < 24) {
                     p.deactivate();
                     o.takeDamage(p.getOwner(), p.getDamage());
+                }
+            }
+        }
+        //Подбираем сокровища
+        for (Treasure treasure : treasureController.getActiveList()) {
+            if (treasure.isFree()) {
+                if (hero.getPosition().dst(treasure.getPosition()) < 15) {
+                    if (treasure.getType() == Treasure.Type.ELIXIR) {
+                        hero.addElixir(treasure.getQuantity());
+                        treasure.setLifeTime(5.0f);
+                        treasure.setFree(false);
+                    }
+                    if (treasure.getType() == Treasure.Type.MONEY) {
+                        hero.addCoins(treasure.getQuantity());
+                        treasure.setLifeTime(5.0f);
+                        treasure.setFree(false);
+                    }
                 }
             }
         }

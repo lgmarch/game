@@ -49,7 +49,7 @@ public class GameScreen extends AbstractScreen {
         Skin skin = new Skin();
         skin.addRegions(Assets.getInstance().getAtlas());
 
-        BitmapFont font14 = Assets.getInstance().getAssetManager().get("fonts/font24.ttf");
+        BitmapFont font14 = Assets.getInstance().getAssetManager().get("fonts/font20.ttf");
 
         TextButton.TextButtonStyle menuBtnStyle = new TextButton.TextButtonStyle(
                 skin.getDrawable("pusk"), null, null, font14);
