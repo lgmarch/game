@@ -54,6 +54,10 @@ public abstract class GameCharacter implements MapElement {
         return (int) (position.y) / Map.CELL_HEIGHT;
     }
 
+    public Weapon getWeapon() {
+        return weapon;
+    }
+
     @Override
     public float getY() {
         return position.y;

@@ -23,12 +23,7 @@ public class Monster extends GameCharacter implements Poolable {
         this.changePosition(MathUtils.random(0, 1280), MathUtils.random(0, 720));
         this.dst.set(this.position);
         this.visionRadius = 160.0f;
-
-        if (MathUtils.random(100) < 30) {
-            this.weapon = Weapon.createSimpleRangedWeapon();
-        } else {
-            this.weapon = Weapon.createSimpleMeleeWeapon();
-        }
+        this.weapon = gc.getWeaponsController().getOneFromAnyPrototype();
     }
 
     public void setup(){

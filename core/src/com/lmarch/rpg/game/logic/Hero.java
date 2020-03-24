@@ -20,7 +20,7 @@ public class Hero extends GameCharacter{
         this.changePosition(100.0f, 100.0f);
         this.dst.set(position);
         this.strBuilder = new StringBuilder();
-        this.weapon = Weapon.createSimpleMeleeWeapon();
+        this.weapon = gc.getWeaponsController().getOneFromAnyPrototype();
     }
 
     public void renderGUI(SpriteBatch batch, BitmapFont font){
