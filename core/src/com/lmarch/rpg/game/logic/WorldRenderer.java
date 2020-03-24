@@ -80,16 +80,13 @@ public class WorldRenderer {
             drawable.clear();
         }
         drawables[gc.getHero().getCellY()].add(gc.getHero());
-
         for (int i = 0; i < gc.getWeaponsController().getActiveList().size(); i++) {
             Weapon w = gc.getWeaponsController().getActiveList().get(i);
             drawables[w.getCellY()].add(w);
         }
-
         for (Treasure treasure : gc.getTreasureController().getActiveList()) {
             if (treasure.isFree()) drawables[treasure.getCellY()].add(treasure);
         }
-
         for (Monster monster : gc.getMonstersController().getActiveList()) {
             drawables[monster.getCellY()].add(monster);
         }
@@ -106,10 +103,6 @@ public class WorldRenderer {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.begin();
-//        //Цвет очистки экрана: выбор цвета
-//        Gdx.gl.glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
-//        //Очистка экрана
-//        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         //Рисуем всю землю
         for (int y = Map.MAP_CELLS_HEIGHT - 1; y >= 0; y--) {
             for (int x = 0; x < Map.MAP_CELLS_WIDTH; x++) {
@@ -127,7 +120,7 @@ public class WorldRenderer {
                 gc.getMap().renderTree(batch, x, y);
             }
         }
-        //gc.getSpecialEffectsController().render(batch);
+        gc.getEffectsController().render(batch);
         batch.end();
         frameBuffer.end();
 

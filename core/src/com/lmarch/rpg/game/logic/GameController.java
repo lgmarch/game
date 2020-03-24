@@ -15,6 +15,7 @@ public class GameController {
     private ProjectilesController projectilesController;
     private MonstersController monstersController;
     private WeaponsController weaponsController;
+    private SpecialEffectsController effectsController;
     private TreasureController treasureController;
     private List<GameCharacter> allCharacters;
     private Map map;
@@ -39,7 +40,9 @@ public class GameController {
         return map;
     }
 
-
+    public SpecialEffectsController getEffectsController() {
+        return effectsController;
+    }
 
     public List<GameCharacter> getAllCharacters() {
         return allCharacters;
@@ -65,6 +68,7 @@ public class GameController {
         this.allCharacters = new ArrayList<>();
         this.projectilesController = new ProjectilesController(this);
         this.weaponsController = new WeaponsController(this);
+        this.effectsController = new SpecialEffectsController();
         this.treasureController = new TreasureController();
         this.hero = new Hero(this);
         this.map = new Map();
@@ -88,6 +92,7 @@ public class GameController {
         checkCollisions();
         projectilesController.update(dt);
         weaponsController.update(dt);
+        effectsController.update(dt);
         treasureController.update(dt);
     }
 

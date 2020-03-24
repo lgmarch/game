@@ -128,6 +128,8 @@ public abstract class GameCharacter implements MapElement {
             if (attackTime > weapon.getSpeed()) {
                 attackTime = 0.0f;
                 if (weapon.getType() == Weapon.Type.MELEE) {
+                    tmp.set(target.position).sub(position);
+                    gc.getEffectsController().setupSwordSwing(position.x, position.y, tmp.angle());
                     target.takeDamage(this, weapon.generateDamage());
                 }
                 if (weapon.getType() == Weapon.Type.RANGED && target != null) {
