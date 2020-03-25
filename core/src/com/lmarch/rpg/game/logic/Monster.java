@@ -1,5 +1,6 @@
 package com.lmarch.rpg.game.logic;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
@@ -18,12 +19,13 @@ public class Monster extends GameCharacter implements Poolable {
     }
 
     public Monster(GameController gameController){
-        super(gameController, 20, 50.0f);
+        super(gameController, 80, 50.0f);
         this.texture = new TextureRegion(Assets.getInstance().getAtlas().findRegion("dwarf60")).split(60, 60);
         this.changePosition(MathUtils.random(0, 1280), MathUtils.random(0, 720));
         this.dst.set(this.position);
         this.visionRadius = 160.0f;
         this.weapon = gc.getWeaponsController().getOneFromAnyPrototype();
+        this.color = Color.MAGENTA;
     }
 
     public void setup(){
@@ -33,7 +35,6 @@ public class Monster extends GameCharacter implements Poolable {
 
         this.position.set(MathUtils.random(0, 1280), MathUtils.random(0, 720));
         this.speed = MathUtils.random(60, 90);
-        hpMax = 20;
         hp = hpMax;
 
         if (MathUtils.random(0,50) > 25) {
@@ -41,9 +42,8 @@ public class Monster extends GameCharacter implements Poolable {
         } else {
             treasure = gc.getTreasureController().getActiveElement().setElixir();
         }
-        //TODO
-        System.out.println("Active: " + gc.getTreasureController().getActiveList().size() +
-                "  Free: " + gc.getTreasureController().getFreeList().size());
+//        System.out.println("Active: " + gc.getTreasureController().getActiveList().size() +
+//                "  Free: " + gc.getTreasureController().getFreeList().size());
     }
 
     @Override

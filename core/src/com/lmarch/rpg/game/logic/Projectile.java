@@ -33,6 +33,10 @@ public class Projectile implements Poolable, MapElement {
         return damage;
     }
 
+    public String getDamageString() {
+        return "-" + damage;
+    }
+
     @Override
     public int getCellX() {
         return (int) position.x / Map.CELL_WIDTH;

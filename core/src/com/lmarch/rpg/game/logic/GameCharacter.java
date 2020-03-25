@@ -1,5 +1,6 @@
 package com.lmarch.rpg.game.logic;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -42,9 +43,11 @@ public abstract class GameCharacter implements MapElement {
     protected float visionRadius; //Дальность просмотра
     protected float speed;
     protected int hp, hpMax;
+    protected int coins;
 
     protected Weapon weapon;
     protected Treasure treasure;
+    protected Color color;
 
     public int getCellX(){
         return (int) position.x / Map.CELL_WIDTH;
@@ -88,11 +91,13 @@ public abstract class GameCharacter implements MapElement {
         this.area = new Circle(0.0f, 0.0f, 15);
         this.hpMax = hpMax;
         this.hp = this.hpMax;
+        this.coins = 0;
         this.speed = speed;
         this.state = State.IDLE;
         this.stateTimer = 1.0f;
         this.timePerFrame = 0.2f; //8 кадров меняются каждые 0.2 сек.
         this.target = null;
+        this.color = Color.BLACK;
     }
 
     public int getCurrentFrameIndex() {
@@ -106,6 +111,10 @@ public abstract class GameCharacter implements MapElement {
 
     public Circle getArea() {
         return area;
+    }
+
+    public Color getColor() {
+        return color;
     }
 
     public void update(float dt) {
@@ -131,6 +140,7 @@ public abstract class GameCharacter implements MapElement {
                     tmp.set(target.position).sub(position);
                     gc.getEffectsController().setupSwordSwing(position.x, position.y, tmp.angle());
                     target.takeDamage(this, weapon.generateDamage());
+                    //gc.getMessageController().getActiveElement().setMessage(String.valueOf(tmp), target.getPosition(), Color.RED);
                 }
                 if (weapon.getType() == Weapon.Type.RANGED && target != null) {
                     gc.getProjectilesController().setup(this, position.x, position.y, target.getPosition().x,
@@ -187,6 +197,10 @@ public abstract class GameCharacter implements MapElement {
         if (damageTimer > 1.0f) {
             damageTimer = 1.0f;
         }
+
+        //Покажем уменьшение здоровья Героя
+        gc.getMessageController().getActiveElement().setMessage("-"+String.valueOf(amount), this.position, this.getColor());
+
         if (hp <= 0) {
             onDeath();
             return true;
@@ -244,10 +258,22 @@ public abstract class GameCharacter implements MapElement {
         batch.draw(textureHp, position.x - 20 + MathUtils.random(-shock, shock), position.y + 45 + MathUtils.random(-shock, shock), 50 * ((float) hp / hpMax), 8);
 
         batch.setColor(1.0f, 1.0f, 1.0f, 1.0f);
+        font.setColor(1.0f, 1.0f, 1.0f, 1.0f);
         font.draw(batch, String.valueOf(hp), position.x - 15 + MathUtils.random(-shock, shock), position.y + 55 + MathUtils.random(-shock, shock), 10, 1, false);
 
         batch.draw(weapon.getTexture(), position.x + 10,position.y + 35, 30, 30);
 
 //        batch.draw(treasure.getTexture(), position.x, position.y + 35, 30, 30);
+    }
+
+    public void addCoins(int amount){
+        this.coins += amount;
+    }
+
+    public void addHp(int amount){
+        this.hp += amount;
+        if (hp > hpMax) {
+            hp = hpMax;
+        }
     }
 }

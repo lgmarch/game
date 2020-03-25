@@ -94,6 +94,9 @@ public class WorldRenderer {
             Projectile p = gc.getProjectilesController().getActiveList().get(i);
             drawables[p.getCellY()].add(p);
         }
+        for (Message message : gc.getMessageController().getActiveList()) {
+            drawables[message.getCellY()].add(message);
+        }
 
         for (List<MapElement> drawable : drawables) {
             drawable.sort(yComparator);

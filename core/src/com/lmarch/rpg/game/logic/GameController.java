@@ -1,6 +1,8 @@
 package com.lmarch.rpg.game.logic;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Vector2;
 import com.lmarch.rpg.game.screens.ScreenManager;
 
@@ -17,12 +19,14 @@ public class GameController {
     private WeaponsController weaponsController;
     private SpecialEffectsController effectsController;
     private TreasureController treasureController;
+    private MessageController messageController;
     private List<GameCharacter> allCharacters;
     private Map map;
     private Hero hero;
     private Vector2 tmp, tmp2;
     private Vector2 mouse; //Точка в Мире
     private float worldTimer;
+    private Circle circleView;
 
     public Vector2 getMouse() {
         return mouse;
@@ -64,18 +68,24 @@ public class GameController {
         return treasureController;
     }
 
+    public MessageController getMessageController() {
+        return messageController;
+    }
+
     public GameController() {
         this.allCharacters = new ArrayList<>();
         this.projectilesController = new ProjectilesController(this);
         this.weaponsController = new WeaponsController(this);
         this.effectsController = new SpecialEffectsController();
         this.treasureController = new TreasureController();
+        this.messageController = new MessageController();
         this.hero = new Hero(this);
         this.map = new Map();
         this.monstersController = new MonstersController(this, 5);
         this.tmp = new Vector2(0, 0);
         this.tmp2 = new Vector2(0, 0);
         this.mouse = new Vector2(0, 0);
+        this.circleView = new Circle(0, 0 , 25);
     }
 
     public void update(float dt){
@@ -89,11 +99,12 @@ public class GameController {
 
         hero.update(dt);
         monstersController.update(dt);
-        checkCollisions();
+        checkCollisions(dt);
         projectilesController.update(dt);
         weaponsController.update(dt);
         effectsController.update(dt);
         treasureController.update(dt);
+        messageController.update(dt);
     }
 
     public void collideUnits(GameCharacter u1, GameCharacter u2){
@@ -114,7 +125,7 @@ public class GameController {
         }
     }
 
-    public void checkCollisions(){
+    public void checkCollisions(float dt){
         //Проверка столкновений
         for (int i = 0; i < monstersController.getActiveList().size(); i++) {
             Monster m = monstersController.getActiveList().get(i);
@@ -130,7 +141,12 @@ public class GameController {
         for (int i = 0; i < weaponsController.getActiveList().size(); i++) {
             Weapon w = weaponsController.getActiveList().get(i);
             if (hero.getPosition().dst(w.getPosition()) < 20) {
-                w.consume(hero);
+                w.consume(this, hero);
+            }
+            //Данные об валяющемся оружии
+            if (mouse.dst(w.getPosition()) < 20 && !circleView.contains(mouse)) {
+                messageController.getActiveElement().setMessage(w.getWeaponInfo(), mouse, Color.BROWN);
+                circleView.setPosition(mouse);
             }
         }
         for (int i = 0; i < projectilesController.getActiveList().size(); i++) {
@@ -156,16 +172,12 @@ public class GameController {
         //Подбираем сокровища
         for (Treasure treasure : treasureController.getActiveList()) {
             if (treasure.isFree()) {
-                if (hero.getPosition().dst(treasure.getPosition()) < 15) {
+                if (hero.getPosition().dst(treasure.getPosition()) < 20) {
+                    treasure.consume(this, hero);
                     if (treasure.getType() == Treasure.Type.ELIXIR) {
-                        hero.addElixir(treasure.getQuantity());
-                        treasure.setLifeTime(5.0f);
-                        treasure.setFree(false);
-                    }
-                    if (treasure.getType() == Treasure.Type.MONEY) {
-                        hero.addCoins(treasure.getQuantity());
-                        treasure.setLifeTime(5.0f);
-                        treasure.setFree(false);
+                        messageController.getActiveElement().setMessage("+" + String.valueOf(treasure.getQuantity()), hero.position, Color.GREEN);
+                    } else {
+                        messageController.getActiveElement().setMessage(treasure.getTreasureInfo(), hero.position, Color.GOLD);
                     }
                 }
             }

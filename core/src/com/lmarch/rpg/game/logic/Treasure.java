@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
+import com.lmarch.rpg.game.logic.utils.Consumable;
 import com.lmarch.rpg.game.logic.utils.MapElement;
 import com.lmarch.rpg.game.logic.utils.Poolable;
 import com.lmarch.rpg.game.screens.utils.Assets;
@@ -11,7 +12,7 @@ import com.lmarch.rpg.game.screens.utils.Assets;
 /**
  * Класс для отображения на игровом поле выпадающих из Монстров сокровищ
  */
-public class Treasure implements MapElement, Poolable {
+public class Treasure implements MapElement, Poolable, Consumable {
 
     public enum Type {
         ELIXIR, MONEY
@@ -28,6 +29,22 @@ public class Treasure implements MapElement, Poolable {
         this.position = new Vector2(0, 0);
         this.free = false;
         this.lifeTime = 30.0f;
+    }
+
+
+    @Override
+    public void consume(GameController gc, GameCharacter player) {
+        switch (type) {
+            case ELIXIR:
+                player.addHp(this.quantity);
+                break;
+            case MONEY:
+                player.addCoins(this.quantity);
+                break;
+        }
+        //gc.getMessageController().getActiveElement().setMessage(getAddTreasureString(), player.position, Color.GOLD);
+        lifeTime = 5.0f;
+        free = false;
     }
 
     @Override
@@ -80,6 +97,10 @@ public class Treasure implements MapElement, Poolable {
         return (int) (position.y / Map.CELL_HEIGHT);
     }
 
+    public String getTreasureInfo() {
+        return "Add: " + "\n" + String.valueOf(getType()) + " " + String.valueOf(quantity);
+    }
+
     public boolean isFree() {
         return free;
     }
@@ -106,7 +127,7 @@ public class Treasure implements MapElement, Poolable {
     public Treasure setElixir() {
         this.type = Type.ELIXIR;
         this.texture = Assets.getInstance().getAtlas().findRegion("potionBlue");
-        this.quantity = 1; //MathUtils.random(1,20);
+        this.quantity = 10; //MathUtils.random(1,15);
         this.lifeTime = 30.0f;
         this.free = false;
         return this;

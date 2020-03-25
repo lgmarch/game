@@ -95,7 +95,7 @@ public class Weapon implements MapElement, Poolable, Consumable {
     }
 
     @Override
-    public void consume(GameCharacter gameCharacter) {
+    public void consume(GameController gc, GameCharacter gameCharacter) {
         gameCharacter.getWeapon().copyFrom(this);
         active = false;
     }
@@ -145,6 +145,11 @@ public class Weapon implements MapElement, Poolable, Consumable {
 
     public float getRange() {
         return range;
+    }
+
+    public String getWeaponInfo() {
+        return title + "\n" + "damage: " + String.valueOf(minDamage) + "-" + String.valueOf(maxDamage) + " " +
+                "\n" + "speed: " + String.valueOf(speed) + "\n" + "range: " + String.valueOf(range);
     }
 
     public void setPosition(float x, float y) {
