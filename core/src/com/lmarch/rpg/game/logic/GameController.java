@@ -178,11 +178,6 @@ public class GameController {
             if (treasure.isFree()) {
                 if (hero.getPosition().dst(treasure.getPosition()) < 20) {
                     treasure.consume(this, hero);
-                    if (treasure.getType() == Treasure.Type.ELIXIR) {
-                        messageController.getActiveElement().setMessage("+" + treasure.getQuantity(), hero.position, Color.GREEN);
-                    } else {
-                        messageController.getActiveElement().setMessage(treasure.getTreasureInfo(), hero.position, Color.GOLD);
-                    }
                 }
             }
         }

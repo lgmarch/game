@@ -94,9 +94,6 @@ public class WorldRenderer {
             Projectile p = gc.getProjectilesController().getActiveList().get(i);
             drawables[p.getCellY()].add(p);
         }
-        for (Message message : gc.getMessageController().getActiveList()) {
-            drawables[message.getCellY()].add(message);
-        }
 
         for (List<MapElement> drawable : drawables) {
             drawable.sort(yComparator);
@@ -124,6 +121,7 @@ public class WorldRenderer {
             }
         }
         gc.getEffectsController().render(batch);
+        gc.getMessageController().render(batch, font12);
         batch.end();
         frameBuffer.end();
 
@@ -132,8 +130,8 @@ public class WorldRenderer {
         batch.begin();
         batch.setShader(shaderProgram); //Устанавливаем шейдерную программу
         shaderProgram.setUniformf(shaderProgram.getUniformLocation("time"), gc.getWorldTimer());
-        shaderProgram.setUniformf(shaderProgram.getUniformLocation("px"), pov.x / 1280.0f);
-        shaderProgram.setUniformf(shaderProgram.getUniformLocation("py"), pov.y / 720.0f);
+        shaderProgram.setUniformf(shaderProgram.getUniformLocation("px"), pov.x / ScreenManager.WORLD_WIDTH);
+        shaderProgram.setUniformf(shaderProgram.getUniformLocation("py"), pov.y / ScreenManager.WORLD_HEIGHT);
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.draw(frameBufferRegion, 0, 0); //Рисуем разом весь фрейм на экран

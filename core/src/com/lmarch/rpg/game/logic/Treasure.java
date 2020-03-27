@@ -1,8 +1,10 @@
 package com.lmarch.rpg.game.logic;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.lmarch.rpg.game.logic.utils.Consumable;
 import com.lmarch.rpg.game.logic.utils.MapElement;
@@ -110,7 +112,7 @@ public class Treasure implements MapElement, Poolable, Consumable {
     public Treasure setMoney() {
         this.type = Type.MONEY;
         this.texture = Assets.getInstance().getAtlas().findRegion("coin");
-        this.quantity = 1; //MathUtils.random(1,20);
+        this.quantity = MathUtils.random(1,10);
         this.lifeTime = 30.0f;
         this.free = false;
         return this;
@@ -119,7 +121,7 @@ public class Treasure implements MapElement, Poolable, Consumable {
     public Treasure setElixir() {
         this.type = Type.ELIXIR;
         this.texture = Assets.getInstance().getAtlas().findRegion("potionBlue");
-        this.quantity = 10; //MathUtils.random(1,15);
+        this.quantity = MathUtils.random(1,15);
         this.lifeTime = 30.0f;
         this.free = false;
         return this;

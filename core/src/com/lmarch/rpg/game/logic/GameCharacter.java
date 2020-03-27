@@ -198,8 +198,8 @@ public abstract class GameCharacter implements MapElement {
             damageTimer = 1.0f;
         }
 
-        //Покажем уменьшение здоровья Героя
-        gc.getMessageController().getActiveElement().setMessage("-"+String.valueOf(amount), this.position, this.getColor());
+        //Покажем уменьшение здоровья Игроков
+        gc.getMessageController().getActiveElement().setMessage("-"+ amount, this.position, this.getColor());
 
         if (hp <= 0) {
             onDeath();
@@ -268,12 +268,17 @@ public abstract class GameCharacter implements MapElement {
 
     public void addCoins(int amount){
         this.coins += amount;
+        gc.getMessageController().getActiveElement().setMessage("Add: " + "\n" + amount + " money", this.position, Color.GOLD);
     }
 
     public void addHp(int amount){
-        this.hp += amount;
-        if (hp > hpMax) {
-            hp = hpMax;
+        if (hp + amount > hpMax) {
+            amount = hpMax - hp;
+        }
+        hp += amount;
+
+        if (amount > 0) {
+            gc.getMessageController().getActiveElement().setMessage("+" + amount, this.position, Color.GREEN);
         }
     }
 }

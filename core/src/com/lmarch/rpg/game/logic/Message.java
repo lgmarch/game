@@ -1,17 +1,14 @@
 package com.lmarch.rpg.game.logic;
 
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
-import com.lmarch.rpg.game.logic.utils.MapElement;
 import com.lmarch.rpg.game.logic.utils.Poolable;
 
 /**
  * Класс для отображения на игровом поле выпадающих из Монстров сокровищ
  */
-public class Message implements MapElement, Poolable {
+public class Message implements Poolable {
 
     private StringBuilder message;
     private Vector2 position;
@@ -32,10 +29,16 @@ public class Message implements MapElement, Poolable {
         this.speed = 1.0f;
     }
 
-    @Override
-    public void render(SpriteBatch batch, BitmapFont font) {
-        font.setColor(color);
-        font.draw(batch, message, position.x, position.y);
+    public StringBuilder getMessage() {
+        return message;
+    }
+
+    public Vector2 getPosition() {
+        return position;
+    }
+
+    public Color getColor() {
+        return color;
     }
 
     @Override
@@ -48,19 +51,6 @@ public class Message implements MapElement, Poolable {
         if (lifeTime < 0) {
             lifeTime = 0.0f;
         }
-    }
-
-    @Override
-    public float getY() {
-        return position.y;
-    }
-
-    public int getCellX(){
-        return (int) (position.x / Map.CELL_WIDTH);
-    }
-
-    public int getCellY(){
-        return (int) (position.y / Map.CELL_HEIGHT);
     }
 
     public void setMessage(String str, Vector2 position, Color color) {
