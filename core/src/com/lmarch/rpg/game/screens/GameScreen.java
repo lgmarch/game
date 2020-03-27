@@ -87,4 +87,9 @@ public class GameScreen extends AbstractScreen {
     public void update(float dt) {
         stage.act(dt);
     }
+
+    @Override
+    public void dispose() {
+        gc.dispose();
+    }
 }

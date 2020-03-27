@@ -15,12 +15,12 @@ public class Message implements MapElement, Poolable {
 
     private StringBuilder message;
     private Vector2 position;
-    private Vector2 tmp;
-    private Vector2 tmp1;
     private Vector2 dst;
     protected float speed;
     private Color color;
     private float lifeTime;
+    private Vector2 tmp;
+    private Vector2 tmp1;
 
     public Message() {
         this.message = new StringBuilder();

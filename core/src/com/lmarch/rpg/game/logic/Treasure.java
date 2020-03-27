@@ -57,10 +57,6 @@ public class Treasure implements MapElement, Poolable, Consumable {
         return lifeTime > 0;
     }
 
-    public void setLifeTime(float time) {
-        this.lifeTime = time;
-    }
-
     public void subtractLifeTime(float dt) {
         this.lifeTime -= dt;
         if (this.lifeTime < 0) {
@@ -72,9 +68,9 @@ public class Treasure implements MapElement, Poolable, Consumable {
         return type;
     }
 
-    public TextureRegion getTexture() {
-        return texture;
-    }
+//    public TextureRegion getTexture() {
+//        return texture;
+//    }
 
     public Vector2 getPosition() {
         return position;
@@ -98,15 +94,11 @@ public class Treasure implements MapElement, Poolable, Consumable {
     }
 
     public String getTreasureInfo() {
-        return "Add: " + "\n" + String.valueOf(getType()) + " " + String.valueOf(quantity);
+        return "Add: " + "\n" + getType() + " " + quantity;
     }
 
     public boolean isFree() {
         return free;
-    }
-
-    public void setFree(boolean free) {
-        this.free = free;
     }
 
     public void setupFree(Vector2 position) {

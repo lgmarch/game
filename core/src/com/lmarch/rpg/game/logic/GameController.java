@@ -1,11 +1,11 @@
 package com.lmarch.rpg.game.logic;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Vector2;
 import com.lmarch.rpg.game.screens.ScreenManager;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,6 +21,7 @@ public class GameController {
     private TreasureController treasureController;
     private MessageController messageController;
     private List<GameCharacter> allCharacters;
+    private Music music; //Для воспроизвдения длинной музыки
     private Map map;
     private Hero hero;
     private Vector2 tmp, tmp2;
@@ -86,6 +87,9 @@ public class GameController {
         this.tmp2 = new Vector2(0, 0);
         this.mouse = new Vector2(0, 0);
         this.circleView = new Circle(0, 0 , 25);
+        this.music = Gdx.audio.newMusic(Gdx.files.internal("audio/music.wav"));
+        this.music.setLooping(true); //Loop
+        this.music.play();
     }
 
     public void update(float dt){
@@ -99,7 +103,7 @@ public class GameController {
 
         hero.update(dt);
         monstersController.update(dt);
-        checkCollisions(dt);
+        checkCollisions();
         projectilesController.update(dt);
         weaponsController.update(dt);
         effectsController.update(dt);
@@ -125,7 +129,7 @@ public class GameController {
         }
     }
 
-    public void checkCollisions(float dt){
+    public void checkCollisions(){
         //Проверка столкновений
         for (int i = 0; i < monstersController.getActiveList().size(); i++) {
             Monster m = monstersController.getActiveList().get(i);
@@ -175,12 +179,17 @@ public class GameController {
                 if (hero.getPosition().dst(treasure.getPosition()) < 20) {
                     treasure.consume(this, hero);
                     if (treasure.getType() == Treasure.Type.ELIXIR) {
-                        messageController.getActiveElement().setMessage("+" + String.valueOf(treasure.getQuantity()), hero.position, Color.GREEN);
+                        messageController.getActiveElement().setMessage("+" + treasure.getQuantity(), hero.position, Color.GREEN);
                     } else {
                         messageController.getActiveElement().setMessage(treasure.getTreasureInfo(), hero.position, Color.GOLD);
                     }
                 }
             }
         }
+    }
+
+    public void dispose() {
+        hero.dispose();
+        music.dispose();
     }
 }

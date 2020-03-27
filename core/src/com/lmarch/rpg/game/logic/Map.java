@@ -18,6 +18,9 @@ public class Map {
             this.scale = MathUtils.random(0.7f, 1.4f);
             this.offset = MathUtils.random(-12, 12);
             this.isAirPassable = false;
+            if(this.index == 4 || this.index == 6) {
+                this.isAirPassable = true;
+            }
         }
     }
 
@@ -26,6 +29,7 @@ public class Map {
 
     public static final int CELL_WIDTH = 80;
     public static final int CELL_HEIGHT = 60;
+    public static final int OBSTACLES_COUNT = 60;
 
     private Obstacle[][] data;
     private TextureRegion grassTexture;
@@ -57,7 +61,7 @@ public class Map {
 
     public Map() {
         this.data = new Obstacle[MAP_CELLS_WIDTH][MAP_CELLS_HEIGHT];
-        for (int i = 0; i < 25; i++) {
+        for (int i = 0; i < OBSTACLES_COUNT; i++) {
             int x = MathUtils.random(MAP_CELLS_WIDTH - 1);
             int y = MathUtils.random(MAP_CELLS_HEIGHT - 1);
             data[x][y] = new Obstacle();
