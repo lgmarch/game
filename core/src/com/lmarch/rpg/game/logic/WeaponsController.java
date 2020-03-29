@@ -54,7 +54,7 @@ public class WeaponsController extends ObjectPool<Weapon> {
         }
     }
 
-    public void update(float dt) {
+    public void update() {
         checkPool();
     }
 

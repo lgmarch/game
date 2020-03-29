@@ -45,6 +45,10 @@ public class GameController {
         return map;
     }
 
+    public Music getMusic() {
+        return music;
+    }
+
     public SpecialEffectsController getEffectsController() {
         return effectsController;
     }
@@ -105,7 +109,7 @@ public class GameController {
         monstersController.update(dt);
         checkCollisions();
         projectilesController.update(dt);
-        weaponsController.update(dt);
+        weaponsController.update();
         effectsController.update(dt);
         treasureController.update(dt);
         messageController.update(dt);
@@ -145,9 +149,10 @@ public class GameController {
         for (int i = 0; i < weaponsController.getActiveList().size(); i++) {
             Weapon w = weaponsController.getActiveList().get(i);
             if (hero.getPosition().dst(w.getPosition()) < 20) {
+                //Добавим оружие в рюкзак
                 w.consume(this, hero);
             }
-            //Данные об валяющемся оружии
+            //Инфа об валяющемся оружии
             if (mouse.dst(w.getPosition()) < 20 && !circleView.contains(mouse)) {
                 messageController.getActiveElement().setMessage(w.getWeaponInfo(), mouse, Color.BROWN);
                 circleView.setPosition(mouse);

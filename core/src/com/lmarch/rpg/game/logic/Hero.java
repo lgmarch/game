@@ -12,6 +12,11 @@ import com.lmarch.rpg.game.screens.utils.Assets;
 public class Hero extends GameCharacter{
     private StringBuilder strBuilder;
     private Sound sound;
+    private Inventory inventory;
+
+    public Inventory getInventory() {
+        return inventory;
+    }
 
     public Hero(GameController gc){
         super(gc, 100, 120.0f);
@@ -20,6 +25,7 @@ public class Hero extends GameCharacter{
         this.dst.set(position);
         this.strBuilder = new StringBuilder();
         this.weapon = gc.getWeaponsController().getOneFromAnyPrototype();
+        this.inventory = new Inventory(this, gc);
         this.color = Color.RED;
         this.sound = Gdx.audio.newSound(Gdx.files.internal("audio/40.ogg"));
     }
@@ -54,6 +60,7 @@ public class Hero extends GameCharacter{
 //        if (Gdx.input.isButtonJustPressed(Input.Buttons.RIGHT)){
 //            gc.getProjectilesController().setup(position.x, position.y, Gdx.input.getX(), 720 - Gdx.input.getY());
 //        }
+        inventory.update();
     }
 
     @Override

@@ -95,9 +95,10 @@ public class Weapon implements MapElement, Poolable, Consumable {
     }
 
     @Override
-    public void consume(GameController gc, GameCharacter gameCharacter) {
-        gameCharacter.getWeapon().copyFrom(this);
-        active = false;
+    public void consume(GameController gc, GameCharacter player) {
+        //Сохраним аналог в виде строки. Положим оружие в рюкзак.
+        gc.getHero().getInventory().getRucksack().add(copyWeaponToString());
+        this.active = false;
     }
 
     @Override
@@ -148,8 +149,8 @@ public class Weapon implements MapElement, Poolable, Consumable {
     }
 
     public String getWeaponInfo() {
-        return title + "\n" + "damage: " + String.valueOf(minDamage) + "-" + String.valueOf(maxDamage) + " " +
-                "\n" + "speed: " + String.valueOf(speed) + "\n" + "range: " + String.valueOf(range);
+        return title + "\n" + "damage: " + minDamage + "-" + maxDamage + " " +
+                "\n" + "speed: " + speed + "\n" + "range: " + range;
     }
 
     public void setPosition(float x, float y) {
@@ -163,7 +164,16 @@ public class Weapon implements MapElement, Poolable, Consumable {
 
     // CLASS ,TYPE  ,TITLE ,MIN_DAMAGE, MAX_DAMAGE, SPEED, RANGE
     public Weapon(String line) {
-        String[] tokens = line.split(",");
+        makeWeaponFromString(line);
+    }
+
+    public String copyWeaponToString() {
+        return  this.weaponClass + "," + this.type + "," + this.title + "," +
+                this.minDamage + "," + this.maxDamage + "," + this.speed + "," + this.range;
+    }
+
+    public void makeWeaponFromString(String str) {
+        String[] tokens = str.split(",");
         this.weaponClass = WeaponClass.fromString(tokens[0].trim());
         this.type = Type.fromString(tokens[1].trim());
         this.title = tokens[2].trim();
@@ -187,6 +197,7 @@ public class Weapon implements MapElement, Poolable, Consumable {
         this.minDamage = from.minDamage;
         this.speed = from.speed;
         this.texture = from.texture;
+        this.active = true;
     }
 
     @Override

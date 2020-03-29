@@ -11,6 +11,7 @@ import com.lmarch.rpg.game.logic.utils.MapElement;
 import com.lmarch.rpg.game.screens.utils.Assets;
 
 public abstract class GameCharacter implements MapElement {
+
     public enum State {
         IDLE, MOVE, ATTACK, PURSUIT, RETREAT
     }
