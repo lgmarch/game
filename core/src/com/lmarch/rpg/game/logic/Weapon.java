@@ -8,7 +8,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.lmarch.rpg.game.logic.utils.Consumable;
 import com.lmarch.rpg.game.logic.utils.MapElement;
 import com.lmarch.rpg.game.logic.utils.Poolable;
-import com.lmarch.rpg.game.screens.utils.Assets;
 
 public class Weapon implements MapElement, Poolable, Consumable {
     public enum WeaponClass {
@@ -49,7 +48,7 @@ public class Weapon implements MapElement, Poolable, Consumable {
         }
     }
 
-    private GameController gc;
+    private TextureRegion[] textures;
     private TextureRegion texture;
     private WeaponClass weaponClass;
     private Type type;
@@ -157,13 +156,14 @@ public class Weapon implements MapElement, Poolable, Consumable {
         this.position.set(x, y);
     }
 
-    public Weapon(GameController gc) {
-        this.gc = gc;
+    public Weapon(TextureRegion[] texturesAll) {
+        this.textures = texturesAll;
         this.position = new Vector2(0, 0);
     }
 
     // CLASS ,TYPE  ,TITLE ,MIN_DAMAGE, MAX_DAMAGE, SPEED, RANGE
-    public Weapon(String line) {
+    public Weapon(String line, TextureRegion[] texturesAll) {
+        this.textures = texturesAll;
         makeWeaponFromString(line);
     }
 
@@ -181,11 +181,34 @@ public class Weapon implements MapElement, Poolable, Consumable {
         this.maxDamage = Integer.parseInt(tokens[4].trim());
         this.speed = Float.parseFloat(tokens[5].trim());
         this.range = Float.parseFloat(tokens[6].trim());
-        if (this.type == Type.MELEE) {
-            texture = Assets.getInstance().getAtlas().findRegion("weaponMelee");
-        } else {
-            texture = Assets.getInstance().getAtlas().findRegion("weaponRanged");
+        this.texture = getTexture(weaponClass.name());
+    }
+
+    public TextureRegion getTexture(String name) {
+        TextureRegion texture;
+        switch (name) {
+            case "SWORD":
+                texture = textures[0];
+                break;
+            case "SPEAR":
+                texture = textures[1];
+                break;
+            case "AXE":
+                texture = textures[2];
+                break;
+            case "MACE":
+                texture = textures[3];
+                break;
+            case "BOW":
+                texture = textures[4];
+                break;
+            case "CROSSBOW":
+                texture = textures[5];
+                break;
+            default:
+                throw new RuntimeException("Unknown weapon class");
         }
+        return texture;
     }
 
     public void copyFrom(Weapon from) {

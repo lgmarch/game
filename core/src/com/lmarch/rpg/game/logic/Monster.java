@@ -50,7 +50,7 @@ public class Monster extends GameCharacter implements Poolable {
     public void onDeath() {
         super.onDeath();
         treasure.setupFree(position);
-        gc.getWeaponsController().setup(position.x, position.y);
+        gc.getWeaponsController().setup(this.weapon, position.x, position.y);
         //gc.getTreasureController().getActiveElement().setup(position, this.treasure);
     }
 

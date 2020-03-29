@@ -80,7 +80,7 @@ public class GameController {
     public GameController() {
         this.allCharacters = new ArrayList<>();
         this.projectilesController = new ProjectilesController(this);
-        this.weaponsController = new WeaponsController(this);
+        this.weaponsController = new WeaponsController();
         this.effectsController = new SpecialEffectsController();
         this.treasureController = new TreasureController();
         this.messageController = new MessageController();
