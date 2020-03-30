@@ -19,9 +19,10 @@ public class Hero extends GameCharacter implements Poolable {
         return inventory;
     }
 
-    public Hero(GameController gc){
+    public Hero(GameController gc, TextureRegion textureRegion){
         super(gc, 100, 120.0f);
         this.texture = new TextureRegion(Assets.getInstance().getAtlas().findRegion("pig1")).split(60, 60);
+        //this.texture = textureRegion;
         this.changePosition(MathUtils.random(50, 800), MathUtils.random(50, 600));
         this.dst.set(position);
         this.strBuilder = new StringBuilder();

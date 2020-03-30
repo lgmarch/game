@@ -17,6 +17,27 @@ whiteRect
   orig: 500, 260
   offset: 0, 0
   index: -1
+mage
+  rotate: false
+  xy: 2, 304
+  size: 90, 150
+  orig: 90, 150
+  offset: 0, 0
+  index: -1
+knight
+  rotate: false
+  xy: 94, 304
+  size: 90, 150
+  orig: 90, 150
+  offset: 0, 0
+  index: -1
+archer
+  rotate: false
+  xy: 2, 456
+  size: 90, 150
+  orig: 90, 150
+  offset: 0, 0
+  index: -1
 trees
   rotate: false
   xy: 254, 264
@@ -26,28 +47,28 @@ trees
   index: -1
 powerUps
   rotate: false
-  xy: 2, 304
+  xy: 186, 304
   size: 60, 120
   orig: 60, 120
   offset: 0, 0
   index: -1
 pine
   rotate: false
-  xy: 64, 304
+  xy: 94, 456
   size: 80, 116
   orig: 80, 116
   offset: 0, 0
   index: -1
 tree
   rotate: false
-  xy: 146, 304
+  xy: 2, 608
   size: 90, 113
   orig: 90, 113
   offset: 0, 0
   index: -1
 wool
   rotate: false
-  xy: 2, 426
+  xy: 94, 608
   size: 80, 91
   orig: 80, 91
   offset: 0, 0
@@ -61,84 +82,91 @@ simpleButton
   index: -1
 shortButton
   rotate: false
-  xy: 84, 426
+  xy: 2, 723
   size: 80, 80
   orig: 80, 80
   offset: 0, 0
   index: -1
 grass
   rotate: false
-  xy: 166, 426
+  xy: 84, 723
   size: 80, 80
   orig: 80, 80
   offset: 0, 0
   index: -1
 stop
   rotate: false
-  xy: 2, 519
+  xy: 176, 456
   size: 64, 65
   orig: 64, 65
   offset: 0, 0
   index: -1
 pusk
   rotate: false
-  xy: 68, 519
+  xy: 176, 523
   size: 64, 65
   orig: 64, 65
   offset: 0, 0
   index: -1
 exit
   rotate: false
-  xy: 134, 519
+  xy: 176, 608
   size: 64, 65
   orig: 64, 65
   offset: 0, 0
   index: -1
+heroes
+  rotate: false
+  xy: 756, 2
+  size: 256, 64
+  orig: 256, 64
+  offset: 0, 0
+  index: -1
 weaponRanged
   rotate: false
-  xy: 2, 586
+  xy: 166, 723
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 weaponMelee
   rotate: false
-  xy: 68, 586
+  xy: 2, 805
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 potionBlue
   rotate: false
-  xy: 134, 586
+  xy: 2, 871
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 pointer
   rotate: false
-  xy: 2, 652
+  xy: 2, 937
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 pig1
   rotate: false
-  xy: 68, 652
+  xy: 68, 805
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 coin
   rotate: false
-  xy: 134, 652
+  xy: 134, 805
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 sceleton
   rotate: false
-  xy: 200, 519
+  xy: 200, 805
   size: 29, 64
   orig: 29, 64
   offset: 0, 0
@@ -157,37 +185,30 @@ weapons
   orig: 360, 60
   offset: 0, 0
   index: -1
-knight
-  rotate: false
-  xy: 2, 718
-  size: 60, 60
-  orig: 60, 60
-  offset: 0, 0
-  index: -1
 axe
   rotate: false
-  xy: 64, 718
+  xy: 68, 871
   size: 60, 60
   orig: 60, 60
   offset: 0, 0
   index: -1
 arrow
   rotate: false
-  xy: 126, 718
+  xy: 68, 933
   size: 60, 60
   orig: 60, 60
   offset: 0, 0
   index: -1
 smButton
   rotate: false
-  xy: 2, 780
+  xy: 130, 871
   size: 120, 32
   orig: 120, 32
   offset: 0, 0
   index: -1
 hp
   rotate: false
-  xy: 84, 508
+  xy: 186, 426
   size: 60, 8
   orig: 60, 8
   offset: 0, 0

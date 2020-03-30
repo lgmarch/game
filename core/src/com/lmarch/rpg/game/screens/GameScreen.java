@@ -32,9 +32,7 @@ public class GameScreen extends AbstractScreen {
         this.gc = new GameController();
         this.worldRenderer = new WorldRenderer(gc, batch);
         createGui();
-        //this.inventoryGui = new InventoryGui(stage, skin, gc.getHeroesController().getSelected().get(0).getInventory());
-        this.inventoryGui = new InventoryGui(stage, skin, gc.getHeroesController().getHeroes().get(0));
-        //this.inventoryGui = new InventoryGui(stage, skin, gc.getHero().getInventory());
+        this.inventoryGui = new InventoryGui(stage, skin, gc.getHeroesController().getHeroesCommander());
     }
 
     @Override //Отрисовка
@@ -44,7 +42,7 @@ public class GameScreen extends AbstractScreen {
             //gc.getMusic().play();
         }
         worldRenderer.render();
-        inventoryGui.update();
+        inventoryGui.update(gc.getHeroesController().getHeroesCommander());
         //gc.getMusic().pause();
         stage.draw();
     }

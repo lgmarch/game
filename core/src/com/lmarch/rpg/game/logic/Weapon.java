@@ -155,8 +155,8 @@ public class Weapon implements MapElement, Poolable, Consumable {
         this.position.set(x, y);
     }
 
-    public Weapon(TextureRegion[] texturesAll) {
-        this.textures = texturesAll;
+    public Weapon(TextureRegion[] textures) {
+        this.textures = textures;
         this.position = new Vector2(0, 0);
     }
 

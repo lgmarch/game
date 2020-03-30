@@ -88,10 +88,13 @@ public class InventoryGui extends Group {
         stage.setDebugAll(true);
     }
 
-    public void update() {
+    public void update(Hero commander) {
+        this.hero = commander;
         itemList.setItems(hero.getInventory().getRucksackInfo());
 
         labelWeapon.setText(hero.weapon.getTitle() + " "
                 + hero.weapon.getMinDamage() + "-" + hero.weapon.getMaxDamage());
+
+
     }
 }
