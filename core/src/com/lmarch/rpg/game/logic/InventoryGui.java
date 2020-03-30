@@ -11,16 +11,8 @@ import com.lmarch.rpg.game.screens.utils.Assets;
 
 public class InventoryGui extends Group {
     private com.badlogic.gdx.scenes.scene2d.ui.List<String> itemList;
-    private Inventory inventory;
+    private Hero hero;
     private Label labelWeapon;
-
-    public List<String> getItemList() {
-        return itemList;
-    }
-
-    public Label getLabelWeapon() {
-        return labelWeapon;
-    }
 
     private final int INV_WIDTH = 450;
     private final int INV_HEIGHT = 260;
@@ -29,7 +21,9 @@ public class InventoryGui extends Group {
         setVisible(!isVisible());
     }
 
-    public InventoryGui(Stage stage, Skin skin, Inventory inv) {
+    public InventoryGui(Stage stage, Skin skin, Hero played) {
+        this.hero = played;
+
         BitmapFont font12 = Assets.getInstance().getAssetManager().get("fonts/font12.ttf");
         BitmapFont font20 = Assets.getInstance().getAssetManager().get("fonts/font20.ttf");
 
@@ -44,6 +38,8 @@ public class InventoryGui extends Group {
 
         //Item List - рюкзак
         itemList = new List<>(new List.ListStyle(font12, Color.BLACK, Color.WHITE, skin.getDrawable("shortButton")));
+//        ScrollPane scrollPane = new ScrollPane(itemList, new ScrollPane.ScrollPaneStyle(null,
+//                skin.getDrawable("emptyPoint"), skin.getDrawable("emptyPoint"), skin.getDrawable("emptyPoint"), skin.getDrawable("emptyPoint")));
         ScrollPane scrollPane = new ScrollPane(itemList, new ScrollPane.ScrollPaneStyle());
         scrollPane.setTransform(true);
         scrollPane.setColor(0.0f, 0.0f, 0.2f, 0.8f);
@@ -64,7 +60,7 @@ public class InventoryGui extends Group {
         labelWeapon = new Label("", new Label.LabelStyle(font12, Color.WHITE));
         labelWeapon.setWrap(true);
         labelWeapon.setPosition(220, 190);
-        labelWeapon.setText("1 weapon");
+        //labelWeapon.setText("1 weapon");
         addActor(labelWeapon);
 
         stage.addActor(this);
@@ -75,29 +71,27 @@ public class InventoryGui extends Group {
                 if (getTapCount() == 2) {
                     //Номер выбранной строки
                     int index = itemList.getSelectedIndex();
-                    //Выбрали строку из рюкзака, из которой надо будет сделать оружие
-                    String string = inventory.getRucksack().get(index);
-                    //Сохраним оружие, что в руках в стринге
-                    String string1 = inventory.getOwner().weapon.copyWeaponToString();
+                    if (index >= 0) {
+                        //Выбрали строку из рюкзака, из которой надо будет сделать оружие
+                        String string = hero.getInventory().getRucksack().get(index);
+                        //Сохраним оружие, что в руках в стринге
+                        String string1 = hero.weapon.copyWeaponToString();
 
-                    //На место выбранной строки (в рюкзак) вставляем оружие
-                    inventory.getRucksack().set(index, string1);
-                    //Из строки делаем оружие и отдаем Игроку
-                    inventory.getOwner().weapon.makeWeaponFromString(string);
+                        //На место выбранной строки (в рюкзак) вставляем оружие
+                        hero.getInventory().getRucksack().set(index, string1);
+                        //Из строки делаем оружие и отдаем Игроку
+                        hero.weapon.makeWeaponFromString(string);
+                    }
                 }
             }
         });
-
         stage.setDebugAll(true);
-
-        this.inventory = inv;
-        this.inventory.injectGui(this);
     }
 
     public void update() {
-        itemList.setItems(inventory.getRucksackInfo());
+        itemList.setItems(hero.getInventory().getRucksackInfo());
 
-        labelWeapon.setText(inventory.getOwner().weapon.getTitle() + " "
-                + inventory.getOwner().weapon.getMinDamage() + "-" + inventory.getOwner().weapon.getMaxDamage());
+        labelWeapon.setText(hero.weapon.getTitle() + " "
+                + hero.weapon.getMinDamage() + "-" + hero.weapon.getMaxDamage());
     }
 }

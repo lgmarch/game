@@ -89,9 +89,9 @@ public class Weapon implements MapElement, Poolable, Consumable {
     }
 
     @Override
-    public void consume(GameController gc, GameCharacter player) {
+    public void consume(GameController gc, Hero player) {
         //Сохраним аналог в виде строки. Положим оружие в рюкзак.
-        gc.getHero().getInventory().getRucksack().add(copyWeaponToString());
+        player.getInventory().getRucksack().add(copyWeaponToString());
         this.active = false;
     }
 
@@ -167,6 +167,9 @@ public class Weapon implements MapElement, Poolable, Consumable {
     }
 
     public String copyWeaponToString() {
+        System.out.println("copyWeaponToString(): " + this.weaponClass + "," + this.type + "," + this.title + "," +
+                this.minDamage + "," + this.maxDamage + "," + this.speed + "," + this.range);
+
         return  this.weaponClass + "," + this.type + "," + this.title + "," +
                 this.minDamage + "," + this.maxDamage + "," + this.speed + "," + this.range;
     }

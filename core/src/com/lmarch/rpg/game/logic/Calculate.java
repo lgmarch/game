@@ -5,7 +5,7 @@ import com.badlogic.gdx.math.MathUtils;
 public class Calculate {
     //ЛовкостьГероя * УровеньГероя - УровеньМонстра * ЗащитаМонстра = Урон
 
-    public static int getMeleeDamage(GameCharacter attacker, GameCharacter target) {
+    public static int getMeleeDamage(GameCharacter attacker) {
         int damage = MathUtils.random(attacker.getWeapon().getMinDamage(), attacker.getWeapon().getMaxDamage());
 
         int dmg = damage + attacker.getLevel();
@@ -16,7 +16,7 @@ public class Calculate {
         return dmg;
     }
 
-    public static int getRangedDamage(GameCharacter attacker, GameCharacter target) {
+    public static int getRangedDamage(GameCharacter attacker) {
         int damage = MathUtils.random(attacker.getWeapon().getMinDamage(), attacker.getWeapon().getMaxDamage());
 
         int dmg = damage + attacker.getLevel();
@@ -29,9 +29,9 @@ public class Calculate {
 
     public static int calculateDamage(GameCharacter attacker, GameCharacter target) {
         if(attacker.getWeapon().getType() == Weapon.Type.MELEE) {
-            return getMeleeDamage(attacker, target);
+            return getMeleeDamage(attacker);
         } else {
-            return getRangedDamage(attacker, target);
+            return getRangedDamage(attacker);
         }
     }
 }

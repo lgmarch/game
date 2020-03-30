@@ -1,7 +1,6 @@
 package com.lmarch.rpg.game.screens;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -33,7 +32,9 @@ public class GameScreen extends AbstractScreen {
         this.gc = new GameController();
         this.worldRenderer = new WorldRenderer(gc, batch);
         createGui();
-        this.inventoryGui = new InventoryGui(stage, skin, gc.getHero().getInventory());
+        //this.inventoryGui = new InventoryGui(stage, skin, gc.getHeroesController().getSelected().get(0).getInventory());
+        this.inventoryGui = new InventoryGui(stage, skin, gc.getHeroesController().getHeroes().get(0));
+        //this.inventoryGui = new InventoryGui(stage, skin, gc.getHero().getInventory());
     }
 
     @Override //Отрисовка
@@ -43,6 +44,7 @@ public class GameScreen extends AbstractScreen {
             //gc.getMusic().play();
         }
         worldRenderer.render();
+        inventoryGui.update();
         //gc.getMusic().pause();
         stage.draw();
     }
@@ -70,7 +72,7 @@ public class GameScreen extends AbstractScreen {
                 paused = !paused;
                 if (paused) {
                     stage.getActors().get(0).setColor(Color.BLUE);
-                    //btnPause.setText("Paus");
+                    //btnPause.setText("Pause");
                 } else {
                     stage.getActors().get(0).setColor(Color.GREEN);
                     //btnPause.setText("Run");
@@ -94,7 +96,6 @@ public class GameScreen extends AbstractScreen {
     //Обработка событий сцены
     public void update(float dt) {
         stage.act(dt);
-        inventoryGui.update();
     }
 
     @Override
