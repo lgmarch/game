@@ -2,7 +2,6 @@ package com.lmarch.rpg.game.logic;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -11,7 +10,6 @@ import com.lmarch.rpg.game.screens.utils.Assets;
 
 public class Hero extends GameCharacter{
     private StringBuilder strBuilder;
-    private Sound sound;
     private Inventory inventory;
 
     public Inventory getInventory() {
@@ -27,7 +25,6 @@ public class Hero extends GameCharacter{
         this.weapon = gc.getWeaponsController().getOneFromAnyPrototype();
         this.inventory = new Inventory(this, gc);
         this.color = Color.RED;
-        this.sound = Gdx.audio.newSound(Gdx.files.internal("audio/40.ogg"));
     }
 
     public void renderGUI(SpriteBatch batch, BitmapFont font){
@@ -71,12 +68,8 @@ public class Hero extends GameCharacter{
     }
 
     @Override
-    public boolean takeDamage(GameCharacter attacker, int amount) {
-        sound.play();
-        return super.takeDamage(attacker, amount);
-    }
-
-    public void dispose() {
-        sound.dispose();
+    public boolean takeDamage(GameCharacter attacker) {
+        weapon.getSound().play();
+        return super.takeDamage(attacker);
     }
 }

@@ -80,10 +80,9 @@ public class InventoryGui extends Group {
                     //Сохраним оружие, что в руках в стринге
                     String string1 = inventory.getOwner().weapon.copyWeaponToString();
 
-                    //На место этой строки (в рюкзак) вставляем оружие
+                    //На место выбранной строки (в рюкзак) вставляем оружие
                     inventory.getRucksack().set(index, string1);
-                    //itemList.setSelectedIndex(index);
-                    //Из строки делаем оружие
+                    //Из строки делаем оружие и отдаем Игроку
                     inventory.getOwner().weapon.makeWeaponFromString(string);
                 }
             }

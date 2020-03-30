@@ -45,10 +45,6 @@ public class GameController {
         return map;
     }
 
-    public Music getMusic() {
-        return music;
-    }
-
     public SpecialEffectsController getEffectsController() {
         return effectsController;
     }
@@ -166,15 +162,15 @@ public class GameController {
             }
             if (p.getPosition().dst(hero.getPosition()) < 24 && p.getOwner() != hero) {
                 p.deactivate();
-                hero.takeDamage(p.getOwner(), p.getDamage());
+                hero.takeDamage(p.getOwner());
             }
-            for (Monster o : monstersController.getActiveList()) {
-                if (p.getOwner() == o) {
+            for (Monster monster : monstersController.getActiveList()) {
+                if (p.getOwner() == monster) {
                     continue;
                 }
-                if (p.getPosition().dst(o.getPosition()) < 24) {
+                if (p.getPosition().dst(monster.getPosition()) < 24) {
                     p.deactivate();
-                    o.takeDamage(p.getOwner(), p.getDamage());
+                    monster.takeDamage(p.getOwner());
                 }
             }
         }
@@ -189,7 +185,7 @@ public class GameController {
     }
 
     public void dispose() {
-        hero.dispose();
+        //.dispose();
         music.dispose();
     }
 }

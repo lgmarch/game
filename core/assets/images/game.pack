@@ -94,13 +94,6 @@ exit
   orig: 64, 65
   offset: 0, 0
   index: -1
-weapons
-  rotate: false
-  xy: 576, 386
-  size: 364, 64
-  orig: 364, 64
-  offset: 0, 0
-  index: 1
 weaponRanged
   rotate: false
   xy: 2, 586
@@ -159,7 +152,7 @@ dwarf60
   index: -1
 weapons
   rotate: false
-  xy: 254, 530
+  xy: 576, 386
   size: 360, 60
   orig: 360, 60
   offset: 0, 0

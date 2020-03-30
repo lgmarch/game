@@ -1,5 +1,7 @@
 package com.lmarch.rpg.game.logic;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -51,6 +53,7 @@ public class Weapon implements MapElement, Poolable, Consumable {
     private TextureRegion[] textures;
     private TextureRegion texture;
     private WeaponClass weaponClass;
+    private Sound sound;
     private Type type;
     private String title;
     private Vector2 position;
@@ -66,14 +69,6 @@ public class Weapon implements MapElement, Poolable, Consumable {
 
     public void setMaxDamage(int maxDamage) {
         this.maxDamage = maxDamage;
-    }
-
-    public void setSpeed(float speed) {
-        this.speed = speed;
-    }
-
-    public void setRange(float range) {
-        this.range = range;
     }
 
     @Override
@@ -115,7 +110,7 @@ public class Weapon implements MapElement, Poolable, Consumable {
         return position.y;
     }
 
-    public TextureRegion getTexture() {
+    public TextureRegion setTextureAndSound() {
         return texture;
     }
 
@@ -152,6 +147,10 @@ public class Weapon implements MapElement, Poolable, Consumable {
                 "\n" + "speed: " + speed + "\n" + "range: " + range;
     }
 
+    public Sound getSound() {
+        return sound;
+    }
+
     public void setPosition(float x, float y) {
         this.position.set(x, y);
     }
@@ -162,8 +161,8 @@ public class Weapon implements MapElement, Poolable, Consumable {
     }
 
     // CLASS ,TYPE  ,TITLE ,MIN_DAMAGE, MAX_DAMAGE, SPEED, RANGE
-    public Weapon(String line, TextureRegion[] texturesAll) {
-        this.textures = texturesAll;
+    public Weapon(String line, TextureRegion[] textures) {
+        this.textures = textures;
         makeWeaponFromString(line);
     }
 
@@ -181,34 +180,38 @@ public class Weapon implements MapElement, Poolable, Consumable {
         this.maxDamage = Integer.parseInt(tokens[4].trim());
         this.speed = Float.parseFloat(tokens[5].trim());
         this.range = Float.parseFloat(tokens[6].trim());
-        this.texture = getTexture(weaponClass.name());
+        setTextureAndSound(weaponClass.name());
     }
 
-    public TextureRegion getTexture(String name) {
-        TextureRegion texture;
+    public void setTextureAndSound(String name) {
         switch (name) {
             case "SWORD":
-                texture = textures[0];
+                this.texture = textures[0];
+                this.sound = Gdx.audio.newSound(Gdx.files.internal("audio/40.ogg"));
                 break;
             case "SPEAR":
-                texture = textures[1];
+                this.texture = textures[1];
+                this.sound = Gdx.audio.newSound(Gdx.files.internal("audio/40.ogg"));
                 break;
             case "AXE":
-                texture = textures[2];
+                this.texture = textures[2];
+                this.sound = Gdx.audio.newSound(Gdx.files.internal("audio/40.ogg"));
                 break;
             case "MACE":
-                texture = textures[3];
+                this.texture = textures[3];
+                this.sound = Gdx.audio.newSound(Gdx.files.internal("audio/40.ogg"));
                 break;
             case "BOW":
-                texture = textures[4];
+                this.texture = textures[4];
+                this.sound = Gdx.audio.newSound(Gdx.files.internal("audio/40.ogg"));
                 break;
             case "CROSSBOW":
-                texture = textures[5];
+                this.texture = textures[5];
+                this.sound = Gdx.audio.newSound(Gdx.files.internal("audio/40.ogg"));
                 break;
             default:
                 throw new RuntimeException("Unknown weapon class");
         }
-        return texture;
     }
 
     public void copyFrom(Weapon from) {
@@ -220,11 +223,17 @@ public class Weapon implements MapElement, Poolable, Consumable {
         this.minDamage = from.minDamage;
         this.speed = from.speed;
         this.texture = from.texture;
+        this.sound = from.sound;
         this.active = true;
     }
 
     @Override
     public void render(SpriteBatch batch, BitmapFont font) {
         batch.draw(texture, position.x - 32, position.y - 32, 32, 32, 64, 64, 0.8f, 0.8f, 0.0f);
+    }
+
+    //TODO
+    public void dispose() {
+        sound.dispose();
     }
 }
