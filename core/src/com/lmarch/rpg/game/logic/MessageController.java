@@ -20,8 +20,7 @@ public class MessageController extends ObjectPool<Message> {
     }
 
     public void render(SpriteBatch batch, BitmapFont font) {
-        for (int i = 0; i < activeList.size(); i++) {
-            Message msg = activeList.get(i);
+        for (Message msg : activeList) {
             font.setColor(msg.getColor());
             font.draw(batch, msg.getMessage(), msg.getPosition().x, msg.getPosition().y);
         }

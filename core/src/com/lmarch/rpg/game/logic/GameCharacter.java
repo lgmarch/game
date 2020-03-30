@@ -11,6 +11,9 @@ import com.lmarch.rpg.game.logic.utils.MapElement;
 import com.lmarch.rpg.game.screens.utils.Assets;
 
 public abstract class GameCharacter implements MapElement {
+
+    public static final int MOVE_NEXT_LEVEL = 100;
+
     public enum State {
         IDLE, MOVE, ATTACK, PURSUIT, RETREAT
     }
@@ -42,43 +45,15 @@ public abstract class GameCharacter implements MapElement {
 
     protected float visionRadius; //Дальность просмотра
     protected float speed;
+    protected int level; //Уровень Игрока
+
+    protected float experience; //Опыт
     protected int hp, hpMax;
     protected int coins;
 
     protected Weapon weapon;
     protected Treasure treasure;
     protected Color color;
-
-    public int getCellX(){
-        return (int) position.x / Map.CELL_WIDTH;
-    }
-
-    public int getCellY(){
-        return (int) (position.y) / Map.CELL_HEIGHT;
-    }
-
-    public Weapon getWeapon() {
-        return weapon;
-    }
-
-    @Override
-    public float getY() {
-        return position.y;
-    }
-
-    public void changePosition(float x, float y){
-        position.set(x, y);
-        checkBounds();
-        area.setPosition(x, y);
-    }
-
-    public void setWeapon(Weapon weapon) {
-        this.weapon = weapon;
-    }
-
-    public void changePosition(Vector2 newPosition){
-        changePosition(newPosition.x, newPosition.y);
-    }
 
     public GameCharacter(GameController gameController, int hpMax, float speed) {
         this.gc = gameController;
@@ -93,6 +68,8 @@ public abstract class GameCharacter implements MapElement {
         this.hp = this.hpMax;
         this.coins = 0;
         this.speed = speed;
+        this.level = 0;
+        this.experience = 0.0f;
         this.state = State.IDLE;
         this.stateTimer = 1.0f;
         this.timePerFrame = 0.2f; //8 кадров меняются каждые 0.2 сек.
@@ -100,9 +77,36 @@ public abstract class GameCharacter implements MapElement {
         this.color = Color.BLACK;
     }
 
+    public int getCellX(){
+        return (int) position.x / Map.CELL_WIDTH;
+    }
+
+    public int getCellY(){
+        return (int) (position.y) / Map.CELL_HEIGHT;
+    }
+
+    @Override
+    public float getY() {
+        return position.y;
+    }
+
+    public void changePosition(float x, float y){
+        position.set(x, y);
+        checkBounds();
+        area.setPosition(x, y);
+    }
+
+    public void changePosition(Vector2 newPosition){
+        changePosition(newPosition.x, newPosition.y);
+    }
+
     public int getCurrentFrameIndex() {
         // ТекущееВремя / ВремяОдного кадра % КоличествоКадров
         return (int)(walkTime / timePerFrame) % texture[0].length;
+    }
+
+    public int getLevel() {
+        return level;
     }
 
     public Vector2 getPosition() {
@@ -115,6 +119,14 @@ public abstract class GameCharacter implements MapElement {
 
     public Color getColor() {
         return color;
+    }
+
+    public Weapon getWeapon() {
+        return weapon;
+    }
+
+    public void changeLevel() {
+        if ((int)experience / MOVE_NEXT_LEVEL > level) level++;
     }
 
     public void update(float dt) {
@@ -139,7 +151,7 @@ public abstract class GameCharacter implements MapElement {
                 if (weapon.getType() == Weapon.Type.MELEE) {
                     tmp.set(target.position).sub(position);
                     gc.getEffectsController().setupSwordSwing(position.x, position.y, tmp.angle());
-                    target.takeDamage(this, weapon.generateDamage());
+                    target.takeDamage(this);
                     //gc.getMessageController().getActiveElement().setMessage(String.valueOf(tmp), target.getPosition(), Color.RED);
                 }
                 if (weapon.getType() == Weapon.Type.RANGED && target != null) {
@@ -149,6 +161,7 @@ public abstract class GameCharacter implements MapElement {
             }
         }
         slideFromWall(dt);
+        changeLevel();
     }
 
     public void moveToDst(float dt) {
@@ -189,11 +202,15 @@ public abstract class GameCharacter implements MapElement {
         }
     }
 
-    public boolean takeDamage(GameCharacter attacker, int amount) {
+    public boolean takeDamage(GameCharacter attacker) {
+        int amount = Calculate.calculateDamage(attacker, this);
+
+        //Добавим атакующему опыта
+        attacker.experience += amount;
         lastAttacker = attacker;
         this.hp -= amount;
-        damageTimer += 0.4f; //увел. на 0.4 сек.
 
+        damageTimer += 0.4f; //увел. на 0.4 сек.
         if (damageTimer > 1.0f) {
             damageTimer = 1.0f;
         }
@@ -232,7 +249,6 @@ public abstract class GameCharacter implements MapElement {
 
     @Override
     public void render(SpriteBatch batch, BitmapFont font) {
-        //batch.setColor(1, 0 , 0, 1);
         TextureRegion currentRegion = texture[0][getCurrentFrameIndex()];
         if (dst.x > position.x) {
             if (currentRegion.isFlipX()) {
@@ -256,12 +272,15 @@ public abstract class GameCharacter implements MapElement {
         float shock = damageTimer * 5.0f;
         batch.setColor(1.0f - n, n, 0.0f, 1.0f);
         batch.draw(textureHp, position.x - 20 + MathUtils.random(-shock, shock), position.y + 45 + MathUtils.random(-shock, shock), 50 * ((float) hp / hpMax), 8);
-
+        //Жизнь в цифрах
         batch.setColor(1.0f, 1.0f, 1.0f, 1.0f);
         font.setColor(1.0f, 1.0f, 1.0f, 1.0f);
         font.draw(batch, String.valueOf(hp), position.x - 15 + MathUtils.random(-shock, shock), position.y + 55 + MathUtils.random(-shock, shock), 10, 1, false);
-
-        batch.draw(weapon.getTexture(), position.x + 10,position.y + 35, 30, 30);
+        //Прорисовка оружия
+        batch.draw(weapon.setTextureAndSound(), position.x + 10,position.y + 35, 25, 25);
+        //Уровень в цифрах
+        font.setColor(1.0f, 1.0f, 1.0f, 1.0f);
+        font.draw(batch, String.valueOf(level), position.x + 20, position.y + 45, 10, 1, false);
 
 //        batch.draw(treasure.getTexture(), position.x, position.y + 35, 30, 30);
     }

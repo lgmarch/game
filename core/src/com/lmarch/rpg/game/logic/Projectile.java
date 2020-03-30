@@ -33,9 +33,9 @@ public class Projectile implements Poolable, MapElement {
         return damage;
     }
 
-    public String getDamageString() {
-        return "-" + damage;
-    }
+//    public String getDamageString() {
+//        return "-" + damage;
+//    }
 
     @Override
     public int getCellX() {

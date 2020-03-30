@@ -1,6 +1,5 @@
 package com.lmarch.rpg.game.logic;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -35,7 +34,7 @@ public class Treasure implements MapElement, Poolable, Consumable {
 
 
     @Override
-    public void consume(GameController gc, GameCharacter player) {
+    public void consume(GameController gc, Hero player) {
         switch (type) {
             case ELIXIR:
                 player.addHp(this.quantity);
@@ -66,14 +65,6 @@ public class Treasure implements MapElement, Poolable, Consumable {
         }
     }
 
-    public Type getType() {
-        return type;
-    }
-
-//    public TextureRegion getTexture() {
-//        return texture;
-//    }
-
     public Vector2 getPosition() {
         return position;
     }
@@ -83,20 +74,12 @@ public class Treasure implements MapElement, Poolable, Consumable {
         return position.y;
     }
 
-    public int getQuantity() {
-        return quantity;
-    }
-
     public int getCellX(){
         return (int) (position.x / Map.CELL_WIDTH);
     }
 
     public int getCellY(){
         return (int) (position.y / Map.CELL_HEIGHT);
-    }
-
-    public String getTreasureInfo() {
-        return "Add: " + "\n" + getType() + " " + quantity;
     }
 
     public boolean isFree() {

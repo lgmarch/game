@@ -16,6 +16,7 @@ import java.util.List;
 public class GameController {
     private ProjectilesController projectilesController;
     private MonstersController monstersController;
+    private HeroesController heroesController;
     private WeaponsController weaponsController;
     private SpecialEffectsController effectsController;
     private TreasureController treasureController;
@@ -23,7 +24,6 @@ public class GameController {
     private List<GameCharacter> allCharacters;
     private Music music; //Для воспроизвдения длинной музыки
     private Map map;
-    private Hero hero;
     private Vector2 tmp, tmp2;
     private Vector2 mouse; //Точка в Мире
     private float worldTimer;
@@ -35,10 +35,6 @@ public class GameController {
 
     public float getWorldTimer() {
         return worldTimer;
-    }
-
-    public Hero getHero() {
-        return hero;
     }
 
     public Map getMap() {
@@ -61,6 +57,10 @@ public class GameController {
         return monstersController;
     }
 
+    public HeroesController getHeroesController() {
+        return heroesController;
+    }
+
     public WeaponsController getWeaponsController() {
         return weaponsController;
     }
@@ -76,11 +76,11 @@ public class GameController {
     public GameController() {
         this.allCharacters = new ArrayList<>();
         this.projectilesController = new ProjectilesController(this);
-        this.weaponsController = new WeaponsController(this);
+        this.weaponsController = new WeaponsController();
         this.effectsController = new SpecialEffectsController();
         this.treasureController = new TreasureController();
         this.messageController = new MessageController();
-        this.hero = new Hero(this);
+        this.heroesController = new HeroesController(this);
         this.map = new Map();
         this.monstersController = new MonstersController(this, 5);
         this.tmp = new Vector2(0, 0);
@@ -98,14 +98,14 @@ public class GameController {
 
         worldTimer += dt;
         allCharacters.clear();
-        allCharacters.add(hero);
+        allCharacters.addAll(heroesController.getHeroes());
         allCharacters.addAll(monstersController.getActiveList());
 
-        hero.update(dt);
         monstersController.update(dt);
+        heroesController.update(dt);
         checkCollisions();
         projectilesController.update(dt);
-        weaponsController.update(dt);
+        weaponsController.update();
         effectsController.update(dt);
         treasureController.update(dt);
         messageController.update(dt);
@@ -133,7 +133,10 @@ public class GameController {
         //Проверка столкновений
         for (int i = 0; i < monstersController.getActiveList().size(); i++) {
             Monster m = monstersController.getActiveList().get(i);
-            collideUnits(hero, m);
+            for (int j = 0; j < heroesController.getHeroes().size(); j++) {
+                Hero hero = heroesController.getHeroes().get(j);
+                collideUnits(hero, m);
+            }
         }
         for (int i = 0; i < monstersController.getActiveList().size(); i++) {
             Monster m = monstersController.getActiveList().get(i);
@@ -144,10 +147,14 @@ public class GameController {
         }
         for (int i = 0; i < weaponsController.getActiveList().size(); i++) {
             Weapon w = weaponsController.getActiveList().get(i);
-            if (hero.getPosition().dst(w.getPosition()) < 20) {
-                w.consume(this, hero);
+            for (int j = 0; j < heroesController.getHeroes().size(); j++) {
+                Hero hero = heroesController.getHeroes().get(j);
+                if (hero.getPosition().dst(w.getPosition()) < 20) {
+                    //Добавим оружие в рюкзак
+                    w.consume(this, hero);
+                }
             }
-            //Данные об валяющемся оружии
+            //Инфа об валяющемся оружии
             if (mouse.dst(w.getPosition()) < 20 && !circleView.contains(mouse)) {
                 messageController.getActiveElement().setMessage(w.getWeaponInfo(), mouse, Color.BROWN);
                 circleView.setPosition(mouse);
@@ -159,32 +166,38 @@ public class GameController {
                 p.deactivate();
                 continue;
             }
-            if (p.getPosition().dst(hero.getPosition()) < 24 && p.getOwner() != hero) {
-                p.deactivate();
-                hero.takeDamage(p.getOwner(), p.getDamage());
+            for (int j = 0; j < heroesController.getHeroes().size(); j++) {
+                Hero hero = heroesController.getHeroes().get(j);
+                if (p.getPosition().dst(hero.getPosition()) < 24 && p.getOwner() != hero) {
+                    p.deactivate();
+                    hero.takeDamage(p.getOwner());
+                }
             }
-            for (Monster o : monstersController.getActiveList()) {
-                if (p.getOwner() == o) {
+            for (Monster monster : monstersController.getActiveList()) {
+                if (p.getOwner() == monster) {
                     continue;
                 }
-                if (p.getPosition().dst(o.getPosition()) < 24) {
+                if (p.getPosition().dst(monster.getPosition()) < 24) {
                     p.deactivate();
-                    o.takeDamage(p.getOwner(), p.getDamage());
+                    monster.takeDamage(p.getOwner());
                 }
             }
         }
         //Подбираем сокровища
         for (Treasure treasure : treasureController.getActiveList()) {
             if (treasure.isFree()) {
-                if (hero.getPosition().dst(treasure.getPosition()) < 20) {
-                    treasure.consume(this, hero);
+                for (int j = 0; j < heroesController.getHeroes().size(); j++) {
+                    Hero hero = heroesController.getHeroes().get(j);
+                    if (hero.getPosition().dst(treasure.getPosition()) < 20) {
+                        treasure.consume(this, hero);
+                    }
                 }
             }
         }
     }
 
     public void dispose() {
-        hero.dispose();
+        //.dispose();
         music.dispose();
     }
 }

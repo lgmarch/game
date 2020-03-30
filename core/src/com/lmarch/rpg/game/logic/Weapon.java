@@ -1,5 +1,7 @@
 package com.lmarch.rpg.game.logic;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -8,7 +10,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.lmarch.rpg.game.logic.utils.Consumable;
 import com.lmarch.rpg.game.logic.utils.MapElement;
 import com.lmarch.rpg.game.logic.utils.Poolable;
-import com.lmarch.rpg.game.screens.utils.Assets;
 
 public class Weapon implements MapElement, Poolable, Consumable {
     public enum WeaponClass {
@@ -49,9 +50,10 @@ public class Weapon implements MapElement, Poolable, Consumable {
         }
     }
 
-    private GameController gc;
+    private TextureRegion[] textures;
     private TextureRegion texture;
     private WeaponClass weaponClass;
+    private Sound sound;
     private Type type;
     private String title;
     private Vector2 position;
@@ -67,14 +69,6 @@ public class Weapon implements MapElement, Poolable, Consumable {
 
     public void setMaxDamage(int maxDamage) {
         this.maxDamage = maxDamage;
-    }
-
-    public void setSpeed(float speed) {
-        this.speed = speed;
-    }
-
-    public void setRange(float range) {
-        this.range = range;
     }
 
     @Override
@@ -95,9 +89,10 @@ public class Weapon implements MapElement, Poolable, Consumable {
     }
 
     @Override
-    public void consume(GameController gc, GameCharacter gameCharacter) {
-        gameCharacter.getWeapon().copyFrom(this);
-        active = false;
+    public void consume(GameController gc, Hero player) {
+        //Сохраним аналог в виде строки. Положим оружие в рюкзак.
+        player.getInventory().getRucksack().add(copyWeaponToString());
+        this.active = false;
     }
 
     @Override
@@ -115,7 +110,7 @@ public class Weapon implements MapElement, Poolable, Consumable {
         return position.y;
     }
 
-    public TextureRegion getTexture() {
+    public TextureRegion setTextureAndSound() {
         return texture;
     }
 
@@ -148,22 +143,39 @@ public class Weapon implements MapElement, Poolable, Consumable {
     }
 
     public String getWeaponInfo() {
-        return title + "\n" + "damage: " + String.valueOf(minDamage) + "-" + String.valueOf(maxDamage) + " " +
-                "\n" + "speed: " + String.valueOf(speed) + "\n" + "range: " + String.valueOf(range);
+        return title + "\n" + "damage: " + minDamage + "-" + maxDamage + " " +
+                "\n" + "speed: " + speed + "\n" + "range: " + range;
+    }
+
+    public Sound getSound() {
+        return sound;
     }
 
     public void setPosition(float x, float y) {
         this.position.set(x, y);
     }
 
-    public Weapon(GameController gc) {
-        this.gc = gc;
+    public Weapon(TextureRegion[] textures) {
+        this.textures = textures;
         this.position = new Vector2(0, 0);
     }
 
     // CLASS ,TYPE  ,TITLE ,MIN_DAMAGE, MAX_DAMAGE, SPEED, RANGE
-    public Weapon(String line) {
-        String[] tokens = line.split(",");
+    public Weapon(String line, TextureRegion[] textures) {
+        this.textures = textures;
+        makeWeaponFromString(line);
+    }
+
+    public String copyWeaponToString() {
+        System.out.println("copyWeaponToString(): " + this.weaponClass + "," + this.type + "," + this.title + "," +
+                this.minDamage + "," + this.maxDamage + "," + this.speed + "," + this.range);
+
+        return  this.weaponClass + "," + this.type + "," + this.title + "," +
+                this.minDamage + "," + this.maxDamage + "," + this.speed + "," + this.range;
+    }
+
+    public void makeWeaponFromString(String str) {
+        String[] tokens = str.split(",");
         this.weaponClass = WeaponClass.fromString(tokens[0].trim());
         this.type = Type.fromString(tokens[1].trim());
         this.title = tokens[2].trim();
@@ -171,10 +183,37 @@ public class Weapon implements MapElement, Poolable, Consumable {
         this.maxDamage = Integer.parseInt(tokens[4].trim());
         this.speed = Float.parseFloat(tokens[5].trim());
         this.range = Float.parseFloat(tokens[6].trim());
-        if (this.type == Type.MELEE) {
-            texture = Assets.getInstance().getAtlas().findRegion("weaponMelee");
-        } else {
-            texture = Assets.getInstance().getAtlas().findRegion("weaponRanged");
+        setTextureAndSound(weaponClass.name());
+    }
+
+    public void setTextureAndSound(String name) {
+        switch (name) {
+            case "SWORD":
+                this.texture = textures[0];
+                this.sound = Gdx.audio.newSound(Gdx.files.internal("audio/40.ogg"));
+                break;
+            case "SPEAR":
+                this.texture = textures[1];
+                this.sound = Gdx.audio.newSound(Gdx.files.internal("audio/40.ogg"));
+                break;
+            case "AXE":
+                this.texture = textures[2];
+                this.sound = Gdx.audio.newSound(Gdx.files.internal("audio/40.ogg"));
+                break;
+            case "MACE":
+                this.texture = textures[3];
+                this.sound = Gdx.audio.newSound(Gdx.files.internal("audio/40.ogg"));
+                break;
+            case "BOW":
+                this.texture = textures[4];
+                this.sound = Gdx.audio.newSound(Gdx.files.internal("audio/40.ogg"));
+                break;
+            case "CROSSBOW":
+                this.texture = textures[5];
+                this.sound = Gdx.audio.newSound(Gdx.files.internal("audio/40.ogg"));
+                break;
+            default:
+                throw new RuntimeException("Unknown weapon class");
         }
     }
 
@@ -187,10 +226,17 @@ public class Weapon implements MapElement, Poolable, Consumable {
         this.minDamage = from.minDamage;
         this.speed = from.speed;
         this.texture = from.texture;
+        this.sound = from.sound;
+        this.active = true;
     }
 
     @Override
     public void render(SpriteBatch batch, BitmapFont font) {
         batch.draw(texture, position.x - 32, position.y - 32, 32, 32, 64, 64, 0.8f, 0.8f, 0.0f);
+    }
+
+    //TODO
+    public void dispose() {
+        sound.dispose();
     }
 }

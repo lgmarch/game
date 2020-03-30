@@ -59,7 +59,7 @@ public class WorldRenderer {
     }
 
     public void render() {
-        pov.set(gc.getHero().getPosition());
+        pov.set(gc.getHeroesController().getSelected().get(0).getPosition());
         if (pov.x < ScreenManager.HALF_WORLD_WIDTH) {
             pov.x = ScreenManager.HALF_WORLD_WIDTH;
         }
@@ -79,7 +79,9 @@ public class WorldRenderer {
         for (List<MapElement> drawable : drawables) {
             drawable.clear();
         }
-        drawables[gc.getHero().getCellY()].add(gc.getHero());
+        for (Hero hero : gc.getHeroesController().getHeroes()) {
+            drawables[hero.getCellY()].add(hero);
+        }
         for (int i = 0; i < gc.getWeaponsController().getActiveList().size(); i++) {
             Weapon w = gc.getWeaponsController().getActiveList().get(i);
             drawables[w.getCellY()].add(w);
@@ -139,7 +141,7 @@ public class WorldRenderer {
         batch.setShader(null); //Сброс Шейдера
 
         batch.begin();
-        gc.getHero().renderGUI(batch, font20);
+        gc.getHeroesController().renderGUI(batch, font12);
         batch.end();
 
         ScreenManager.getInstance().pointCameraTo(pov);

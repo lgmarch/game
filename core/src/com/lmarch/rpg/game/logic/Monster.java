@@ -42,15 +42,13 @@ public class Monster extends GameCharacter implements Poolable {
         } else {
             treasure = gc.getTreasureController().getActiveElement().setElixir();
         }
-//        System.out.println("Active: " + gc.getTreasureController().getActiveList().size() +
-//                "  Free: " + gc.getTreasureController().getFreeList().size());
     }
 
     @Override
     public void onDeath() {
         super.onDeath();
         treasure.setupFree(position);
-        gc.getWeaponsController().setup(position.x, position.y);
+        gc.getWeaponsController().setup(this.weapon, position.x, position.y);
         //gc.getTreasureController().getActiveElement().setup(position, this.treasure);
     }
 
@@ -69,10 +67,12 @@ public class Monster extends GameCharacter implements Poolable {
             stateTimer = MathUtils.random(2.0f, 5.0f);
         }
 
-        if (state != State.RETREAT && this.position.dst(gc.getHero().getPosition()) < visionRadius) {
-            state = State.ATTACK;
-            target = gc.getHero();
-            stateTimer = 10.0f;
+        for (Hero hero : gc.getHeroesController().getHeroes()) {
+            if (state != State.RETREAT && this.position.dst(hero.getPosition()) < visionRadius) {
+                state = State.ATTACK;
+                target = hero;
+                stateTimer = 10.0f;
+            }
         }
         //Если здоровье меньше, чем..., то монстр убегает
         if (hp < hpMax * 0.2 && state != State.RETREAT) {
@@ -81,13 +81,5 @@ public class Monster extends GameCharacter implements Poolable {
             dst.set(position.x + MathUtils.random(100, 200) * Math.signum(position.x - lastAttacker.position.x),
                     position.y + MathUtils.random(100, 200) * Math.signum(position.y - lastAttacker.position.y));
         }
-
-        //Преследование героя
-//        if (this.position.dst(gc.getHero().getPosition()) < visionRadius) {
-//            dst.set(gc.getHero().getPosition());
-//        }
-//        if (position.dst(dst) < 2.0f) {
-//            dst.set(MathUtils.random(0, 1280), MathUtils.random(0, 720));
-//        }
     }
 }
